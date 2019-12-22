@@ -1,7 +1,9 @@
 //@flow
 
-import {realmLog, logs} from './domain'
-import {realmStatus, changeSources, selectVersion} from '../domain'
+import {realmLog} from '.'
+import {logs} from './state'
+import {changeSources, selectVersion} from '../editor'
+import {realmStatus} from '../realm'
 
 let nextID = 0
 
