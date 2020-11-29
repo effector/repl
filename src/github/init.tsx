@@ -1,21 +1,9 @@
-import {attach, createEffect, Store} from 'effector'
-import {TGitHubUserInfo, TToken} from './state'
+import {attach, createEffect} from 'effector'
+import {TToken} from './state'
 import {$githubToken, $githubUser} from './state'
 import {login, logout, setToken} from './index'
 import {GITHUB_API_URL, GITHUB_GATEKEEPER_URL} from './config'
 import {userInfo} from './gql'
-
-type GQLParams = {
-  query: string,
-  variables?: {},
-  token?: TToken,
-}
-
-type TUserInfoResult = {
-  data: {
-    viewer: TGitHubUserInfo,
-  },
-}
 
 export const auth = createEffect({
   async handler() {

@@ -1,4 +1,4 @@
-import {createEffect, createEvent} from 'effector'
+import {createEvent} from 'effector'
 
 export const login = createEvent()
 export const logout = createEvent()
