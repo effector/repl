@@ -6,10 +6,9 @@ import debounce from 'lodash.debounce'
 import 'codemirror/lib/codemirror.css'
 import './styles.css'
 import './main.css'
-import {SidebarHeader} from './components/SidebarHeader'
 import Panel from './components/CodeMirrorPanel'
 import Errors from './components/Errors'
-import SecondanaryTabs from './components/SecondanaryTabs'
+import SecondaryTabs from './components/SecondaryTabs'
 import Outline from './components/Outline'
 import {TypeHintView} from './flow/view'
 import {isDesktopChanges, tab} from './tabs/domain'
@@ -117,13 +116,13 @@ export default () => {
       <SmallScreens>
         {_tab !== 'share' && _tab !== 'settings' && (
           <>
-            <SecondanaryTabs />
+            <SecondaryTabs />
             <ErrorsView />
           </>
         )}
       </SmallScreens>
       <DesktopScreens>
-        <SecondanaryTabs />
+        <SecondaryTabs />
         <ErrorsView />
       </DesktopScreens>
       <GitHubAuth />

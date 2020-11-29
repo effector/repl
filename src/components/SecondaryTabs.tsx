@@ -75,7 +75,7 @@ const ToolbarView = createComponent(
   ),
 )
 
-const SecondanaryTabs = styled.div`
+const SecondaryTabs = styled.div`
   display: flex;
   flex-direction: column;
   background: #fff;
@@ -101,7 +101,7 @@ export default function() {
   const mainTab = useStore($mainTab)
 
   return (
-    <SecondanaryTabs ref={setRef} id="console-panel">
+    <SecondaryTabs ref={setRef} id="console-panel">
       <Sizer
         direction="horizontal"
         cssVar="--console-height"
@@ -124,6 +124,6 @@ export default function() {
       <DesktopScreens>
         <LogsView />
       </DesktopScreens>
-    </SecondanaryTabs>
+    </SecondaryTabs>
   )
 }
