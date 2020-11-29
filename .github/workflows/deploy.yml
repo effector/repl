@@ -20,6 +20,7 @@ jobs:
           path: '**/node_modules'
           key: modules-${{ hashFiles('**/yarn.lock') }}
       - name: Install deps
+        if: steps.yarn-cache.outputs.cache-hit != 'true'
         run: yarn install --frozen-lockfile
       - name: Generate versions
         run: node src/loadVersions.js
