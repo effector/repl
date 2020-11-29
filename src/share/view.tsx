@@ -1,26 +1,32 @@
 import React, {useRef} from 'react'
+import {styled} from 'linaria/react'
 import {useStore} from 'effector-react'
 import {getShareListByAuthor, shareCode} from '../graphql'
 import {ShareButton, ShareGroup} from './styled'
 import {sharing} from './controller'
 import {Section} from '../settings/view'
 import {isShareAPISupported} from '../device'
-import {handleInput, handleKeyDown, onTextChange, removeShare, setCurrentShareId, setFilterMode} from './index'
+import {
+  handleInput,
+  handleKeyDown,
+  onTextChange,
+  removeShare,
+  setCurrentShareId,
+  setFilterMode,
+} from './index'
 import {$currentShareId, $filterMode, $shareDescription} from './state'
-import {styled} from 'linaria/react'
 import {CopyIcon} from '../components/Icons/CopyIcon'
 import {ShareIcon} from '../components/Icons/ShareIcon'
 import {LoadingIcon} from '../components/Icons/LoadingIcon'
 import {$sortedShareList} from './init'
 import {IconButton} from '../components/IconButton'
-import {theme} from '../components/Console/theme/default'
+import {theme} from '~/features/logs/lib/console/theme/default'
 import {getUserInfo} from '~/github/init'
 import {FilterIcon} from '~/share/filterIcon'
-import {$debouncedInput, resetInput} from '~/share/debounceInput'
+import {$debouncedInput} from '~/share/debounceInput'
 import {RemoveIcon} from '~/share/RemoveIcon'
 
-
-const Save = props => {
+const Save = (props) => {
   const pending = useStore(shareCode.pending)
   return (
     <ShareButton
@@ -38,7 +44,7 @@ const ShareItem = styled.a`
   padding: 5px 10px;
   border-bottom: 1px solid #eee;
   border-left: 3px solid
-    ${props => (props.active ? 'var(--primary-color)' : 'transparent')};
+    ${(props) => (props.active ? 'var(--primary-color)' : 'transparent')};
 `
 
 const ShareRow = styled.div`
@@ -66,7 +72,7 @@ const ShareDescription = styled.div`
   max-width: calc(100vw - 100px);
   @media (min-width: 699px) {
     max-width: calc(100% - 70px);
-  } 
+  }
 `
 
 const MiniButton = styled.button`
@@ -120,30 +126,27 @@ const ShareList = ({filterMode, description}) => {
           textAlign: 'center',
           marginTop: 30,
         }}>
-        {loading
-          ? status.loading
-          : signing
-            ? status.signing
-            : status.empty
-        }
+        {loading ? status.loading : signing ? status.signing : status.empty}
       </h2>
     )
   }
 
   if (filterMode && description) {
-    sortedShareList = sortedShareList.filter(share => share?.description && (
-      share?.description?.trim().toLowerCase().indexOf(description) !== -1
-      || share?.code?.trim().indexOf(description) !== -1
-    ))
+    sortedShareList = sortedShareList.filter(
+      (share) =>
+        share?.description &&
+        (share?.description?.trim().toLowerCase().indexOf(description) !== -1 ||
+          share?.code?.trim().indexOf(description) !== -1),
+    )
   }
 
-  return sortedShareList.map(share => {
+  return sortedShareList.map((share) => {
     const d = new Date(share.created * 1000)
     const dateString = dateStringFormatter.format(d)
     const timeString = timeStringFormatter.format(d)
     const dateISO = d.toISOString()
 
-    const shareLink = e => {
+    const shareLink = (e) => {
       e.preventDefault()
       e.stopPropagation()
       sharing({
@@ -152,7 +155,7 @@ const ShareList = ({filterMode, description}) => {
       })
     }
 
-    const copyLink = e => {
+    const copyLink = (e) => {
       e.preventDefault()
       e.stopPropagation()
 
@@ -179,7 +182,10 @@ const ShareList = ({filterMode, description}) => {
         }}>
         <ShareRow>
           <ShareDescription>
-            {typeof share.description === 'undefined' || share.description === null ? `<${share.slug}>` : share.description}
+            {typeof share.description === 'undefined' ||
+            share.description === null
+              ? `<${share.slug}>`
+              : share.description}
           </ShareDescription>
           <div style={{marginLeft: 10, position: 'relative'}}>
             {isShareAPISupported ? (
@@ -201,7 +207,7 @@ const ShareList = ({filterMode, description}) => {
                 height: 24,
                 fill: 'red',
               }}
-              onClick={e => {
+              onClick={(e) => {
                 e.preventDefault()
                 e.stopPropagation()
                 if (confirm('Are you sure delete this share?')) {
@@ -272,7 +278,13 @@ export const Share = () => {
           />
           <RemoveIcon
             color="gray"
-            style={{width: 16, cursor: 'pointer', position: 'absolute', right: 4, top: 8}}
+            style={{
+              width: 16,
+              cursor: 'pointer',
+              position: 'absolute',
+              right: 4,
+              top: 8,
+            }}
             onClick={() => onTextChange('')}
           />
         </div>
@@ -288,8 +300,9 @@ export const Share = () => {
           borderBottom: 'none',
           height: 'calc(100% - 42px)',
         }}>
-        <ShareList filterMode={filterMode}
-                   description={debouncedInput.trim().toLowerCase()}
+        <ShareList
+          filterMode={filterMode}
+          description={debouncedInput.trim().toLowerCase()}
         />
       </Section>
     </ShareGroup>

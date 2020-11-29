@@ -1,10 +1,10 @@
 import React, {useState} from 'react'
 import {styled} from 'linaria/react'
 import {createComponent, useStore} from 'effector-react'
-import {createApi, createStore, Store} from 'effector'
+import {createApi, createStore} from 'effector'
 import {TabHeaderList} from '../tabs/styled'
 import Sizer from './Sizer'
-import {theme} from './Console/theme/default'
+import {theme} from '~/features/logs/lib/console/theme/default'
 // TODO: remove exact dependency on feature, use requirements in the future
 import {
   logsClear as clearConsole,
@@ -14,7 +14,6 @@ import {
 import {autoScrollLog} from '../settings/state'
 import {IconButton} from './IconButton'
 import {DesktopScreens, SmallScreens} from '../tabs/view'
-import Outline from './Outline'
 import {OutlineView} from '../view'
 import {tab as $mainTab} from '../tabs/domain'
 
@@ -36,18 +35,13 @@ const Tab = styled.li`
     isActive ? '3px solid #e95801' : '3px solid transparent'};
 `
 
-const TabContent = styled.div`
-  overflow: auto;
-`
-
-// style={{display: 'flex', justifyContent: 'space-between', alignItems: 'center', paddingRight: 10, minHeight: 36}}>
 const ToolbarView = createComponent(
   {logs, tab, autoScrollLog, $mainTab},
   ({}, {$mainTab, logs, tab, autoScrollLog}) => (
     <TabHeaderList justify="space-between" style={{border: 'none'}}>
       <div style={{display: 'flex'}}>
         <Tab
-          onMouseDown={e => {
+          onMouseDown={(e) => {
             api.showConsole()
           }}
           isActive={tab === 'console' || $mainTab !== 'editor'}>
@@ -95,7 +89,7 @@ const SecondaryTabs = styled.div`
   }
 `
 
-export default function() {
+export default function () {
   const [ref, setRef] = useState(null)
   const _tab = useStore(tab)
   const mainTab = useStore($mainTab)
