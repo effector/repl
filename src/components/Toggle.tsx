@@ -1,7 +1,5 @@
 import * as React from 'react'
 import {styled} from 'linaria/react'
-import {createStore, createEvent, Store, Event} from 'effector'
-import {createComponent, StoreView} from 'effector-react'
 
 export function Toggle({
   name,
@@ -10,9 +8,11 @@ export function Toggle({
   style,
   size = 'default',
 }: {
-  name: string,
-  checked: boolean,
-  onChange: (e: SyntheticEvent<HTMLInputElement>) => any,
+  name: string
+  checked: boolean
+  onChange: (e: React.SyntheticEvent<HTMLInputElement>) => any
+  style?: React.CSSProperties
+  size?: 'small' | 'default'
 }) {
   return (
     <Input
@@ -70,15 +70,15 @@ const Input = styled.input`
   --color-main: #e95801;
   --color-second: #676778;
   --shadow-intense: 0.4;
-  top: ${props => toggeSizeSettings[props.size].top};
+  top: ${(props) => toggeSizeSettings[props.size].top};
   position: relative;
-  height: ${props => toggeSizeSettings[props.size].height};
-  width: ${props => toggeSizeSettings[props.size].width};
-  min-width: ${props => toggeSizeSettings[props.size].minWidth};
-  border-radius: ${props => toggeSizeSettings[props.size].borderRadius};
+  height: ${(props) => toggeSizeSettings[props.size].height};
+  width: ${(props) => toggeSizeSettings[props.size].width};
+  min-width: ${(props) => toggeSizeSettings[props.size].minWidth};
+  border-radius: ${(props) => toggeSizeSettings[props.size].borderRadius};
   -webkit-appearance: none;
   outline: none;
-  margin: ${props => toggeSizeSettings[props.size].margin};
+  margin: ${(props) => toggeSizeSettings[props.size].margin};
   cursor: pointer;
   &:checked::before {
     background-color: var(--color-main);
@@ -99,8 +99,8 @@ const Input = styled.input`
     height: 100%;
     width: 100%;
     padding: 2px;
-    border-radius: ${props =>
-    toggeSizeSettings[props.size].before.borderRadius};
+    border-radius: ${(props) =>
+      toggeSizeSettings[props.size].before.borderRadius};
     top: 0;
     left: 0;
     box-sizing: content-box;
@@ -110,9 +110,9 @@ const Input = styled.input`
     content: '';
     position: absolute;
     display: block;
-    height: ${props => toggeSizeSettings[props.size].after.height};
-    width: ${props => toggeSizeSettings[props.size].after.width};
-    top: ${props => toggeSizeSettings[props.size].after.top};
+    height: ${(props) => toggeSizeSettings[props.size].after.height};
+    width: ${(props) => toggeSizeSettings[props.size].after.width};
+    top: ${(props) => toggeSizeSettings[props.size].after.top};
     border-radius: 1em;
     background: white;
     box-shadow: 0 0px 1px rgba(0, 0, 0, var(--shadow-intense)),

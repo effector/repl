@@ -2,7 +2,6 @@ import ReactDOM from 'react-dom'
 
 import {loadLayoutSettings} from './layout-settings'
 import './init'
-import './graphite/dynamic'
 import App from './view'
 import React from 'react'
 
@@ -13,7 +12,7 @@ loadLayoutSettings()
 
 window.addEventListener(
   'touchmove',
-  event => {
+  (event) => {
     event.preventDefault()
   },
   {passive: false},

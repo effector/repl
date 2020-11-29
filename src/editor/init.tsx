@@ -12,7 +12,6 @@ import {retrieveCode, retrieveVersion} from './retrieve'
 import {compress} from './compression'
 import {typeNode} from '../flow/state'
 import {typeAtPos, showTypeNode, hideTypeNode} from '../flow'
-import {resetGraphiteState} from '../graphite/domain'
 import {evaluator, versionLoader} from '../evaluator'
 import {typechecker, typeHoverToggle} from '../settings/state'
 
@@ -20,7 +19,7 @@ evalEffect.use(evaluator)
 
 version.on(selectVersion, (_, p) => p)
 
-codeCursorActivity.watch(editor => {
+codeCursorActivity.watch((editor) => {
   const cursor = editor.getCursor()
   const body = editor.getValue()
   const line = cursor.line + 1
@@ -57,12 +56,6 @@ sample({
   }
 })
 
-//$off
-forward({
-  from: evalEffect,
-  to: resetGraphiteState,
-})
-
 codeError
   .on(evalEffect.done, () => ({
     isError: false,
@@ -85,7 +78,7 @@ codeError
   })
 
 let textMarker
-codeError.watch(async({stackFrames}) => {
+codeError.watch(async ({stackFrames}) => {
   if (textMarker) textMarker.clear()
   for (const frame of stackFrames) {
     if (frame._originalFileName !== 'repl.js') continue
@@ -100,7 +93,7 @@ codeError.watch(async({stackFrames}) => {
 
 let lastCode = null
 
-changeSources.map(compress).watch(code => {
+changeSources.map(compress).watch((code) => {
   if (lastCode !== null && lastCode !== code) {
     localStorage.setItem('code-compressed', code)
     history.replaceState({}, '', location.origin)
@@ -118,7 +111,7 @@ const initStore = combine({
   versionLoader,
   typechecker,
 })
-initStore.watch(data => {
+initStore.watch((data) => {
   evalEffect(data.sourceCode)
 })
 

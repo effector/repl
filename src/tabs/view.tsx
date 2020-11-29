@@ -1,7 +1,6 @@
 import * as React from 'react'
 import {useStore, useStoreMap} from 'effector-react'
 import {tab as _tab, tabApi} from './domain'
-import {GraphiteView} from '../graphite/view'
 import {PrettifyButton, Settings} from '../settings/view'
 import {flowToggle as _flowToggle} from '../settings/state'
 import {TypeErrorsView} from '../flow/view'
@@ -79,7 +78,6 @@ export const TabsView = () => {
         <TabHeaderTemplate name="share" />
         <TabHeaderTemplate name="settings" />
       </TabHeaderList>
-      {tab === 'graphite' && <GraphiteView />}
       <div style={{display: tab === 'dom' ? 'block' : 'none'}} className="dom">
         <iframe id="dom" />
       </div>

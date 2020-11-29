@@ -94,9 +94,6 @@ body {
   display: grid;
   grid-template-rows: 1fr auto;
 }
-.graphite {
-  border-bottom: 1px solid #ddd;
-}
 
 .editor.results {
 }
@@ -153,7 +150,10 @@ body {
     width: 100vw;
     overflow-x: hidden;
     scroll-snap-type: mandatory;
-    grid-template-rows: 36px minmax(0, 1fr) minmax(var(--console-min-height), var(--console-height));
+    grid-template-rows: 36px minmax(0, 1fr) minmax(
+        var(--console-min-height),
+        var(--console-height)
+      );
     border: none;
     z-index: 9999;
   }
@@ -190,8 +190,13 @@ body {
   }
   #try-wrapper {
     overflow: hidden;
-    grid-template-columns: var(--outline-width) minmax(200px, 2fr) var(--right-panel-width);
-    grid-template-rows: 36px minmax(0, 1fr) minmax(var(--console-min-height), var(--console-height));
+    grid-template-columns: var(--outline-width) minmax(200px, 2fr) var(
+        --right-panel-width
+      );
+    grid-template-rows: 36px minmax(0, 1fr) minmax(
+        var(--console-min-height),
+        var(--console-height)
+      );
   }
   .header-tabs {
     grid-column: 3 / span 1;
@@ -290,7 +295,8 @@ h3 {
   font-weight: normal;
 }
 
-.CodeMirror-foldgutter-open, .CodeMirror-foldgutter-folded {
+.CodeMirror-foldgutter-open,
+.CodeMirror-foldgutter-folded {
   font-size: 24px;
   margin: -6px 2px 0 -4px;
 }

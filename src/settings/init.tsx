@@ -20,14 +20,14 @@ import {
   autoScrollLog,
 } from './state'
 
-domain.onCreateStore(store => {
+domain.onCreateStore((store) => {
   const snapshot = localStorage.getItem(store.compositeName.fullName)
   if (snapshot != null) {
     const data = JSON.parse(snapshot)
     store.setState(data)
   }
 
-  store.updates.watch(newState => {
+  store.updates.watch((newState) => {
     localStorage.setItem(store.compositeName.fullName, JSON.stringify(newState))
   })
   return store
@@ -47,7 +47,7 @@ tsToggle.on(tsToggleChange, handler).on(flowToggleChange, (state, e) => {
 
 typeHoverToggle.on(typeHoverToggleChange, handler)
 
-prettier.use(async({code, parser}) => {
+prettier.use(async ({code, parser}) => {
   const req = await fetch('https://codebox.now.sh/prettier', {
     method: 'POST',
     body: JSON.stringify({code, config: {parser}}),
@@ -63,17 +63,19 @@ prettier.use(async({code, parser}) => {
 sample({
   source: {
     code: sourceCode,
-    parser: typechecker.map(parser => parser ?? 'babel'),
+    parser: typechecker.map((parser) => parser ?? 'babel'),
   },
   clock: guard(clickPrettify, {
-    filter: prettier.pending.map(pending => !pending),
+    filter: prettier.pending.map((pending) => !pending),
   }),
   target: prettier,
 })
 
 forward({
-  from: prettier.done.map(({result}) => result),
+  from: prettier.doneData,
   to: sourceCode,
 })
 
-autoScrollLog.on(enableAutoScroll, _ => true).on(disableAutoScroll, _ => false)
+autoScrollLog
+  .on(enableAutoScroll, (_) => true)
+  .on(disableAutoScroll, (_) => false)

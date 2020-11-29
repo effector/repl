@@ -1,5 +1,4 @@
-
-
+import {SyntheticEvent} from 'react'
 import {createEvent, createEffect, Effect} from 'effector'
 
 export const flowToggleChange = createEvent<SyntheticEvent<HTMLInputElement>>()
@@ -7,14 +6,14 @@ export const flowToggleChange = createEvent<SyntheticEvent<HTMLInputElement>>()
 export const tsToggleChange = createEvent<SyntheticEvent<HTMLInputElement>>()
 
 export const typeHoverToggleChange = createEvent<
-  SyntheticEvent<HTMLInputElement>,
+  SyntheticEvent<HTMLInputElement>
 >()
 
 export const clickPrettify = createEvent<any>()
 export const prettier: Effect<
-  {code: string, parser: 'flow' | 'typescript' | 'babel'},
+  {code: string; parser: 'flow' | 'typescript' | 'babel'},
   string,
-  Error,
+  Error
 > = createEffect()
 
 export const enableAutoScroll = createEvent()
