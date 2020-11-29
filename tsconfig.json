@@ -20,7 +20,5 @@
     "strict": true,
     "target": "esnext"
   },
-  "files": ["src/typings/json.d.ts"],
-  "exclude": ["./dist"],
-  "include": ["./src"]
+  "include": ["./src/*"]
 }
