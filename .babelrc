@@ -1,6 +1,11 @@
 {
   "plugins": [
-    "effector/babel-plugin",
+    [
+      "effector/babel-plugin",
+      {
+        "factories": ["~/lib/local-store", "~/lib/media-query"]
+      }
+    ],
     "@babel/plugin-proposal-optional-chaining",
     "@babel/plugin-proposal-nullish-coalescing-operator"
   ],
