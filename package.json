@@ -4,6 +4,9 @@
     "build": "npx parcel build -d dist --no-autoinstall --public-url /try src/index.html",
     "now-build": "node src/loadVersions.js && yarn build"
   },
+  "resolutions": {
+    "node-forge": "0.10.0"
+  },
   "devDependencies": {
     "@babel/core": "^7.11.6",
     "@babel/plugin-proposal-class-properties": "^7.10.4",
@@ -24,7 +27,6 @@
     "@types/lodash.debounce": "^4.0.6",
     "@types/lodash.throttle": "^4.1.6",
     "@types/react": "^16.9.32",
-    "fs-extra": "^7.0.1",
     "parcel-bundler": "^1.12.4",
     "parcel-plugin-linaria": "file:./forks/parcel-plugin-linaria",
     "typescript": "^4.1.2"
