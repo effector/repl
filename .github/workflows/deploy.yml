@@ -1,0 +1,41 @@
+name: deploy
+
+on:
+  push:
+    branches: [ main ]
+
+  # Allows you to run this workflow manually from the Actions tab
+  workflow_dispatch:
+
+jobs:
+  build:
+    runs-on: ubuntu-latest
+    steps:
+      - uses: actions/checkout@v2
+      - uses: actions/setup-node@v2
+        with:
+          node-version: 10
+      - uses: actions/cache@v2
+        with:
+          path: '**/node_modules'
+          key: modules-${{ hashFiles('**/yarn.lock') }}
+      - name: Install deps
+        run: yarn install --frozen-lockfile
+      - name: Generate versions
+        run: node src/loadVersions.js
+      - name: Build app
+        run: npx parcel build -d dist --no-autoinstall --public-url 'https://editor-prod.effector.dev' src/index.html
+      - name: Configure AWS Credentials
+        uses: aws-actions/configure-aws-credentials@v1
+        with:
+          aws-access-key-id: ${{ secrets.aws_uploader_access_key_id }}
+          aws-secret-access-key: ${{ secrets.aws_uploader_secret_access_key }}
+          aws-region: us-east-1
+      - name: Upload to S3
+        run: aws s3 sync ./dist s3://$S3_FOR_FRONTEND/  --exclude '.git/*'
+        env:
+          S3_FOR_FRONTEND: ${{ secrets.s3_for_frontend }}
+      - name: Delete cloudfront cache
+        run: aws cloudfront create-invalidation --distribution-id $CLOUDFRONT_STATIC --paths "/*"
+        env:
+          CLOUDFRONT_STATIC: ${{ secrets.cloudfront_static }}
