@@ -1,7 +1,7 @@
 import {createLocalStore} from '~/lib/local-store'
 
 export type TGitHubUserInfo = {
-  databaseId?: number | null
+  databaseId: number | null
   name: string
   url: string
   avatarUrl: string

@@ -1,5 +1,6 @@
 import {createStore} from 'effector'
 import {createLocalStore} from '~/lib/local-store'
+import {SharedItem} from './index.h'
 
 const shareListBackup = localStorage.getItem('share-list-backup')
 
@@ -8,8 +9,14 @@ if (!shareListBackup) {
   localStorage.setItem('share-list-backup', shareListOrigin)
 }
 
-export const $shareList = createLocalStore('share-list', {})
-export const $hiddenShareList = createLocalStore('share-list-hidden', {})
+export const $shareList = createLocalStore(
+  'share-list',
+  {} as Record<number, Record<string, SharedItem>>,
+)
+export const $hiddenShareList = createLocalStore(
+  'share-list-hidden',
+  {} as Record<string, boolean>,
+)
 export const $currentShareId = createStore(null)
 export const $shareDescription = createStore('')
 
