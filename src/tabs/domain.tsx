@@ -24,7 +24,6 @@ export const tabApi = createApi(tab, {
   showDOM: () => 'dom',
   showShare: () => 'share',
   showSettings: () => 'settings',
-  showGist: () => 'gist',
   showErrors: () => 'errors',
 })
 

@@ -7,7 +7,6 @@ import {TypeErrorsView} from '../flow/view'
 import {Share} from '../share/view'
 import {TabHeader, TabHeaderList} from './styled'
 import {createMediaQuery} from '~/lib/media-query'
-import {Gist} from '../github/view'
 
 export const SmallScreens = createMediaQuery('(max-width: 699px)')
 export const DesktopScreens = createMediaQuery('(min-width: 700px)')
@@ -36,10 +35,6 @@ const tabs = {
   settings: {
     select: tabApi.showSettings,
     title: 'Settings',
-  },
-  gist: {
-    select: tabApi.showGist,
-    title: 'Gist',
   },
 }
 
