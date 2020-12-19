@@ -1,4 +1,4 @@
-import StackFrame from './stack-frame'
+import {StackFrame} from './stack-frame'
 
 const regexExtractLocation = /\(?(.+?)(?::(\d+))?(?::(\d+))?\)?$/
 

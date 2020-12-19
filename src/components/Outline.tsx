@@ -1,8 +1,11 @@
 import React from 'react'
 import {styled} from 'linaria/react'
-import {codeSetCursor} from '../editor'
+import {useStore} from 'effector-react'
 
-const Outline = styled.div`
+import {codeSetCursor} from '../editor'
+import {stats} from '../realm/state'
+
+const OutlineWrapper = styled.div`
   grid-column: 1 / span 1;
   grid-row: 2 / span 1;
   background-color: #fff;
@@ -32,26 +35,8 @@ const EmptySection = styled.section`
 `
 
 const Item = styled.li`
-  cursor: ${props => (Boolean(props.loc) ? 'pointer' : 'inherit')};
+  cursor: ${(props: any) => (Boolean(props.loc) ? 'pointer' : 'inherit')};
 `
-
-const mapper = (item, i) => {
-  const loc = item?.defaultConfig?.loc
-  const name =
-    item?.compositeName?.fullName ||
-    item?.shortName ||
-    item.id ||
-    item.displayName
-  const key = item.kind && item.id ? item.kind + item.id + name : name
-  const onClick = () => {
-    if (loc) codeSetCursor(loc)
-  }
-  return (
-    <Item loc={loc} onClick={onClick} key={`${key} ${i}`}>
-      {name}
-    </Item>
-  )
-}
 
 const OutlineSection = ({list, title}) => {
   if (list.length === 0) return null
@@ -59,20 +44,32 @@ const OutlineSection = ({list, title}) => {
     <>
       <Header>{title}</Header>
       <Section>
-        <ol>{list.map(mapper)}</ol>
+        <ol>
+          {list.map((item, i) => {
+            const loc = item?.defaultConfig?.loc
+            const name =
+              item?.compositeName?.fullName ||
+              item?.shortName ||
+              item.id ||
+              item.displayName
+            const key = item.kind && item.id ? item.kind + item.id + name : name
+            const onClick = () => {
+              if (loc) codeSetCursor(loc)
+            }
+            return (
+              <Item loc={loc} onClick={onClick} key={`${key} ${i}`}>
+                {name}
+              </Item>
+            )
+          })}
+        </ol>
       </Section>
     </>
   )
 }
 
-export default function ({
-  style,
-  component,
-  domain,
-  event,
-  effect,
-  store,
-}: any) {
+export function Outline() {
+  const {component, domain, event, effect, store} = useStore(stats)
   const isEmpty =
     event.length === 0 &&
     effect.length === 0 &&
@@ -80,7 +77,7 @@ export default function ({
     domain.length === 0 &&
     component.length === 0
   return (
-    <Outline id="outline-sidebar" style={style}>
+    <OutlineWrapper id="outline-sidebar">
       {isEmpty && (
         <EmptySection>Symbols weren&apos;t found in this file</EmptySection>
       )}
@@ -89,6 +86,6 @@ export default function ({
       <OutlineSection list={store} title="Stores" />
       <OutlineSection list={domain} title="Domains" />
       <OutlineSection list={component} title="Components" />
-    </Outline>
+    </OutlineWrapper>
   )
 }

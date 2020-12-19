@@ -1,23 +1,13 @@
-/** A container holding a script line. */
-class ScriptLine {
+export type ScriptLine = {
   /** The line number of this line of source. */
   lineNumber: number
   /** The content (or value) of this line of source. */
   content: string
   /** Whether or not this line should be highlighted. Particularly useful for error reporting with context. */
   highlight: boolean
-
-  constructor(lineNumber: number, content: string, highlight: boolean = false) {
-    this.lineNumber = lineNumber
-    this.content = content
-    this.highlight = highlight
-  }
 }
 
-/**
- * A representation of a stack frame.
- */
-class StackFrame {
+export class StackFrame {
   functionName: string | null
   fileName: string | null
   lineNumber: number | null
@@ -106,6 +96,3 @@ class StackFrame {
     return `${functionName}${source ? ` (${source})` : ``}`
   }
 }
-
-export {StackFrame, ScriptLine}
-export default StackFrame

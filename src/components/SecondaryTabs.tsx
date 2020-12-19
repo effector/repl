@@ -1,4 +1,4 @@
-import React, {useState} from 'react'
+import React from 'react'
 import {styled} from 'linaria/react'
 import {createComponent, useStore} from 'effector-react'
 import {createApi, createStore} from 'effector'
@@ -14,7 +14,7 @@ import {
 import {autoScrollLog} from '../settings/state'
 import {IconButton} from './IconButton'
 import {DesktopScreens, SmallScreens} from '../tabs/view'
-import {OutlineView} from '../view'
+import {Outline} from './Outline'
 import {tab as $mainTab} from '../tabs/domain'
 
 const tab = createStore('console')
@@ -69,7 +69,7 @@ const ToolbarView = createComponent(
   ),
 )
 
-const SecondaryTabs = styled.div`
+const SecondaryTabsWrapper = styled.div`
   display: flex;
   flex-direction: column;
   background: #fff;
@@ -89,13 +89,13 @@ const SecondaryTabs = styled.div`
   }
 `
 
-export default function () {
-  const [ref, setRef] = useState(null)
+export function SecondaryTabs() {
+  const [ref, setRef] = React.useState(null)
   const _tab = useStore(tab)
   const mainTab = useStore($mainTab)
 
   return (
-    <SecondaryTabs ref={setRef} id="console-panel">
+    <SecondaryTabsWrapper ref={setRef} id="console-panel">
       <Sizer
         direction="horizontal"
         cssVar="--console-height"
@@ -112,12 +112,12 @@ export default function () {
         {_tab === 'console' || mainTab !== 'editor' ? (
           <LogsView />
         ) : (
-          <OutlineView />
+          <Outline />
         )}
       </SmallScreens>
       <DesktopScreens>
         <LogsView />
       </DesktopScreens>
-    </SecondaryTabs>
+    </SecondaryTabsWrapper>
   )
 }

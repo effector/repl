@@ -1,32 +1,18 @@
 import React, {useEffect, useState} from 'react'
 import {combine} from 'effector'
-import {createComponent, useStore} from 'effector-react'
+import {useStore} from 'effector-react'
 
 import 'codemirror/lib/codemirror.css'
 import './styles.css'
 import './main.css'
 import {CodeMirrorPanel} from './editor/view'
-import Errors from './components/Errors'
-import SecondaryTabs from './components/SecondaryTabs'
-import Outline from './components/Outline'
+import {Errors} from './evaluator/stackframe/view'
+import {SecondaryTabs} from './components/SecondaryTabs'
+import {Outline} from './components/Outline'
 import {isDesktopChanges, tab} from './tabs/domain'
 import {DesktopScreens, SmallScreens, TabsView} from './tabs/view'
-import {codeError} from './editor/state'
-
-import {stats} from './realm/state'
 import Sizer from './components/Sizer'
 import {GitHubAuth} from './github/GitHubAuthLink'
-
-export const OutlineView = createComponent({stats}, ({}, {stats}) => (
-  <Outline {...stats} />
-))
-
-const ErrorsView = createComponent(
-  codeError,
-  ({}, {isError, error, stackFrames}) => (
-    <Errors isError={isError} error={error} stackFrames={stackFrames} />
-  ),
-)
 
 const $displayOutline = combine(
   tab,
@@ -81,20 +67,20 @@ export default () => {
   const _tab = useStore(tab)
   return (
     <>
-      {displayOutline && <OutlineView />}
+      {displayOutline && <Outline />}
       <CodeView />
       <TabsView />
       <SmallScreens>
         {_tab !== 'share' && _tab !== 'settings' && (
           <>
             <SecondaryTabs />
-            <ErrorsView />
+            <Errors />
           </>
         )}
       </SmallScreens>
       <DesktopScreens>
         <SecondaryTabs />
-        <ErrorsView />
+        <Errors />
       </DesktopScreens>
       <GitHubAuth />
     </>

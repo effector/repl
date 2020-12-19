@@ -1,4 +1,4 @@
-import StackFrame from './stack-frame'
+import {StackFrame} from './stack-frame'
 import {getSourceMap} from './getSourceMap'
 import {getLinesAround} from './getLinesAround'
 import path from 'path'
