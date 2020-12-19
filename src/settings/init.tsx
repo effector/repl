@@ -2,26 +2,17 @@ import {sample, forward, guard} from 'effector'
 
 import {sourceCode} from '../editor/state'
 
-import {
-  clickPrettify,
-  prettier,
-  enableAutoScroll,
-  disableAutoScroll,
-} from '.'
-import {
-  domain,
-  typechecker,
-  autoScrollLog,
-} from './state'
+import {clickPrettify, prettier, enableAutoScroll, disableAutoScroll} from '.'
+import {domain, typechecker, autoScrollLog} from './state'
 
-domain.onCreateStore((store) => {
+domain.onCreateStore(store => {
   const snapshot = localStorage.getItem(store.compositeName.fullName)
   if (snapshot != null) {
     const data = JSON.parse(snapshot)
     store.setState(data)
   }
 
-  store.updates.watch((newState) => {
+  store.updates.watch(newState => {
     localStorage.setItem(store.compositeName.fullName, JSON.stringify(newState))
   })
   return store
@@ -43,10 +34,10 @@ prettier.use(async ({code, parser}) => {
 sample({
   source: {
     code: sourceCode,
-    parser: typechecker.map((parser) => parser ?? 'babel'),
+    parser: typechecker.map(parser => parser ?? 'babel'),
   },
   clock: guard(clickPrettify, {
-    filter: prettier.pending.map((pending) => !pending),
+    filter: prettier.pending.map(pending => !pending),
   }),
   target: prettier,
 })
@@ -56,6 +47,4 @@ forward({
   to: sourceCode,
 })
 
-autoScrollLog
-  .on(enableAutoScroll, (_) => true)
-  .on(disableAutoScroll, (_) => false)
+autoScrollLog.on(enableAutoScroll, _ => true).on(disableAutoScroll, _ => false)

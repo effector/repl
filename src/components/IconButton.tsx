@@ -1,6 +1,5 @@
 import {styled} from 'linaria/react'
 
-
 export const IconButton = styled.button`
   display: inline-block;
   background: ${props => props.icon};
@@ -14,6 +13,6 @@ export const IconButton = styled.button`
   border: none;
   outline: none;
   :hover {
-    opacity: .75;
+    opacity: 0.75;
   }
 `

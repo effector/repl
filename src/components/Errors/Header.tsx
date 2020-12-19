@@ -13,7 +13,7 @@ const headerStyle = {
 }
 
 type HeaderPropType = {
-  headerText: string,
+  headerText: string
 }
 
 function Header(props: HeaderPropType) {

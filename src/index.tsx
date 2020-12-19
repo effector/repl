@@ -12,7 +12,7 @@ loadLayoutSettings()
 
 window.addEventListener(
   'touchmove',
-  (event) => {
+  event => {
     event.preventDefault()
   },
   {passive: false},

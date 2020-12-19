@@ -1,5 +1,5 @@
 import * as React from 'react'
-import { shallow } from 'enzyme'
+import {shallow} from 'enzyme'
 
 import Console from '..'
 
@@ -10,10 +10,10 @@ it('renders', () => {
         {
           method: 'log',
           id: 'id',
-          data: ['my-log']
-        }
+          data: ['my-log'],
+        },
       ]}
-    />
+    />,
   )
 
   expect(result.html()).toContain('my-log')
@@ -26,10 +26,10 @@ it('formats messages', () => {
         {
           method: 'log',
           id: 'id',
-          data: ['%ctest', 'color: red']
-        }
+          data: ['%ctest', 'color: red'],
+        },
       ]}
-    />
+    />,
   )
 
   expect(result.html()).toContain('<span style="color: red;">test</span>')
@@ -42,10 +42,10 @@ it('displays object names', () => {
         {
           method: 'log',
           id: 'id',
-          data: [new class MyObject {}()]
-        }
+          data: [new (class MyObject {})()],
+        },
       ]}
-    />
+    />,
   )
 
   expect(result.html()).toContain('MyObject {}')

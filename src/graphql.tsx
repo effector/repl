@@ -12,7 +12,7 @@ const ENDPOINT = {
   PUBLIC_API_KEY: 'da2-srl2uzygsnhpdd2bban5gscnza',
 }
 
-const request = (data) => {
+const request = data => {
   const url = `https://${ENDPOINT.DIST}.appsync-api.${ENDPOINT.REGION}.amazonaws.com/graphql`
   return fetch(url, {
     method: 'POST',
@@ -22,8 +22,8 @@ const request = (data) => {
     },
     body: JSON.stringify(data),
   })
-    .then((req) => req.json())
-    .then((result) => {
+    .then(req => req.json())
+    .then(result => {
       if ('errors' in result) {
         console.error(result.errors)
         throw Error('request exception')

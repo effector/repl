@@ -65,7 +65,14 @@ const OutlineSection = ({list, title}) => {
   )
 }
 
-export default function({style, component, domain, event, effect, store}: any) {
+export default function ({
+  style,
+  component,
+  domain,
+  event,
+  effect,
+  store,
+}: any) {
   const isEmpty =
     event.length === 0 &&
     effect.length === 0 &&

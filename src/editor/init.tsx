@@ -1,11 +1,6 @@
 import {combine, forward} from 'effector'
 
-import {
-  changeSources,
-  codeMarkLine,
-  evalEffect,
-  selectVersion,
-} from '.'
+import {changeSources, codeMarkLine, evalEffect, selectVersion} from '.'
 import {sourceCode, codeError, version} from './state'
 import {retrieveCode, retrieveVersion} from './retrieve'
 import {compress} from './compression'
@@ -53,7 +48,7 @@ codeError.watch(async ({stackFrames}) => {
 
 let lastCode = null
 
-changeSources.watch((codeRaw) => {
+changeSources.watch(codeRaw => {
   const code = compress(codeRaw)
   if (lastCode !== null && lastCode !== code) {
     localStorage.setItem('code-compressed', code)
@@ -72,7 +67,7 @@ const initStore = combine({
   versionLoader,
   typechecker,
 })
-initStore.watch((data) => {
+initStore.watch(data => {
   evalEffect(data.sourceCode)
 })
 

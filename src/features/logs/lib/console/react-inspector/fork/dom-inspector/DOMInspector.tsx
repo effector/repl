@@ -4,7 +4,7 @@ import DOMNodePreview from './DOMNodePreview'
 import TreeView from '../tree-view/TreeView'
 
 import shouldInline from './shouldInline'
-const domIterator = function*(data) {
+const domIterator = function* (data) {
   if (data && data.childNodes) {
     const textInlined = shouldInline(data)
 

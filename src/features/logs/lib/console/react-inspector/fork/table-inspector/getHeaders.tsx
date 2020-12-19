@@ -3,7 +3,7 @@
  * `includes` is an ES2016 feature
  */
 if (!Array.prototype.includes) {
-  Array.prototype.includes = function(searchElement /*, fromIndex*/) {
+  Array.prototype.includes = function (searchElement /*, fromIndex*/) {
     var O = Object(this)
     var len = parseInt(O.length) || 0
     if (len === 0) {

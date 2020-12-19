@@ -8,7 +8,7 @@ import ObjectLabel from './ObjectLabel'
 import ThemeProvider from '../styles/ThemeProvider'
 
 const createIterator = (showNonenumerable, sortObjectKeys) => {
-  const objectIterator = function*(data) {
+  const objectIterator = function* (data) {
     const shouldIterate =
       (typeof data === 'object' && data !== null) || typeof data === 'function'
     if (!shouldIterate) return

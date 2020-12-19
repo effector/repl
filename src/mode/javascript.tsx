@@ -1,6 +1,6 @@
 import CodeMirror from 'codemirror'
 
-CodeMirror.defineMode('javascript', function(config, parserConfig) {
+CodeMirror.defineMode('javascript', function (config, parserConfig) {
   const indentUnit = config.indentUnit
   const statementIndent = parserConfig.statementIndent
   const jsonldMode = parserConfig.jsonld
@@ -11,7 +11,7 @@ CodeMirror.defineMode('javascript', function(config, parserConfig) {
 
   // Tokenizer
 
-  const keywords = (function() {
+  const keywords = (function () {
     function kw(type) {
       return {type, style: 'keyword'}
     }
@@ -162,7 +162,7 @@ CodeMirror.defineMode('javascript', function(config, parserConfig) {
   }
 
   function tokenString(quote) {
-    return function(stream, state) {
+    return function (stream, state) {
       let escaped = false,
         next
       if (jsonldMode && stream.peek() == '@' && stream.match(isJsonldKeyword)) {
@@ -394,7 +394,7 @@ CodeMirror.defineMode('javascript', function(config, parserConfig) {
   }
   popcontext.lex = true
   function pushlex(type, info) {
-    const result = function() {
+    const result = function () {
       let state = cx.state,
         indent = state.indented
       if (state.lexical.type == 'stat') indent = state.lexical.indented
@@ -668,7 +668,7 @@ CodeMirror.defineMode('javascript', function(config, parserConfig) {
     return pass(type == '{' ? statement : expressionNoComma)
   }
   function maybeTarget(noComma) {
-    return function(type) {
+    return function (type) {
       if (type == '.') return cont(noComma ? targetNoComma : target)
       else if (type == 'variable' && (isTS || isFlow))
         return cont(
@@ -748,7 +748,7 @@ CodeMirror.defineMode('javascript', function(config, parserConfig) {
       if (sep ? sep.indexOf(type) > -1 : type == ',') {
         const lex = cx.state.lexical
         if (lex.info == 'call') lex.pos = (lex.pos || 0) + 1
-        return cont(function(type, value) {
+        return cont(function (type, value) {
           if (type == end || value == end) return pass()
           return pass(what)
         }, proceed)
@@ -757,7 +757,7 @@ CodeMirror.defineMode('javascript', function(config, parserConfig) {
       if (sep && sep.indexOf(';') > -1) return pass(what)
       return cont(expect(end))
     }
-    return function(type, value) {
+    return function (type, value) {
       if (type == end || value == end) return cont()
       return pass(what, proceed)
     }

@@ -41,7 +41,7 @@ const ToolbarView = createComponent(
     <TabHeaderList justify="space-between" style={{border: 'none'}}>
       <div style={{display: 'flex'}}>
         <Tab
-          onMouseDown={(e) => {
+          onMouseDown={e => {
             api.showConsole()
           }}
           isActive={tab === 'console' || $mainTab !== 'editor'}>

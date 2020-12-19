@@ -26,7 +26,7 @@ import {FilterIcon} from '~/share/filterIcon'
 import {$debouncedInput} from '~/share/debounceInput'
 import {RemoveIcon} from '~/share/RemoveIcon'
 
-const Save = (props) => {
+const Save = props => {
   const pending = useStore(shareCode.pending)
   return (
     <ShareButton
@@ -44,7 +44,7 @@ const ShareItem = styled.a`
   padding: 5px 10px;
   border-bottom: 1px solid #eee;
   border-left: 3px solid
-    ${(props) => (props.active ? 'var(--primary-color)' : 'transparent')};
+    ${props => (props.active ? 'var(--primary-color)' : 'transparent')};
 `
 
 const ShareRow = styled.div`
@@ -133,20 +133,20 @@ const ShareList = ({filterMode, description}) => {
 
   if (filterMode && description) {
     sortedShareList = sortedShareList.filter(
-      (share) =>
+      share =>
         share?.description &&
         (share?.description?.trim().toLowerCase().indexOf(description) !== -1 ||
           share?.code?.trim().indexOf(description) !== -1),
     )
   }
 
-  return sortedShareList.map((share) => {
+  return sortedShareList.map(share => {
     const d = new Date(share.created * 1000)
     const dateString = dateStringFormatter.format(d)
     const timeString = timeStringFormatter.format(d)
     const dateISO = d.toISOString()
 
-    const shareLink = (e) => {
+    const shareLink = e => {
       e.preventDefault()
       e.stopPropagation()
       sharing({
@@ -155,7 +155,7 @@ const ShareList = ({filterMode, description}) => {
       })
     }
 
-    const copyLink = (e) => {
+    const copyLink = e => {
       e.preventDefault()
       e.stopPropagation()
 
@@ -207,7 +207,7 @@ const ShareList = ({filterMode, description}) => {
                 height: 24,
                 fill: 'red',
               }}
-              onClick={(e) => {
+              onClick={e => {
                 e.preventDefault()
                 e.stopPropagation()
                 if (confirm('Are you sure delete this share?')) {

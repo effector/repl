@@ -1,4 +1,3 @@
-
 import * as React from 'react'
 import * as pathLibrary from 'path'
 import {combine, createEffect} from 'effector'
@@ -28,9 +27,12 @@ async function createRealm(sourceCode: string, filename, additionalLibs = {}) {
   realm.require = path => {
     switch (path) {
       //$off
-      case 'symbol-observable': return (Symbol as any).observable || '@@observable'
-      case 'path': return pathLibrary
-      case 'react': return React
+      case 'symbol-observable':
+        return (Symbol as any).observable || '@@observable'
+      case 'path':
+        return pathLibrary
+      case 'react':
+        return React
     }
     if (path in additionalLibs) return additionalLibs[path]
     console.warn('require: ', path)
@@ -50,8 +52,8 @@ async function createRealm(sourceCode: string, filename, additionalLibs = {}) {
 }
 
 const cache = {
-  'effector': new Map(),
-  '@effector/babel-plugin': new Map()
+  effector: new Map(),
+  '@effector/babel-plugin': new Map(),
 }
 
 const fetchEffector = createEffect('fetch effector', {
@@ -63,7 +65,10 @@ const fetchEffector = createEffect('fetch effector', {
     const sourceMap = `${url}.map`
     const req = await fetch(url)
     let text = await req.text()
-    text = text.replace(/\/\/\# sourceMappingURL\=.*$/m, `//${tag}MappingURL=${sourceMap}`)
+    text = text.replace(
+      /\/\/\# sourceMappingURL\=.*$/m,
+      `//${tag}MappingURL=${sourceMap}`,
+    )
     return createRealm(text, `effector.${ver}.js`)
   },
 })
@@ -74,11 +79,15 @@ const fetchBabelPlugin = createEffect<string, {[key: string]: any}, any>({
   async handler(ver) {
     let url: string
     if (ver === 'master') {
-      url = 'https://effector--canary.s3-eu-west-1.amazonaws.com/effector/babel-plugin.js'
+      url =
+        'https://effector--canary.s3-eu-west-1.amazonaws.com/effector/babel-plugin.js'
     } else {
       let [major, minor = '', patch = ''] = ver.split('.')
       patch = patch.split('-')[0]
-      if (major === '0' && (parseInt(minor) < 18 || (minor === '18' && parseInt(patch) < 7))) {
+      if (
+        major === '0' &&
+        (parseInt(minor) < 18 || (minor === '18' && parseInt(patch) < 7))
+      ) {
         url = `https://unpkg.com/@effector/babel-plugin@latest/index.js`
       } else {
         url = `https://unpkg.com/effector@${ver}/babel-plugin.js`
@@ -87,52 +96,71 @@ const fetchBabelPlugin = createEffect<string, {[key: string]: any}, any>({
     const sourceMap = `${url}.map`
     const req = await fetch(url)
     let text = await req.text()
-    text = text.replace(/\/\/\# sourceMappingURL\=.*$/m, `//${tag}MappingURL=${sourceMap}`)
+    text = text.replace(
+      /\/\/\# sourceMappingURL\=.*$/m,
+      `//${tag}MappingURL=${sourceMap}`,
+    )
     return createRealm(text, `effector-babel-plugin.${ver}.js`)
   },
 })
 
 const fetchEffectorReact = createEffect<any, {[key: string]: any}, any>({
   async handler(effector) {
-    const url = 'https://effector--canary.s3-eu-west-1.amazonaws.com/effector-react/effector-react.cjs.js'
+    const url =
+      'https://effector--canary.s3-eu-west-1.amazonaws.com/effector-react/effector-react.cjs.js'
     const sourceMap = `${url}.map`
     const req = await fetch(url)
     let text = await req.text()
-    text = text.replace(/\/\/\# sourceMappingURL\=.*$/m, `//${tag}MappingURL=${sourceMap}`)
+    text = text.replace(
+      /\/\/\# sourceMappingURL\=.*$/m,
+      `//${tag}MappingURL=${sourceMap}`,
+    )
     return createRealm(text, `effector-react.cjs.js`, {effector})
   },
 })
 
 const fetchForest = createEffect({
   async handler(effector) {
-    const url = 'https://effector--canary.s3-eu-west-1.amazonaws.com/forest/forest.cjs.js'
+    const url =
+      'https://effector--canary.s3-eu-west-1.amazonaws.com/forest/forest.cjs.js'
     const sourceMap = `${url}.map`
     const req = await fetch(url)
     let text = await req.text()
-    text = text.replace(/\/\/\# sourceMappingURL\=.*$/m, `//${tag}MappingURL=${sourceMap}`)
+    text = text.replace(
+      /\/\/\# sourceMappingURL\=.*$/m,
+      `//${tag}MappingURL=${sourceMap}`,
+    )
     return createRealm(text, `forest.cjs.js`, {effector})
-  }
+  },
 })
 const fetchEffectorFork = createEffect({
   async handler(effector) {
-    const url = 'https://effector--canary.s3-eu-west-1.amazonaws.com/effector/fork.js'
+    const url =
+      'https://effector--canary.s3-eu-west-1.amazonaws.com/effector/fork.js'
     const sourceMap = `${url}.map`
     const req = await fetch(url)
     let text = await req.text()
-    text = text.replace(/\/\/\# sourceMappingURL\=.*$/m, `//${tag}MappingURL=${sourceMap}`)
+    text = text.replace(
+      /\/\/\# sourceMappingURL\=.*$/m,
+      `//${tag}MappingURL=${sourceMap}`,
+    )
     return createRealm(text, `fork.js`, {effector})
-  }
+  },
 })
 
 const fetchEffectorReactSSR = createEffect({
   async handler(effector) {
-    const url = 'https://effector--canary.s3-eu-west-1.amazonaws.com/effector-react/ssr.js'
+    const url =
+      'https://effector--canary.s3-eu-west-1.amazonaws.com/effector-react/ssr.js'
     const sourceMap = `${url}.map`
     const req = await fetch(url)
     let text = await req.text()
-    text = text.replace(/\/\/\# sourceMappingURL\=.*$/m, `//${tag}MappingURL=${sourceMap}`)
+    text = text.replace(
+      /\/\/\# sourceMappingURL\=.*$/m,
+      `//${tag}MappingURL=${sourceMap}`,
+    )
     return createRealm(text, `ssr.js`, {effector})
-  }
+  },
 })
 
 const fetchPatronum = createEffect({
@@ -141,15 +169,18 @@ const fetchPatronum = createEffect({
     const sourceMap = `${url}.map`
     const req = await fetch(url)
     let text = await req.text()
-    text = text.replace(/\/\/\# sourceMappingURL\=.*$/m, `//${tag}MappingURL=${sourceMap}`)
+    text = text.replace(
+      /\/\/\# sourceMappingURL\=.*$/m,
+      `//${tag}MappingURL=${sourceMap}`,
+    )
     return createRealm(text, `patronum.js`, {effector})
-  }
+  },
 })
 
 fetchBabelPlugin.fail.watch(() => selectVersion('master'))
 
 const api = {
-  'effector': fetchEffector,
+  effector: fetchEffector,
   'effector/fork': fetchEffectorFork,
   '@effector/babel-plugin': fetchBabelPlugin,
   forest: fetchForest,
@@ -171,13 +202,9 @@ export const versionLoader = version.map(v => {
   return data
 })
 
-
 export async function evaluator(code: string) {
   realmStatusApi.init()
-  const [
-    babelPlugin,
-    effector,
-  ] = await Promise.all([
+  const [babelPlugin, effector] = await Promise.all([
     cache['@effector/babel-plugin'].get(version.getState()),
     cache.effector.get(version.getState()),
   ])
@@ -191,7 +218,7 @@ export async function evaluator(code: string) {
       fetchForest(effector),
       fetchEffectorFork(effector),
       fetchEffectorReactSSR(effector),
-      fetchPatronum(effector)
+      fetchPatronum(effector),
     ])
     forest = additionalLibs[0]
     effectorFork = additionalLibs[1]
@@ -203,7 +230,10 @@ export async function evaluator(code: string) {
   return exec({
     code,
     realmGlobal: getIframe().contentWindow,
-    globalBlocks: [env, {dom: forest, forest, effectorFork, effectorReactSSR, patronum}],
+    globalBlocks: [
+      env,
+      {dom: forest, forest, effectorFork, effectorReactSSR, patronum},
+    ],
     filename: filename.getState(),
     types: typechecker.getState() || 'typescript',
     pluginRegistry: {
@@ -242,36 +272,36 @@ function replaceModuleImports(globalVarName, path, {types: t}) {
         values.push(
           t.objectProperty(
             t.identifier(specifier.imported.name),
-            t.identifier(specifier.local.name)
-          )
+            t.identifier(specifier.local.name),
+          ),
         )
         break
       case 'ImportNamespaceSpecifier':
       case 'ImportDefaultSpecifier':
         path.replaceWith(
-          t.VariableDeclaration("const", [
+          t.VariableDeclaration('const', [
             t.VariableDeclarator(
               t.identifier(specifier.local.name),
               t.memberExpression(
-                t.identifier("globalThis"),
-                t.identifier(globalVarName)
-              )
-            )
-          ])
+                t.identifier('globalThis'),
+                t.identifier(globalVarName),
+              ),
+            ),
+          ]),
         )
         return
     }
   }
   path.replaceWith(
-    t.VariableDeclaration("const", [
+    t.VariableDeclaration('const', [
       t.VariableDeclarator(
         t.objectPattern(values),
         t.memberExpression(
-          t.identifier("globalThis"),
-          t.identifier(globalVarName)
-        )
-      )
-    ])
+          t.identifier('globalThis'),
+          t.identifier(globalVarName),
+        ),
+      ),
+    ]),
   )
 }
 const removeImportsPlugin = babel => ({
@@ -290,13 +320,12 @@ const removeImportsPlugin = babel => ({
           break
         case 'patronum':
           replaceModuleImports('patronum', path, babel)
-          break;
+          break
         default:
           // TODO: import actual module after patronum refactoring to ES Modules
           if (path.node.source.value.indexOf('patronum/') === 0) {
             replaceModuleImports('patronum', path, babel)
-          }
-          else path.remove()
+          } else path.remove()
       }
     },
     ExportDefaultDeclaration(path) {
@@ -316,9 +345,7 @@ let iframe: HTMLIFrameElement | null = null
 
 function getIframe(): HTMLIFrameElement {
   if (iframe === null) {
-    iframe =
-      document.getElementById('dom') ||
-      document.createElement('iframe')
+    iframe = document.getElementById('dom') || document.createElement('iframe')
     const wrapListenerMethods = target => {
       if (!target) return
       if (!target.addEventListener.__original__) {
@@ -368,14 +395,8 @@ function resetHead(document) {
     if (node.nodeName === 'LINK') {
       const href = node.getAttribute('href')
       const rel = node.getAttribute('rel')
-      if (
-          rel === 'stylesheet' &&
-          styleLinks.includes(href)
-        ) {
-        styleLinks.splice(
-          styleLinks.indexOf(href),
-          1,
-        )
+      if (rel === 'stylesheet' && styleLinks.includes(href)) {
+        styleLinks.splice(styleLinks.indexOf(href), 1)
         continue
       }
     }

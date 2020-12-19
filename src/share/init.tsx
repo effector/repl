@@ -22,8 +22,8 @@ import {SharedItem} from './index.h'
 $currentShareId.on(setCurrentShareId, (_, id) => id)
 
 export const keyDown = split(onKeyDown, {
-  Escape: (key) => key === 'Escape',
-  Enter: (key) => key === 'Enter',
+  Escape: key => key === 'Escape',
+  Enter: key => key === 'Enter',
 })
 
 forward({
@@ -66,7 +66,7 @@ sample({
     const userShares = shareList[githubUser.databaseId!]
     const currentShare = Object.values(
       userShares || ({} as typeof userShares),
-    ).find((share) => share.slug === slug)
+    ).find(share => share.slug === slug)
     return currentShare?.description
   },
 })
@@ -121,7 +121,7 @@ export const $sortedShareList = combine(
       shareList[githubUser.databaseId!] || ({} as Record<string, SharedItem>),
     )
       .filter(
-        (share) =>
+        share =>
           share.author === githubUser.databaseId &&
           !hiddenShareList[share.slug],
       )

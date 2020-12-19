@@ -19,9 +19,9 @@ export default function Errors({
   error,
   stackFrames,
 }: {
-  isError: boolean,
-  error: Error,
-  stackFrames: StackFrameType[],
+  isError: boolean
+  error: Error
+  stackFrames: StackFrameType[]
 }) {
   if (isError) {
     if (error !== Object(error)) {

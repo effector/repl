@@ -1,10 +1,7 @@
 import * as React from 'react'
 import {useStore, useStoreMap, useList} from 'effector-react'
 import {styled} from 'linaria/react'
-import {
-  clickPrettify,
-  prettier,
-} from '.'
+import {clickPrettify, prettier} from '.'
 import {selectVersion} from '../editor'
 import {packageVersions, version} from '../editor/state'
 import {LoadingIcon} from '../components/Icons/LoadingIcon'

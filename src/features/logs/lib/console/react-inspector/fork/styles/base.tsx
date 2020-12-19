@@ -1,4 +1,4 @@
-import unselectable from './unselectable';
+import unselectable from './unselectable'
 
 export default theme => ({
   DOMNodePreview: {
@@ -262,4 +262,4 @@ export default theme => ({
     // lineHeight: 14
     ...unselectable,
   },
-});
+})

@@ -46,7 +46,7 @@ function getPrettyURL(
   return prettyURL.replace('webpack://', '.')
 }
 
-export default function({frame}: {frame: StackFrameType}) {
+export default function ({frame}: {frame: StackFrameType}) {
   const {
     fileName,
     lineNumber,

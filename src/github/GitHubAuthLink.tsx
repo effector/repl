@@ -10,13 +10,13 @@ import {logout, setToken} from './index'
 import {auth, getUserInfo} from './init'
 import {LoadingIcon} from '../components/Icons/LoadingIcon'
 
-
 const portalContainer = document.getElementById('auth-section')
 
 const DropDownMenu = styled.div`
   transform-origin: top right;
-  transform: scale(${props => props.open ? 1 : 0}) translateX(${props => props.open ? 0 : -100}px);
-  transition: transform .2s;
+  transform: scale(${props => (props.open ? 1 : 0)})
+    translateX(${props => (props.open ? 0 : -100)}px);
+  transition: transform 0.2s;
   border: 1px solid #ccc;
   position: absolute;
   top: calc(100% + 10px);
@@ -28,8 +28,8 @@ const DropDownMenu = styled.div`
   padding: 5px 0px;
   border-radius: 5px;
   &::after {
-    opacity: ${props => props.open ? 1 : 0};
-    transition: opacity .3s;
+    opacity: ${props => (props.open ? 1 : 0)};
+    transition: opacity 0.3s;
     content: '';
     position: absolute;
     border: 10px solid transparent;
@@ -42,7 +42,7 @@ const DropDownMenu = styled.div`
 
 const MenuItem = styled.div`
   padding: 5px 20px;
-  transition: background-color .25s, color .25s;
+  transition: background-color 0.25s, color 0.25s;
   background-color: transparent;
   color: #333;
   &:hover {
@@ -61,9 +61,14 @@ const GitHubUserMenu = ({user, pending, ...props}) => {
   const [open, setOpen] = useState(false)
   const ref = useRef(null)
 
-  const closeMenu = (e) => {
+  const closeMenu = e => {
     const {left, right, top, bottom} = ref.current.getBoundingClientRect()
-    if (e.pageX < left || e.pageX > right || e.pageY < top || e.pageY > bottom) {
+    if (
+      e.pageX < left ||
+      e.pageX > right ||
+      e.pageY < top ||
+      e.pageY > bottom
+    ) {
       setOpen(false)
     }
   }
@@ -73,8 +78,9 @@ const GitHubUserMenu = ({user, pending, ...props}) => {
     return () => window.removeEventListener('click', closeMenu)
   }, [open])
 
-  return ReactDOM.createPortal((
-      <div style={{
+  return ReactDOM.createPortal(
+    <div
+      style={{
         alignSelf: 'center',
         marginLeft: 40,
         alignItems: 'center',
@@ -86,70 +92,74 @@ const GitHubUserMenu = ({user, pending, ...props}) => {
         minHeight: 18,
         ...props.style,
       }}>
-        <div
+      <div
+        style={{
+          alignSelf: 'center',
+          display: 'flex',
+          alignItems: 'center',
+          ...props.style,
+        }}
+        onClick={e => {
+          e.preventDefault()
+          e.stopPropagation()
+          setOpen(state => !state)
+        }}>
+        <img
+          src={user.avatarUrl}
+          alt={user.name}
+          style={{margin: '0 5px 0 0', width: 32, height: 32}}
+        />
+        <DropDownArrow />
+      </div>
+      <DropDownMenu open={open} ref={ref}>
+        <a
           style={{
-            alignSelf: 'center',
+            margin: '5px 20px 10px 20px',
+            color: '#555',
             display: 'flex',
             alignItems: 'center',
-            ...props.style,
           }}
-          onClick={(e) => {
-            e.preventDefault()
-            e.stopPropagation()
-            setOpen(state => !state)
-          }}
-        >
-          <img src={user.avatarUrl} alt={user.name} style={{margin: '0 5px 0 0', width: 32, height: 32}} />
-          <DropDownArrow />
-        </div>
-        <DropDownMenu open={open} ref={ref}>
-          <a
-            style={{
-              margin: '5px 20px 10px 20px',
-              color: '#555',
-              display: 'flex',
-              alignItems: 'center',
-            }}
-            href={user.url}
-            target="_blank" rel="noreferrer noopener">
-            <GitHubCatIcon />
-            <span style={{fontWeight: 'bold'}}>{user.name}</span>
-          </a>
-          <MenuDivider />
-          <MenuItem onClick={() => {
+          href={user.url}
+          target="_blank"
+          rel="noreferrer noopener">
+          <GitHubCatIcon />
+          <span style={{fontWeight: 'bold'}}>{user.name}</span>
+        </a>
+        <MenuDivider />
+        <MenuItem
+          onClick={() => {
             setOpen(false)
             logout()
           }}>
-            Sign out
-          </MenuItem>
-        </DropDownMenu>
-      </div>
-    ),
+          Sign out
+        </MenuItem>
+      </DropDownMenu>
+    </div>,
     portalContainer,
   )
 }
 
 export const GitHubAuthLink = ({token, ...props}) => {
   return ReactDOM.createPortal(
-    <a href="#"
+    <a
+      href="#"
       // target="_blank"
-       {...props}
-       style={{
-         alignSelf: 'center',
-         marginLeft: 40,
-         // zIndex: 100,
-         paddingRight: 10,
-         ...props.style,
-       }}
-       onClick={(e) => {
-         e.preventDefault()
-         const csrf = Math.random().toString(36)
-         $csrf.setState(csrf)
-         config.githubAuthUrl.searchParams.set('state', csrf)
-         console.log(config.githubAuthUrl.href)
-         location.replace(config.githubAuthUrl.href)
-       }}
-    >
+      {...props}
+      style={{
+        alignSelf: 'center',
+        marginLeft: 40,
+        // zIndex: 100,
+        paddingRight: 10,
+        ...props.style,
+      }}
+      onClick={e => {
+        e.preventDefault()
+        const csrf = Math.random().toString(36)
+        $csrf.setState(csrf)
+        config.githubAuthUrl.searchParams.set('state', csrf)
+        console.log(config.githubAuthUrl.href)
+        location.replace(config.githubAuthUrl.href)
+      }}>
       <GitHubCatIcon /> Sign in
     </a>,
     portalContainer,
@@ -165,15 +175,16 @@ export const GitHubAuth = () => {
 
   if (authPending || userInfoPending) {
     return ReactDOM.createPortal(
-      <div style={{
-        alignSelf: 'center',
-        marginLeft: 40,
-        // zIndex: 100,
-        paddingRight: 40,
-      }}>
+      <div
+        style={{
+          alignSelf: 'center',
+          marginLeft: 40,
+          // zIndex: 100,
+          paddingRight: 40,
+        }}>
         <LoadingIcon />
       </div>,
-      portalContainer
+      portalContainer,
     )
   }
 

@@ -10,15 +10,15 @@ export const sourceCode: Store<string> = createStore(retrieveCode())
 export const compiledCode: Store<string> = createStore('')
 export const codeError: Store<
   | {
-      isError: true,
-      error: Error,
-      stackFrames: StackFrame[],
+      isError: true
+      error: Error
+      stackFrames: StackFrame[]
     }
   | {
-      isError: false,
-      error: null,
-      stackFrames: StackFrame[],
-    },
+      isError: false
+      error: null
+      stackFrames: StackFrame[]
+    }
 > = createStore({
   isError: false,
   error: null,

@@ -56,7 +56,7 @@ export const canShare: Store<boolean> = slug.map(url => url !== '')
 
 export const clickShare: Event<any> = createEvent()
 
-type Sharing = Effect<{slug: string, sharedUrl: string}, void>
+type Sharing = Effect<{slug: string; sharedUrl: string}, void>
 export const sharing: Sharing = createEffect('sharing url', {
   async handler({slug, sharedUrl}) {
     if (isShareAPISupported) {

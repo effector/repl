@@ -23,7 +23,7 @@ function copyContext(context) {
 
 CodeMirror.defineMode(
   'jsx',
-  function(config, modeConfig) {
+  function (config, modeConfig) {
     const xmlMode = CodeMirror.getMode(config, {
       name: 'xml',
       allowMissing: true,

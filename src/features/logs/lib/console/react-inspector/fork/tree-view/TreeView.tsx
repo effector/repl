@@ -95,8 +95,10 @@ class ConnectedTreeNode extends Component {
         // Render a node from name and data (or possibly other props like isNonenumerable)
         nodeRenderer={nodeRenderer}
         {...this.props}>
-        {// only render if the node is expanded
-        expanded ? this.renderChildNodes(data, path) : undefined}
+        {
+          // only render if the node is expanded
+          expanded ? this.renderChildNodes(data, path) : undefined
+        }
       </TreeNode>
     )
   }

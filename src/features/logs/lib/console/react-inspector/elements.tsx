@@ -2,7 +2,7 @@ import {styled} from 'linaria/react'
 import {Context} from '../index.h'
 
 type Props = {
-  theme: Context,
+  theme: Context
 }
 
 /**

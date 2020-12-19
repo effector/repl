@@ -5,7 +5,7 @@ export const domain = createDomain('settings')
 export const tsToggle = domain.store<boolean>(false)
 export const typechecker: Store<'typescript' | null> = combine(
   tsToggle,
-  (tsEnabled) => {
+  tsEnabled => {
     if (tsEnabled) return 'typescript'
     return null
   },

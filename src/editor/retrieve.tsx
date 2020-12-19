@@ -1,5 +1,3 @@
-
-
 import defaultSourceCode from './defaultSourceCode'
 import defaultVersions from '../versions.json'
 import {decompress, compress} from './compression'
@@ -19,9 +17,9 @@ export function retrieveCode(): string {
   if (isProdDomain) {
     if ('__code__' in window) {
       const preloaded: {
-        code: string,
-        description: string,
-        tags: string[],
+        code: string
+        description: string
+        tags: string[]
       } = window.__code__
       slug && setCurrentShareId(slug)
       return preloaded.code
