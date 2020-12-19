@@ -4,7 +4,6 @@ import './settings/init'
 import './realm/init'
 import './github/init'
 import './share/init'
-import './flow/init'
 import './editor/init'
 
 import {autoScrollLog} from './settings/state'

@@ -10,7 +10,6 @@ import Panel from './components/CodeMirrorPanel'
 import Errors from './components/Errors'
 import SecondaryTabs from './components/SecondaryTabs'
 import Outline from './components/Outline'
-import {TypeHintView} from './flow/view'
 import {isDesktopChanges, tab} from './tabs/domain'
 import {DesktopScreens, SmallScreens, TabsView} from './tabs/view'
 import {mode} from './mode/domain'
@@ -19,7 +18,6 @@ import {
   codeCursorActivity,
   codeMarkLine,
   codeSetCursor,
-  performLint,
 } from './editor'
 import {codeError, sourceCode} from './editor/state'
 
@@ -81,7 +79,6 @@ const CodeView = createComponent(
           <Panel
             markLine={codeMarkLine}
             setCursor={codeSetCursor}
-            performLint={performLint}
             onCursorActivity={codeCursorActivity}
             value={sourceCode}
             mode={mode}
@@ -89,7 +86,6 @@ const CodeView = createComponent(
             lineWrapping
             passive
           />
-          <TypeHintView />
         </div>
 
         <DesktopScreens>

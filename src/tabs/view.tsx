@@ -2,8 +2,6 @@ import * as React from 'react'
 import {useStore, useStoreMap} from 'effector-react'
 import {tab as _tab, tabApi} from './domain'
 import {PrettifyButton, Settings} from '../settings/view'
-import {flowToggle as _flowToggle} from '../settings/state'
-import {TypeErrorsView} from '../flow/view'
 import {Share} from '../share/view'
 import {TabHeader, TabHeaderList} from './styled'
 import {createMediaQuery} from '~/lib/media-query'
@@ -19,10 +17,6 @@ const tabs = {
   outline: {
     select: tabApi.showOutline,
     title: 'Outline',
-  },
-  errors: {
-    select: tabApi.showErrors,
-    title: 'Errors',
   },
   dom: {
     select: tabApi.showDOM,
@@ -54,7 +48,6 @@ const TabHeaderTemplate = ({name}) => {
 
 export const TabsView = () => {
   const tab = useStore(_tab)
-  const flowToggle = useStore(_flowToggle)
   return (
     <>
       <TabHeaderList
@@ -68,7 +61,6 @@ export const TabsView = () => {
         <SmallScreens>
           <TabHeaderTemplate name="editor" />
         </SmallScreens>
-        {flowToggle && <TabHeaderTemplate name="errors" />}
         <TabHeaderTemplate name="dom" />
         <TabHeaderTemplate name="share" />
         <TabHeaderTemplate name="settings" />
@@ -78,7 +70,6 @@ export const TabsView = () => {
       </div>
       {tab === 'share' && <Share />}
       {tab === 'settings' && <Settings />}
-      {tab === 'errors' && <TypeErrorsView />}
     </>
   )
 }

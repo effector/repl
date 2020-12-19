@@ -1,8 +1,7 @@
-import {combine, sample, forward} from 'effector'
+import {combine, forward} from 'effector'
 
 import {
   changeSources,
-  codeCursorActivity,
   codeMarkLine,
   evalEffect,
   selectVersion,
@@ -10,51 +9,12 @@ import {
 import {sourceCode, codeError, version} from './state'
 import {retrieveCode, retrieveVersion} from './retrieve'
 import {compress} from './compression'
-import {typeNode} from '../flow/state'
-import {typeAtPos, showTypeNode, hideTypeNode} from '../flow'
 import {evaluator, versionLoader} from '../evaluator'
-import {typechecker, typeHoverToggle} from '../settings/state'
+import {typechecker} from '../settings/state'
 
 evalEffect.use(evaluator)
 
 version.on(selectVersion, (_, p) => p)
-
-codeCursorActivity.watch((editor) => {
-  const cursor = editor.getCursor()
-  const body = editor.getValue()
-  const line = cursor.line + 1
-  const col = cursor.ch
-  typeAtPos({
-    filename: '/static/repl.js',
-    body,
-    line,
-    col,
-  })
-})
-
-sample({
-  source: typeHoverToggle,
-  clock: codeCursorActivity,
-  fn: (enabled, editor) => ({enabled, editor}),
-  //$off
-}).watch(({enabled, editor}) => {
-  const cursor = editor.getCursor()
-  if (cursor.line === 0 && cursor.ch === 0) return
-  if (enabled) {
-    editor.addWidget(
-      {
-        line: cursor.line,
-        ch: cursor.ch,
-      },
-      typeNode,
-    )
-    if (cursor.outside) {
-      hideTypeNode()
-    } else {
-      showTypeNode()
-    }
-  }
-})
 
 codeError
   .on(evalEffect.done, () => ({
@@ -93,7 +53,8 @@ codeError.watch(async ({stackFrames}) => {
 
 let lastCode = null
 
-changeSources.map(compress).watch((code) => {
+changeSources.watch((codeRaw) => {
+  const code = compress(codeRaw)
   if (lastCode !== null && lastCode !== code) {
     localStorage.setItem('code-compressed', code)
     history.replaceState({}, '', location.origin)

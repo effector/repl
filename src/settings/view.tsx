@@ -1,15 +1,10 @@
 import * as React from 'react'
 import {useStore, useStoreMap, useList} from 'effector-react'
 import {styled} from 'linaria/react'
-import {Toggle} from '../components/Toggle'
 import {
-  typeHoverToggleChange,
-  flowToggleChange,
-  tsToggleChange,
   clickPrettify,
   prettier,
 } from '.'
-import {flowToggle, tsToggle, typeHoverToggle} from './state'
 import {selectVersion} from '../editor'
 import {packageVersions, version} from '../editor/state'
 import {LoadingIcon} from '../components/Icons/LoadingIcon'
@@ -61,42 +56,6 @@ export const Settings = () => (
         Effector version
       </Label>
     </Section>
-    <Section>
-      <Label>
-        <Toggle
-          name="flow"
-          checked={useStore(flowToggle)}
-          onChange={flowToggleChange}
-        />
-        Flow
-      </Label>
-      <Label>
-        <Toggle
-          name="typescript"
-          checked={useStore(tsToggle)}
-          onChange={tsToggleChange}
-        />
-        TypeScript
-      </Label>
-    </Section>
-    <Section>
-      <Label>
-        <Toggle
-          name="typehover"
-          checked={useStore(typeHoverToggle)}
-          onChange={typeHoverToggleChange}
-        />
-        Type hover
-      </Label>
-    </Section>
-    {/*<Label>
-        <Toggle
-          name="rollup"
-          checked={useStore(flowToggle)}
-          onChange={flowToggleChange}
-        />
-        Rollup
-      </Label>*/}
   </SettingsGroup>
 )
 

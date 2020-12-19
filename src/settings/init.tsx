@@ -3,9 +3,6 @@ import {sample, forward, guard} from 'effector'
 import {sourceCode} from '../editor/state'
 
 import {
-  flowToggleChange,
-  tsToggleChange,
-  typeHoverToggleChange,
   clickPrettify,
   prettier,
   enableAutoScroll,
@@ -13,9 +10,6 @@ import {
 } from '.'
 import {
   domain,
-  flowToggle,
-  tsToggle,
-  typeHoverToggle,
   typechecker,
   autoScrollLog,
 } from './state'
@@ -32,20 +26,6 @@ domain.onCreateStore((store) => {
   })
   return store
 })
-
-const handler = (_, e) => e.currentTarget.checked
-
-flowToggle.on(flowToggleChange, handler).on(tsToggleChange, (state, e) => {
-  if (e.currentTarget.checked) return false
-  return state
-})
-
-tsToggle.on(tsToggleChange, handler).on(flowToggleChange, (state, e) => {
-  if (e.currentTarget.checked) return false
-  return state
-})
-
-typeHoverToggle.on(typeHoverToggleChange, handler)
 
 prettier.use(async ({code, parser}) => {
   const req = await fetch('https://codebox.now.sh/prettier', {

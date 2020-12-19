@@ -2,7 +2,6 @@
 
 import React from 'react'
 import {createEvent, createEffect} from 'effector'
-import {checkContent} from '../flow'
 //$todo: codemirror
 import CodeMirror from 'codemirror'
 //import 'codemirror/mode/javascript/javascript'
@@ -20,30 +19,6 @@ import 'codemirror/keymap/sublime'
 // import 'codemirror/addon/fold/xml-fold';
 import 'codemirror/addon/fold/foldgutter.css'
 
-const {signal, Pos} = CodeMirror
-
-function getAnnotations(text: string, callback, options, editor) {
-  checkContent(text)
-    .then(({code}) => (code === 'fail' ? [] : code))
-    .then(errors => {
-      signal(editor, 'flowErrors', errors)
-
-      const lint = errors.map(err => {
-        const messages = err.message
-        const firstLoc = messages[0].loc
-        const message = messages.map(msg => msg.descr).join('\n')
-        return {
-          from: Pos(firstLoc.start.line - 1, firstLoc.start.column - 1),
-          to: Pos(firstLoc.end.line - 1, firstLoc.end.column),
-          severity: err.level,
-          message,
-        }
-      })
-      callback(lint)
-    })
-}
-getAnnotations.async = true
-
 export default class CodeMirrorPanel extends React.Component<any> {
   static defaultProps = {
     lineNumbers: true,
@@ -57,7 +32,6 @@ export default class CodeMirrorPanel extends React.Component<any> {
     passive: false,
     setCursor: createEvent<any>(),
     markLine: createEffect<any, any, any>(),
-    performLint: createEvent<void>(),
     onCursorActivity() {},
   }
   _textareaRef = React.createRef<HTMLTextAreaElement>()
@@ -80,15 +54,11 @@ export default class CodeMirrorPanel extends React.Component<any> {
       dragDrop: false,
       keyMap: 'sublime',
       gutters: ['CodeMirror-linenumbers', 'CodeMirror-foldgutter'],
-      lint: {
-        getAnnotations,
-        lintOnChange: true,
-      },
       ...props,
     }
 
     this._codeMirror = CodeMirror.fromTextArea(
-      this._textareaRef.current,
+      this._textareaRef.current!,
       options,
     )
     this._codeMirror.on('change', this.handleChange)
@@ -112,10 +82,6 @@ export default class CodeMirrorPanel extends React.Component<any> {
       const cursorCoords = this._codeMirror.cursorCoords({line: line - 1, ch: column}, 'local')
       const scrollInfo = this._codeMirror.getScrollInfo()
       this._codeMirror.scrollTo(cursorCoords.left, cursorCoords.top - scrollInfo.clientHeight / 2)
-    })
-
-    this.props.performLint.watch(() => {
-      this._codeMirror.performLint()
     })
 
     this.props.markLine.use(

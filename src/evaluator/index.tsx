@@ -1,7 +1,7 @@
 
 import * as React from 'react'
 import * as pathLibrary from 'path'
-import {createEffect, createStore} from 'effector'
+import {combine, createEffect} from 'effector'
 import {prepareRuntime} from './prepareRuntime'
 import {selectVersion} from '../editor'
 import {version, sourceCode, compiledCode} from '../editor/state'
@@ -17,20 +17,18 @@ import PluginEffectorReact from 'effector/babel-plugin-react'
 import PluginBigInt from '@babel/plugin-syntax-bigint'
 
 const tag = `# source`
-const filename = createStore('repl.js').on(
-  typechecker,
-  (_, typechecker) => {
-    if (typechecker === 'typescript') return 'repl.ts'
-    return 'repl.js'
-  },
-)
-async function createRealm(sourceCode: string, filename, additionalLibs = {}): any {
-  const realm = {}
+const filename = combine(typechecker, (typechecker): string => {
+  if (typechecker === 'typescript') return 'repl.ts'
+  return 'repl.js'
+})
+
+async function createRealm(sourceCode: string, filename, additionalLibs = {}) {
+  const realm = {} as any
   realm.process = {env: {NODE_ENV: 'development'}}
   realm.require = path => {
     switch (path) {
       //$off
-      case 'symbol-observable': return Symbol.observable
+      case 'symbol-observable': return (Symbol as any).observable || '@@observable'
       case 'path': return pathLibrary
       case 'react': return React
     }
