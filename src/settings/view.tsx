@@ -1,4 +1,4 @@
-import * as React from 'react'
+import React from 'react'
 import {useStore, useStoreMap, useList} from 'effector-react'
 import {styled} from 'linaria/react'
 import {clickPrettify, prettier} from '.'

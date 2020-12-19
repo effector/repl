@@ -1,4 +1,4 @@
-import * as React from 'react'
+import React from 'react'
 import * as pathLibrary from 'path'
 import {combine, createEffect} from 'effector'
 import {prepareRuntime} from './prepareRuntime'

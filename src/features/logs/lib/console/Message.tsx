@@ -1,4 +1,4 @@
-import * as React from 'react'
+import React from 'react'
 import {MessageProps} from './index.h'
 
 import {Message, Icon, Content} from './elements'

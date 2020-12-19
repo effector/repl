@@ -1,4 +1,4 @@
-import * as React from 'react'
+import React from 'react'
 
 import {Root} from './elements'
 import {ConsoleMessage} from './Message'

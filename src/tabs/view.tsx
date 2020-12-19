@@ -1,4 +1,4 @@
-import * as React from 'react'
+import React from 'react'
 import {useStore, useStoreMap} from 'effector-react'
 import {tab as _tab, tabApi} from './domain'
 import {PrettifyButton, Settings} from '../settings/view'

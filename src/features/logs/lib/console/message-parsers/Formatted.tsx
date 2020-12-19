@@ -1,4 +1,4 @@
-import * as React from 'react'
+import React from 'react'
 import {Root} from '../react-inspector/elements'
 
 import {formatMessage} from '../devtools-parser'

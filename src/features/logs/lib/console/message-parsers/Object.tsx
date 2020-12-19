@@ -1,4 +1,4 @@
-import * as React from 'react'
+import React from 'react'
 import Linkify from 'linkifyjs/react'
 
 import {Theme, Message} from '../index.h'
