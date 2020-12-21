@@ -31,7 +31,6 @@ export const realmStatusApi: {
   })),
 }
 
-//$off
 export const {realmEvent, realmStore, realmEffect, realmDomain} = split(
   realmInvoke.map(e => e.instance || {}),
   {

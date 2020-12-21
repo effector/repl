@@ -10,10 +10,8 @@ function getStackFrames(
 ): Promise<StackFrame[]> {
   const parsedFrames = parse(error)
   let enhancedFramesPromise
-  //$off
   if (error.__unmap_source) {
     enhancedFramesPromise = unmap(
-      //$off
       error.__unmap_source,
       parsedFrames,
       contextSize,

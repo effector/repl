@@ -90,7 +90,6 @@ async function unmap(
     const {line, column} = map.getGeneratedPosition(
       sourceT,
       lineNumber,
-      //$todo
       columnNumber,
     )
     const originalSource = map.getSource(sourceT)

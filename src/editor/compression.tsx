@@ -201,7 +201,6 @@ export function decompress(input: string) {
       entry = dictionary[c]
     } else {
       if (c === dictSize) {
-        //$off
         entry = w + charAt(w, 0)
       } else {
         return null
@@ -209,8 +208,7 @@ export function decompress(input: string) {
     }
     result.push(entry)
 
-    // Add w+entry[0] to the dictionary.
-    //$off
+    // Add w+entry[0] to the dictionary
     dictionary[dictSize++] = w + charAt(entry, 0)
     enlargeIn--
 

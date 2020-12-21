@@ -1,4 +1,3 @@
-//$todo
 import {transform, registerPlugin, availablePlugins} from '@babel/standalone'
 
 export type BabelPlugin = string | [string, any]

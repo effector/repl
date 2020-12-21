@@ -10,9 +10,7 @@ import {consoleMap} from '~/features/logs'
 import {realmStatusApi, realmListener, realmRemoveListener} from '../realm'
 import {exec} from './runtime'
 import {getStackFrames} from './stackframe/getStackFrames'
-//$todo
 import PluginEffectorReact from 'effector/babel-plugin-react'
-//$todo
 import PluginBigInt from '@babel/plugin-syntax-bigint'
 
 const tag = `# source`
@@ -26,7 +24,6 @@ async function createRealm(sourceCode: string, filename, additionalLibs = {}) {
   realm.process = {env: {NODE_ENV: 'development'}}
   realm.require = path => {
     switch (path) {
-      //$off
       case 'symbol-observable':
         return (Symbol as any).observable || '@@observable'
       case 'path':
@@ -225,7 +222,6 @@ export async function evaluator(code: string) {
     effectorReactSSR = additionalLibs[2]
     patronum = additionalLibs[3]
   }
-  //$off
   const env = prepareRuntime(effector, effectorReact, version.getState())
   return exec({
     code,
@@ -249,7 +245,6 @@ export async function evaluator(code: string) {
     },
     onRuntimeError,
     onCompileComplete(compiled, config) {
-      //$off
       compiledCode.setState(compiled)
     },
     onRuntimeComplete() {
@@ -370,7 +365,6 @@ function getIframe(): HTMLIFrameElement {
     const generateFrame = () => {
       if (iframe === null) return
       if (iframe.contentDocument.body === null) return
-      //$off
       resetHead(iframe.contentDocument)
       iframe.contentDocument.body.innerHTML =
         '<div class="spectrum spectrum--lightest spectrum--medium" id="root"></div>'
