@@ -1,5 +1,5 @@
-import {chromeLight} from '../react-inspector/fork'
-import {Theme} from '../index.h'
+import chromeLight from './react-inspector/fork/styles/themes/chromeLight'
+import {Theme} from './index.h'
 
 const styles = {
   ...chromeLight,

@@ -1,5 +1,5 @@
 import React from 'react'
-import ObjectName from '../object/ObjectName'
+import {ObjectName} from '../object/ObjectName'
 import ObjectPreview from './ObjectPreview'
 
 const ObjectRootLabel = ({name, data}) => {
@@ -11,9 +11,8 @@ const ObjectRootLabel = ({name, data}) => {
         <ObjectPreview data={data} />
       </span>
     )
-  } else {
-    return <ObjectPreview data={data} />
   }
+  return <ObjectPreview data={data} />
 }
 
 export default ObjectRootLabel

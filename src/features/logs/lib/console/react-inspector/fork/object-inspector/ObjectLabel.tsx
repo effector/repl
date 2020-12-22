@@ -1,7 +1,7 @@
 import React from 'react'
 import PropTypes from 'prop-types'
-import ObjectName from '../object/ObjectName'
-import ObjectValue from '../object/ObjectValue'
+import {ObjectName} from '../object/ObjectName'
+import {ObjectValue} from '../object/ObjectValue'
 
 /**
  * if isNonenumerable is specified, render the name dimmed

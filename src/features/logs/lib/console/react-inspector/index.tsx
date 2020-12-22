@@ -1,27 +1,20 @@
 import React from 'react'
-import {
-  DOMInspector,
-  Inspector,
-  ObjectLabel,
-  ObjectName,
-  ObjectRootLabel,
-} from './fork'
+import {DOMInspector, Inspector, ObjectLabel, ObjectRootLabel} from './fork'
+import {ObjectName} from './fork/object/ObjectName'
 import ObjectPreview from './fork/object-inspector/ObjectPreview'
 
 import {Methods} from '../methods'
 import {Constructor, HTML, Root, Table} from './elements'
-import {theme} from '../theme/default'
 
-type Props = {
-  method: Methods
-  data: any
-}
-
-export class CustomInspector extends React.PureComponent<Props, any> {
+export class CustomInspector extends React.PureComponent<
+  {
+    method: Methods
+    data: any
+  },
+  any
+> {
   render() {
     const {method, data} = this.props
-
-    const {styles} = theme
 
     const dom = data instanceof HTMLElement
     const table = method === 'table'
@@ -30,17 +23,16 @@ export class CustomInspector extends React.PureComponent<Props, any> {
       <Root data-type={table ? 'table' : dom ? 'html' : 'object'}>
         {table ? (
           <Table>
-            <Inspector {...this.props} theme={styles} table />
-            <Inspector {...this.props} theme={styles} />
+            <Inspector {...this.props} table />
+            <Inspector {...this.props} />
           </Table>
         ) : dom ? (
           <HTML>
-            <DOMInspector {...this.props} theme={styles} />
+            <DOMInspector {...this.props} />
           </HTML>
         ) : (
           <Inspector
             {...this.props}
-            theme={styles}
             nodeRenderer={this.nodeRenderer.bind(this)}
           />
         )}
@@ -49,7 +41,6 @@ export class CustomInspector extends React.PureComponent<Props, any> {
   }
 
   getCustomNode(data: any) {
-    const {styles} = theme
     const constructor = data && data.constructor ? data.constructor.name : null
 
     if (constructor === 'Function')
@@ -74,7 +65,7 @@ export class CustomInspector extends React.PureComponent<Props, any> {
     if (data instanceof HTMLElement)
       return (
         <HTML>
-          <DOMInspector data={data} theme={styles} />
+          <DOMInspector data={data} />
         </HTML>
       )
     return null

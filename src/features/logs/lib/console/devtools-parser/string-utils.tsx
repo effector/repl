@@ -109,14 +109,21 @@ function tokenizeFormatString(format: any, formatters: any) {
  * @return {!{formattedResult: T, unusedSubstitutions: ?ArrayLike}};
  * @template T, Q
  */
-function format(
-  format: any = '',
-  substitutions?: any,
-  formatters?: any,
-  initialValue?: any,
-  append: any = () => {},
-  tokenizedFormat?: any,
-) {
+export function format({
+  format = '',
+  substitutions,
+  formatters,
+  initialValue,
+  append = () => {},
+  tokenizedFormat,
+}: {
+  format: any
+  substitutions?: any
+  formatters?: any
+  initialValue?: any
+  append: any
+  tokenizedFormat?: any
+}) {
   if (!format || !substitutions || !substitutions.length)
     return {
       formattedResult: append(initialValue, format),
@@ -197,15 +204,11 @@ function format(
     )
   }
 
-  const unusedSubstitutions = []
+  const unusedSubstitutions = [] as any[]
   for (let i = 0; i < substitutions.length; ++i) {
     if (i in usedSubstitutionIndexes) continue
     unusedSubstitutions.push(substitutions[i])
   }
 
   return {formattedResult: result, unusedSubstitutions}
-}
-
-export const String = {
-  format,
 }

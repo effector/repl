@@ -1,7 +1,7 @@
-import React, {Component} from 'react'
+import React from 'react'
 
 import DOMNodePreview from './DOMNodePreview'
-import TreeView from '../tree-view/TreeView'
+import {TreeView} from '../TreeView'
 
 import shouldInline from './shouldInline'
 const domIterator = function* (data) {
@@ -40,26 +40,12 @@ const domIterator = function* (data) {
   }
 }
 
-import ThemeProvider from '../styles/ThemeProvider'
-
-class DOMInspector extends Component {
-  static defaultProps = {
-    theme: 'chromeLight',
-  }
-
-  render() {
-    const nodeRenderer = DOMNodePreview
-
-    return (
-      <ThemeProvider theme={this.props.theme}>
-        <TreeView
-          nodeRenderer={nodeRenderer}
-          dataIterator={domIterator}
-          {...this.props}
-        />
-      </ThemeProvider>
-    )
-  }
+export default function DOMInspector(props) {
+  return (
+    <TreeView
+      nodeRenderer={DOMNodePreview}
+      dataIterator={domIterator}
+      {...props}
+    />
+  )
 }
-
-export default DOMInspector

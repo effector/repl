@@ -1,13 +1,13 @@
-import React, {Component} from 'react'
-import PropTypes from 'prop-types'
-import TreeView from '../tree-view/TreeView'
+import React from 'react'
+import {TreeView} from '../TreeView'
 
 import ObjectRootLabel from './ObjectRootLabel'
 import ObjectLabel from './ObjectLabel'
 
-import ThemeProvider from '../styles/ThemeProvider'
-
-const createIterator = (showNonenumerable, sortObjectKeys) => {
+const createIterator = (
+  showNonenumerable: boolean,
+  sortObjectKeys?: boolean | ((a: string, b: string) => 1 | 0 | -1),
+) => {
   const objectIterator = function* (data) {
     const shouldIterate =
       (typeof data === 'object' && data !== null) || typeof data === 'function'
@@ -95,56 +95,31 @@ const defaultNodeRenderer = ({depth, name, data, isNonenumerable}) =>
 /**
  * Tree-view for objects
  */
-class ObjectInspector extends Component {
-  static defaultProps = {
-    showNonenumerable: false,
-
-    theme: 'chromeLight',
-  }
-
-  static propTypes = {
-    /** An integer specifying to which level the tree should be initially expanded. */
-    expandLevel: PropTypes.number,
-    /** An array containing all the paths that should be expanded when the component is initialized, or a string of just one path */
-    expandPaths: PropTypes.oneOfType([PropTypes.string, PropTypes.array]),
-
-    name: PropTypes.string,
-    /** Not required prop because we also allow undefined value */
-    data: PropTypes.any,
-
-    /** A known theme or theme object */
-    theme: PropTypes.oneOfType([PropTypes.string, PropTypes.object]),
-
-    /** Show non-enumerable properties */
-    showNonenumerable: PropTypes.bool,
-    /** Sort object keys with optional compare function. */
-    sortObjectKeys: PropTypes.oneOfType([PropTypes.bool, PropTypes.func]),
-
-    /** Provide a custom nodeRenderer */
-    nodeRenderer: PropTypes.func,
-  }
-
-  render() {
-    const {
-      showNonenumerable,
-      sortObjectKeys,
-      nodeRenderer,
-      ...rest
-    } = this.props
-    const dataIterator = createIterator(showNonenumerable, sortObjectKeys)
-
-    const renderer = nodeRenderer ? nodeRenderer : defaultNodeRenderer
-
-    return (
-      <ThemeProvider theme={this.props.theme}>
-        <TreeView
-          nodeRenderer={renderer}
-          dataIterator={dataIterator}
-          {...rest}
-        />
-      </ThemeProvider>
-    )
-  }
+export function ObjectInspector({
+  showNonenumerable = false,
+  sortObjectKeys,
+  nodeRenderer = defaultNodeRenderer,
+  ...rest
+}: {
+  /** An integer specifying to which level the tree should be initially expanded. */
+  expandLevel?: number
+  /** An array containing all the paths that should be expanded when the component is initialized, or a string of just one path */
+  expandPaths?: string | string[]
+  name?: string
+  /** Not required prop because we also allow undefined value */
+  data?: any
+  /** Show non-enumerable properties */
+  showNonenumerable?: boolean
+  /** Sort object keys with optional compare function. */
+  sortObjectKeys?: boolean | ((a: string, b: string) => 1 | 0 | -1)
+  /** Provide a custom nodeRenderer */
+  nodeRenderer?: React.FC<any>
+}) {
+  return (
+    <TreeView
+      nodeRenderer={nodeRenderer}
+      dataIterator={createIterator(showNonenumerable, sortObjectKeys)}
+      {...{...rest, showNonenumerable}}
+    />
+  )
 }
-
-export default ObjectInspector

@@ -1,48 +1,55 @@
 import React from 'react'
 import PropTypes from 'prop-types'
 
-import createStyles from '../styles/createStyles'
+import {styleSet} from '../../styles'
 import shouldInline from './shouldInline'
 
-const OpenTag = ({tagName, attributes, styles}) => {
-  return (
-    <span style={styles.base}>
-      {'<'}
-      <span style={styles.tagName}>{tagName}</span>
+const styles = styleSet.DOMNodePreview
 
-      {(() => {
-        if (attributes) {
-          let attributeNodes = []
-          for (let i = 0; i < attributes.length; i++) {
-            const attribute = attributes[i]
-            attributeNodes.push(
-              <span key={i}>
-                {' '}
-                <span style={styles.htmlAttributeName}>{attribute.name}</span>
-                {'="'}
-                <span style={styles.htmlAttributeValue}>{attribute.value}</span>
-                {'"'}
-              </span>,
-            )
-          }
-          return attributeNodes
-        }
-      })()}
+const OpenTag = ({tagName, attributes}) => {
+  const style = styles.htmlOpenTag
+  let attributeNodes: JSX.Element[] | void
+  if (attributes) {
+    attributeNodes = []
+    for (let i = 0; i < attributes.length; i++) {
+      const attribute = attributes[i]
+      attributeNodes.push(
+        <span key={i}>
+          {' '}
+          <span style={style.htmlAttributeName}>{attribute.name}</span>
+          {'="'}
+          <span style={style.htmlAttributeValue}>{attribute.value}</span>
+          {'"'}
+        </span>,
+      )
+    }
+  }
+  return (
+    <span style={style.base}>
+      {'<'}
+      <span style={style.tagName}>{tagName}</span>
+
+      {attributeNodes}
 
       {'>'}
     </span>
   )
 }
-
+const closeTagChildNodeStyles = {
+  ...styles.htmlCloseTag.base,
+  ...styles.htmlCloseTag.offsetLeft,
+}
 // isChildNode style={{ marginLeft: -12 /* hack: offset placeholder */ }}
-const CloseTag = ({tagName, isChildNode = false, styles}) => (
-  <span
-    style={Object.assign({}, styles.base, isChildNode && styles.offsetLeft)}>
-    {'</'}
-    <span style={styles.tagName}>{tagName}</span>
-    {'>'}
-  </span>
-)
+const CloseTag = ({tagName, isChildNode = false}) => {
+  const style = styles.htmlCloseTag
+  return (
+    <span style={isChildNode ? closeTagChildNodeStyles : style.base}>
+      {'</'}
+      <span style={style.tagName}>{tagName}</span>
+      {'>'}
+    </span>
+  )
+}
 
 const nameByNodeType = {
   1: 'ELEMENT_NODE',
@@ -54,34 +61,20 @@ const nameByNodeType = {
   11: 'DOCUMENT_FRAGMENT_NODE',
 }
 
-const DOMNodePreview = ({isCloseTag, data, expanded}, {theme}) => {
-  const styles = createStyles('DOMNodePreview', theme)
-
+const DOMNodePreview = ({isCloseTag, data, expanded}) => {
   if (isCloseTag) {
-    return (
-      <CloseTag
-        styles={styles.htmlCloseTag}
-        isChildNode
-        tagName={data.tagName}
-      />
-    )
+    return <CloseTag isChildNode tagName={data.tagName} />
   }
 
   switch (data.nodeType) {
     case Node.ELEMENT_NODE:
       return (
         <span>
-          <OpenTag
-            tagName={data.tagName}
-            attributes={data.attributes}
-            styles={styles.htmlOpenTag}
-          />
+          <OpenTag tagName={data.tagName} attributes={data.attributes} />
 
           {shouldInline(data) ? data.textContent : !expanded && '…'}
 
-          {!expanded && (
-            <CloseTag tagName={data.tagName} styles={styles.htmlCloseTag} />
-          )}
+          {!expanded && <CloseTag tagName={data.tagName} />}
         </span>
       )
     case Node.TEXT_NODE:
@@ -127,10 +120,6 @@ DOMNodePreview.propTypes = {
   data: PropTypes.object.isRequired,
   /** Whether the DOM node has been expanded. */
   expanded: PropTypes.bool.isRequired,
-}
-
-DOMNodePreview.contextTypes = {
-  theme: PropTypes.oneOfType([PropTypes.string, PropTypes.object]).isRequired,
 }
 
 export default DOMNodePreview

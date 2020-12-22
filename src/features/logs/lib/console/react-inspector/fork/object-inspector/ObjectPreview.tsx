@@ -1,8 +1,8 @@
 import React from 'react'
 import PropTypes from 'prop-types'
 
-import ObjectValue from '../object/ObjectValue'
-import ObjectName from '../object/ObjectName'
+import {ObjectValue} from '../object/ObjectValue'
+import {ObjectName} from '../object/ObjectName'
 
 /* NOTE: Chrome console.log is italic */
 const styles = {
@@ -58,7 +58,7 @@ const ObjectPreview = ({data, maxProperties}) => {
       </span>
     )
   } else {
-    let propertyNodes = []
+    const propertyNodes = [] as JSX.Element[]
     for (let propertyName in object) {
       const propertyValue = object[propertyName]
       if (Object.prototype.hasOwnProperty.call(object, propertyName)) {

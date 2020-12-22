@@ -4,7 +4,7 @@ import {createComponent, useStore} from 'effector-react'
 import {createApi, createStore} from 'effector'
 import {TabHeaderList} from '../tabs/styled'
 import Sizer from './Sizer'
-import {theme} from '~/features/logs/lib/console/theme/default'
+import {theme} from '~/features/logs/lib/console/theme'
 // TODO: remove exact dependency on feature, use requirements in the future
 import {
   logsClear as clearConsole,

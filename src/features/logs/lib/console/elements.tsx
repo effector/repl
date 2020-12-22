@@ -1,12 +1,12 @@
 import {styled} from 'linaria/react'
-import {theme} from './theme/default'
+import {theme} from './theme'
 
 /**
  * Return themed log-method style
  * @param style The style
  * @param type The method
  */
-const Themed = (style: string, method: string, styles) =>
+const Themed = (style: string, method: string) =>
   styles[`LOG_${method.toUpperCase()}_${style.toUpperCase()}`] ||
   styles[`LOG_${style.toUpperCase()}`]
 
@@ -23,17 +23,17 @@ export const Root = styled.div`
 /**
  * console-message
  */
-export const Message = styled.div`
+export const Message = styled.div<{method: string}>`
   position: relative;
   display: flex;
   margin-top: -1px;
   margin-bottom: ${props => +/^warn|error$/.test(props.method)};
   padding-left: 10px;
   box-sizing: border-box;
-  color: ${props => Themed('color', props.method, styles)};
-  background-color: ${props => Themed('background', props.method, styles)};
-  border-top: 1px solid ${props => Themed('border', props.method, styles)};
-  border-bottom: 1px solid ${props => Themed('border', props.method, styles)};
+  color: ${props => Themed('color', props.method)};
+  background-color: ${props => Themed('background', props.method)};
+  border-top: 1px solid ${props => Themed('border', props.method)};
+  border-bottom: 1px solid ${props => Themed('border', props.method)};
   & * {
     vertical-align: top;
     box-sizing: border-box;
@@ -49,10 +49,10 @@ export const Message = styled.div`
 /**
  * message-icon
  */
-export const Icon = styled.div`
+export const Icon = styled.div<{method: string}>`
   width: 10px;
   height: 18px;
-  background-image: ${props => Themed('icon', props.method, styles)};
+  background-image: ${props => Themed('icon', props.method)};
   background-repeat: no-repeat;
   background-position: 50% 50%;
 `
