@@ -1,6 +1,6 @@
-import {combine, forward} from 'effector'
+import {forward, sample} from 'effector'
 
-import {changeSources, codeMarkLine, evalEffect, selectVersion} from '.'
+import {changeSources, evalEffect, selectVersion} from '.'
 import {sourceCode, codeError, version} from './state'
 import {retrieveCode, retrieveVersion} from './retrieve'
 import {compress} from './compression'
@@ -32,21 +32,21 @@ codeError
     }
   })
 
-let textMarker
-codeError.watch(async ({stackFrames}) => {
-  if (textMarker) textMarker.clear()
-  for (const frame of stackFrames) {
-    if (frame._originalFileName !== 'repl.js') continue
-    const line = (frame._originalLineNumber || 0) - 1
-    const ch = frame._originalColumnNumber || 0
-    textMarker = await codeMarkLine({
-      from: {line, ch},
-      options: {className: 'CodeMirror-lint-mark-error'},
-    })
-  }
-})
+// let textMarker
+// codeError.watch(async ({stackFrames}) => {
+//   if (textMarker) textMarker.clear()
+//   for (const frame of stackFrames) {
+//     if (frame._originalFileName !== 'repl.js') continue
+//     const line = (frame._originalLineNumber || 0) - 1
+//     const ch = frame._originalColumnNumber || 0
+//     textMarker = await codeMarkLine({
+//       from: {line, ch},
+//       options: {className: 'CodeMirror-lint-mark-error'},
+//     })
+//   }
+// })
 
-let lastCode = null
+let lastCode: string | null = null
 
 changeSources.watch(codeRaw => {
   const code = compress(codeRaw)
@@ -62,14 +62,12 @@ forward({
   to: sourceCode,
 })
 
-const initStore = combine({
-  sourceCode,
-  versionLoader,
-  typechecker,
-})
-initStore.watch(data => {
-  evalEffect(data.sourceCode)
+sample({
+  source: sourceCode,
+  clock: [sourceCode, versionLoader, typechecker],
+  target: evalEffect,
 })
 
+evalEffect(sourceCode.getState())
 changeSources(retrieveCode())
 selectVersion(retrieveVersion())
