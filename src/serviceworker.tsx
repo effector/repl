@@ -4,7 +4,6 @@ const urlsToCache = [
   '/index.html',
   'https://effector.dev/css/main.css',
   'https://effector.dev/img/comet.png',
-  'https://effector.dev/js/codetabs.js',
 ]
 
 self.addEventListener('install', event => {
