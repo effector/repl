@@ -28,6 +28,12 @@ mode.updates.watch(mode => {
   codeMirror.setOption('mode', mode)
 })
 
+sourceCode.updates.watch(code => {
+  if (codeMirror.getValue() !== code) {
+    codeMirror.setValue(code)
+  }
+})
+
 codeMarkLine.use(
   ({
     from,
