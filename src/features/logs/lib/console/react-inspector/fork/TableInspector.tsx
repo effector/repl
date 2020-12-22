@@ -7,7 +7,7 @@
 import React from 'react'
 import {styled} from 'linaria/react'
 
-import {ObjectValue} from './object/ObjectValue'
+import {ObjectValue} from './ObjectInspector'
 import {styleSet} from '../styles'
 
 const styles = styleSet.TableInspector

@@ -1,7 +1,11 @@
 import React from 'react'
-import {DOMInspector, Inspector, ObjectLabel, ObjectRootLabel} from './fork'
-import {ObjectName} from './fork/object/ObjectName'
-import ObjectPreview from './fork/object-inspector/ObjectPreview'
+import {DOMInspector, Inspector} from './fork'
+import {
+  ObjectLabel,
+  ObjectRootLabel,
+  ObjectName,
+  ObjectPreview,
+} from './fork/ObjectInspector'
 
 import {Methods} from '../methods'
 import {Constructor, HTML, Root, Table} from './elements'

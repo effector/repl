@@ -1,10 +1,8 @@
 import React from 'react'
 
 export {default as DOMInspector} from './dom-inspector/DOMInspector'
-export {default as ObjectLabel} from './object-inspector/ObjectLabel'
-export {default as ObjectRootLabel} from './object-inspector/ObjectRootLabel'
 
-import {ObjectInspector} from './object-inspector/ObjectInspector'
+import {ObjectInspector} from './ObjectInspector'
 import {TableInspector} from './TableInspector'
 import DOMInspector from './dom-inspector/DOMInspector'
 
