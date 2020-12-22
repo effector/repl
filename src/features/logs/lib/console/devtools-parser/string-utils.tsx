@@ -114,14 +114,14 @@ export function format({
   substitutions,
   formatters,
   initialValue,
-  append = () => {},
+  append,
   tokenizedFormat,
 }: {
   format: any
   substitutions?: any
   formatters?: any
-  initialValue?: any
-  append: any
+  initialValue: HTMLSpanElement
+  append: (a: any, b: any) => any
   tokenizedFormat?: any
 }) {
   if (!format || !substitutions || !substitutions.length)

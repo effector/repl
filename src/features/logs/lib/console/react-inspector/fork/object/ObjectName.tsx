@@ -1,10 +1,5 @@
 import React from 'react'
 import {styleSet} from '../../styles'
-const styles = styleSet.ObjectName
-const objectNameDimmedStyles = {
-  ...styles.base,
-  ...styles.dimmed,
-}
 
 /**
  * A view for object property names.
@@ -22,7 +17,6 @@ export const ObjectName = ({
   name: string
   dimmed?: boolean
 }) => {
-  return (
-    <span style={dimmed ? objectNameDimmedStyles : styles.base}>{name}</span>
-  )
+  const styles = styleSet.ObjectName
+  return <span className={dimmed ? styles.dimmed : styles.base}>{name}</span>
 }

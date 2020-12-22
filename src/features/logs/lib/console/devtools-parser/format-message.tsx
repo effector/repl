@@ -8,7 +8,7 @@ import {format as formatString} from './string-utils'
 export function formatWithSubstitutionString(
   format: any,
   parameters: any,
-  formattedResult: any,
+  formattedResult: HTMLSpanElement,
 ) {
   let currentStyle: any = null
 

@@ -1,4 +1,5 @@
 import React from 'react'
+import {css} from 'linaria'
 import {theme} from '../theme'
 
 const {styles} = theme
@@ -50,45 +51,44 @@ export const styleSet = {
       color: styles.HTML_DOCTYPE_COLOR,
     } as React.CSSProperties,
   },
-
   ObjectName: {
-    base: {
-      color: styles.OBJECT_NAME_COLOR,
-    } as React.CSSProperties,
-    dimmed: {
-      opacity: 0.6,
-    } as React.CSSProperties,
+    base: css`
+      color: ${styles.OBJECT_NAME_COLOR};
+    `,
+    dimmed: css`
+      color: ${styles.OBJECT_NAME_COLOR};
+      opacity: 0.6;
+    `,
   },
-
   ObjectValue: {
-    objectValueNull: {
-      color: styles.OBJECT_VALUE_NULL_COLOR,
-    } as React.CSSProperties,
-    objectValueUndefined: {
-      color: styles.OBJECT_VALUE_UNDEFINED_COLOR,
-    } as React.CSSProperties,
-    objectValueRegExp: {
-      color: styles.OBJECT_VALUE_REGEXP_COLOR,
-    } as React.CSSProperties,
-    objectValueString: {
-      color: styles.OBJECT_VALUE_STRING_COLOR,
-    } as React.CSSProperties,
-    objectValueSymbol: {
-      color: styles.OBJECT_VALUE_SYMBOL_COLOR,
-    } as React.CSSProperties,
-    objectValueNumber: {
-      color: styles.OBJECT_VALUE_NUMBER_COLOR,
-    } as React.CSSProperties,
-    objectValueBoolean: {
-      color: styles.OBJECT_VALUE_BOOLEAN_COLOR,
-    } as React.CSSProperties,
-    objectValueFunctionKeyword: {
-      color: styles.OBJECT_VALUE_FUNCTION_KEYWORD_COLOR,
-      fontStyle: 'italic',
-    } as React.CSSProperties,
-    objectValueFunctionName: {
-      fontStyle: 'italic',
-    } as React.CSSProperties,
+    objectValueNull: css`
+      color: ${styles.OBJECT_VALUE_NULL_COLOR};
+    `,
+    objectValueUndefined: css`
+      color: ${styles.OBJECT_VALUE_UNDEFINED_COLOR};
+    `,
+    objectValueRegExp: css`
+      color: ${styles.OBJECT_VALUE_REGEXP_COLOR};
+    `,
+    objectValueString: css`
+      color: ${styles.OBJECT_VALUE_STRING_COLOR};
+    `,
+    objectValueSymbol: css`
+      color: ${styles.OBJECT_VALUE_SYMBOL_COLOR};
+    `,
+    objectValueNumber: css`
+      color: ${styles.OBJECT_VALUE_NUMBER_COLOR};
+    `,
+    objectValueBoolean: css`
+      color: ${styles.OBJECT_VALUE_BOOLEAN_COLOR};
+    `,
+    objectValueFunctionKeyword: css`
+      color: ${styles.OBJECT_VALUE_FUNCTION_KEYWORD_COLOR};
+      font-style: italic;
+    `,
+    objectValueFunctionName: css`
+      font-style: italic;
+    `,
   },
 
   TreeNode: {
