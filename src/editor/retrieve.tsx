@@ -4,23 +4,32 @@ import {decompress, compress} from './compression'
 import {changeSources} from './index'
 import {setCurrentShareId} from '../share'
 
+function getLocation<T>(defaults: T, fn: (loc: Location) => T): T {
+  if (typeof location !== 'undefined') return fn(location)
+  return defaults
+}
+
 export function retrieveCode(): string {
   const isStuck = readStuckFlag()
-  const isAuthRedirectedUrl = location.pathname === '/auth'
-  const regExp = new RegExp(`${location.origin}/(.*)`)
-  const [, slug] = regExp.exec(location.href)
-
+  const pathname = getLocation('', loc => loc.pathname)
+  const origin = getLocation('', loc => loc.origin)
+  const href = getLocation('', loc => loc.href)
+  const isAuthRedirectedUrl = pathname === '/auth'
+  const regExp = new RegExp(`${origin}/(.*)`)
+  let slug: string | null = null
+  const parsedHref = regExp.exec(href)
+  if (parsedHref) slug = parsedHref[1]
   const isProdDomain =
-    /https:\/\/(.+\.)?effector\.dev/.test(location.origin) ||
-    /^https:\/\/effector\.now\.sh$/.test(location.origin)
+    /https:\/\/(.+\.)?effector\.dev/.test(origin) ||
+    /^https:\/\/effector\.now\.sh$/.test(origin)
 
   if (isProdDomain) {
-    if ('__code__' in window) {
+    if (typeof window !== 'undefined' && '__code__' in window) {
       const preloaded: {
         code: string
         description: string
         tags: string[]
-      } = window.__code__
+      } = (window as any).__code__
       slug && setCurrentShareId(slug)
       return preloaded.code
     }
@@ -31,7 +40,7 @@ export function retrieveCode(): string {
           try {
             const {status, data} = await res.json()
             if (status === 200) {
-              const {code} = JSON.parse(decompress(data))
+              const {code} = JSON.parse(decompress(data)!)
               return changeSources(code)
             }
           } catch (e) {
@@ -46,30 +55,35 @@ export function retrieveCode(): string {
 
   const code = getUrlParameter('code')
   if (!isAuthRedirectedUrl && code) {
-    return decompress(code)
+    return decompress(code)!
   }
-  const storageCode = localStorage.getItem('code-compressed')
-  if (storageCode != null) {
-    const decompressed = decompress(storageCode)
-    if (isStuck) {
-      const withThrow = `throw Error('this code leads to infinite loop')\n${decompressed}`
-      localStorage.setItem('code-compressed', compress(withThrow))
-      return withThrow
+  if (typeof localStorage !== 'undefined') {
+    const storageCode = localStorage.getItem('code-compressed')
+    if (storageCode != null) {
+      const decompressed = decompress(storageCode)!
+      if (isStuck) {
+        const withThrow = `throw Error('this code leads to infinite loop')\n${decompressed}`
+        localStorage.setItem('code-compressed', compress(withThrow))
+        return withThrow
+      }
+      return decompressed
     }
-    return decompressed
   }
   return defaultSourceCode
 }
 
 function readStuckFlag() {
-  try {
-    let flag = JSON.parse(localStorage.getItem('runtime/stuck'))
-    if (typeof flag !== 'boolean') flag = false
-    localStorage.setItem('runtime/stuck', JSON.stringify(false))
-    return flag
-  } catch (err) {
-    return false
+  if (typeof localStorage !== 'undefined') {
+    try {
+      let flag = JSON.parse(localStorage.getItem('runtime/stuck')!)
+      if (typeof flag !== 'boolean') flag = false
+      localStorage.setItem('runtime/stuck', JSON.stringify(false))
+      return flag
+    } catch (err) {
+      return false
+    }
   }
+  return false
 }
 
 export function retrieveVersion(): string {
@@ -81,7 +95,10 @@ export function retrieveVersion(): string {
 }
 
 function getUrlParameter(name: string): string {
-  const urlSearch = new URLSearchParams(location.search)
-  if (urlSearch.has(name)) return urlSearch.get(name)
+  const search = getLocation('', loc => loc.search)
+  if (typeof URLSearchParams !== 'undefined') {
+    const urlSearch = new URLSearchParams(search)
+    if (urlSearch.has(name)) return urlSearch.get(name)!
+  }
   return ''
 }
