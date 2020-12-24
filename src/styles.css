@@ -17,7 +17,6 @@
   --primary-color: #e95801;
 }
 
-
 h1,
 h2,
 h3 {
@@ -281,7 +280,7 @@ body {
   height: 100%;
 }
 
-.slidingNav ul li a {
+[data-fixed-header-link-nav] {
   font-weight: normal;
 }
 
