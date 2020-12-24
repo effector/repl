@@ -29,4 +29,9 @@ export const TabHeaderList = styled.ul`
   height: 36px;
   min-height: 36px;
   overflow-y: hidden;
+  -ms-overflow-style: none;
+  scrollbar-width: none;
+  &::-webkit-scrollbar {
+    display: none;
+  }
 `

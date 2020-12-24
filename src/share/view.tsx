@@ -29,7 +29,7 @@ const Save = ({disabled}: {disabled: boolean}) => {
   return (
     <ShareButton onClick={shareCode} disabled={disabled || pending}>
       {pending && <LoadingIcon style={{marginRight: 10}} />}
-      Save
+      Save app
     </ShareButton>
   )
 }
@@ -343,6 +343,12 @@ const ValidatedInput = styled.input`
   :invalid {
     box-shadow: 0 0 4px red;
   }
+  height: 32px;
+  padding: 4px 24px 4px 4px;
+  width: 100%;
+  &::placeholder {
+    color: #777;
+  }
 `
 
 export const Share = () => {
@@ -379,9 +385,7 @@ export const Share = () => {
           <ValidatedInput
             ref={descRef}
             type="text"
-            className="share-description"
-            style={{width: '100%', padding: '4px 24px 4px 4px', height: 32}}
-            placeholder="Share description required"
+            placeholder="Share description"
             value={shareDescription || ''}
             onKeyDown={handleKeyDown}
             onChange={handleInput}
