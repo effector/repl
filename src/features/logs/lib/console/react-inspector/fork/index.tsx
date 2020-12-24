@@ -1,10 +1,8 @@
 import React from 'react'
 
-export {default as DOMInspector} from './dom-inspector/DOMInspector'
-
 import {ObjectInspector} from './ObjectInspector'
 import {TableInspector} from './TableInspector'
-import DOMInspector from './dom-inspector/DOMInspector'
+import {DOMInspector} from './DOMInspector'
 
 export const Inspector = ({
   table = false,

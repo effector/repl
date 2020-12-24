@@ -17,39 +17,40 @@ const unselectable = {
 export const styleSet = {
   DOMNodePreview: {
     htmlOpenTag: {
-      base: {
-        color: styles.HTML_TAG_COLOR,
-      } as React.CSSProperties,
-      tagName: {
-        color: styles.HTML_TAGNAME_COLOR,
-        textTransform: styles.HTML_TAGNAME_TEXT_TRANSFORM,
-      } as React.CSSProperties,
-      htmlAttributeName: {
-        color: styles.HTML_ATTRIBUTE_NAME_COLOR,
-      } as React.CSSProperties,
-      htmlAttributeValue: {
-        color: styles.HTML_ATTRIBUTE_VALUE_COLOR,
-      } as React.CSSProperties,
+      base: css`
+        color: ${styles.HTML_TAG_COLOR};
+      `,
+      tagName: css`
+        color: ${styles.HTML_TAGNAME_COLOR};
+        text-transform: ${styles.HTML_TAGNAME_TEXT_TRANSFORM};
+      `,
+      htmlAttributeName: css`
+        color: ${styles.HTML_ATTRIBUTE_NAME_COLOR};
+      `,
+      htmlAttributeValue: css`
+        color: ${styles.HTML_ATTRIBUTE_VALUE_COLOR};
+      `,
     },
     htmlCloseTag: {
-      base: {
-        color: styles.HTML_TAG_COLOR,
-      } as React.CSSProperties,
-      offsetLeft: {
+      base: css`
+        color: ${styles.HTML_TAG_COLOR};
+      `,
+      offsetLeft: css`
+        color: ${styles.HTML_TAG_COLOR};
         /* hack: offset placeholder */
-        marginLeft: -styles.TREENODE_PADDING_LEFT,
-      } as React.CSSProperties,
-      tagName: {
-        color: styles.HTML_TAGNAME_COLOR,
-        textTransform: styles.HTML_TAGNAME_TEXT_TRANSFORM,
-      } as React.CSSProperties,
+        margin-left: ${-styles.TREENODE_PADDING_LEFT}px;
+      `,
+      tagName: css`
+        color: ${styles.HTML_TAGNAME_COLOR};
+        text-transform: ${styles.HTML_TAGNAME_TEXT_TRANSFORM};
+      `,
     },
-    htmlComment: {
-      color: styles.HTML_COMMENT_COLOR,
-    } as React.CSSProperties,
-    htmlDoctype: {
-      color: styles.HTML_DOCTYPE_COLOR,
-    } as React.CSSProperties,
+    htmlComment: css`
+      color: ${styles.HTML_COMMENT_COLOR};
+    `,
+    htmlDoctype: css`
+      color: ${styles.HTML_DOCTYPE_COLOR};
+    `,
   },
   ObjectName: {
     base: css`
