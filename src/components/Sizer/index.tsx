@@ -134,9 +134,11 @@ const Sizer = ({
   }
 
   useEffect(() => {
-    ref.current!.addEventListener('pointerdown', handleMouseDown)
+    if (ref.current)
+      ref.current.addEventListener('pointerdown', handleMouseDown)
     return () => {
-      ref.current!.removeEventListener('pointerdown', handleMouseDown)
+      if (ref.current)
+        ref.current.removeEventListener('pointerdown', handleMouseDown)
     }
   }, [container])
 
