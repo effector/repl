@@ -20,7 +20,7 @@ import {mode, sourceCode} from './state'
 import {codeMarkLine, codeSetCursor, codeCursorActivity, changeSources} from '.'
 import {codeMirrorConfig} from './codeMirrorConfig'
 
-let codeMirror: CodeMirror.EditorFromTextArea
+export let codeMirror: CodeMirror.EditorFromTextArea
 
 const CodeMirrorGate = createGate<{}>()
 

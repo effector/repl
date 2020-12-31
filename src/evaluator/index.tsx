@@ -12,6 +12,11 @@ import {exec} from './runtime'
 import {getStackFrames} from './stackframe/getStackFrames'
 import PluginEffectorReact from 'effector/babel-plugin-react'
 import PluginBigInt from '@babel/plugin-syntax-bigint'
+import * as babel from '@babel/core'
+import CodeMirror from 'codemirror'
+import {generateBabelConfig} from './runtime'
+import {availablePlugins} from '@babel/standalone'
+import {codeMirror} from '~/editor/view'
 
 const tag = `# source`
 const filename = combine(typechecker, (typechecker): string => {
@@ -227,8 +232,30 @@ export async function evaluator(code: string) {
     code,
     realmGlobal: getIframe().contentWindow,
     globalBlocks: [
-      env,
-      {dom: forest, forest, effectorFork, effectorReactSSR, patronum},
+      env, {
+        dom: forest, forest, effectorFork, effectorReactSSR, patronum,
+        CodeMirror, cm: codeMirror,
+        babel,
+        generateBabelConfig: (plugins = []) => {
+          const config = generateBabelConfig({types: null, filename: 'file'})
+          config.plugins = [
+            "transform-strict-mode", 
+            "syntax-bigint", 
+            "proposal-numeric-separator", 
+            "proposal-nullish-coalescing-operator", 
+            "proposal-optional-chaining", 
+            "effector/babel-plugin-react", 
+            "@effector/repl-remove-imports",
+            [availablePlugins['proposal-class-properties'], {loose: true}],
+            [availablePlugins['effector/babel-plugin'], {addLoc: true}],
+            availablePlugins['syntax-jsx'],
+            ...plugins
+          ].map((plugin) => typeof plugin === 'string' ? availablePlugins[plugin] : plugin)
+          config.presets = []
+          return config
+        },
+        availablePlugins,
+      },
     ],
     filename: filename.getState(),
     types: typechecker.getState() || 'typescript',

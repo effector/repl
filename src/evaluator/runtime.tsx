@@ -75,7 +75,7 @@ main()
   return wrappedCode
 }
 
-function generateBabelConfig({types, filename}) {
+export function generateBabelConfig({types, filename}) {
   const presets: BabelPlugin[] = ['react']
   const plugins: BabelPlugin[] = [
     'transform-strict-mode',
