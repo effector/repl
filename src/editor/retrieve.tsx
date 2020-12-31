@@ -58,12 +58,15 @@ export function retrieveCode(): string {
     return decompress(code)!
   }
   if (typeof localStorage !== 'undefined') {
-    const storageCode = localStorage.getItem('code-compressed')
+    const sessionExists = Object.keys(sessionStorage || {}).includes('code-compressed')
+    const storageCode = (sessionExists ? sessionStorage : localStorage).getItem('code-compressed')
     if (storageCode != null) {
       const decompressed = decompress(storageCode)!
       if (isStuck) {
         const withThrow = `throw Error('this code leads to infinite loop')\n${decompressed}`
-        localStorage.setItem('code-compressed', compress(withThrow))
+        const compressedWithThrow = compress(withThrow)
+        localStorage.setItem('code-compressed', compressedWithThrow)
+        sessionStorage && sessionStorage.setItem('code-compressed', compressedWithThrow)
         return withThrow
       }
       return decompressed

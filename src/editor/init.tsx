@@ -52,6 +52,7 @@ changeSources.watch(codeRaw => {
   const code = compress(codeRaw)
   if (lastCode !== null && lastCode !== code) {
     localStorage.setItem('code-compressed', code)
+    sessionStorage && sessionStorage.setItem('code-compressed', code)
     history.replaceState({}, '', location.origin)
   }
   lastCode = code || lastCode
