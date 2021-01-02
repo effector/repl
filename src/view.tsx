@@ -13,6 +13,7 @@ import {isDesktopChanges, tab} from './tabs/domain'
 import {DesktopScreens, SmallScreens, TabsView} from './tabs/view'
 import Sizer from './components/Sizer'
 import {GitHubAuth} from './github/GitHubAuthLink'
+import {MenuContent} from './Menu'
 
 const $displayOutline = combine(
   tab,
@@ -70,6 +71,7 @@ export default () => {
       {displayOutline && <Outline />}
       <CodeView />
       <TabsView />
+      <MenuContent />
       <SmallScreens>
         {_tab !== 'share' && _tab !== 'settings' && (
           <>

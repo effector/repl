@@ -161,6 +161,7 @@ const GitHubAuthLink = ({token, ...props}) => {
       onClick={e => {
         e.preventDefault()
         const csrf = Math.random().toString(36)
+        //@ts-ignore
         $csrf.setState(csrf)
         config.githubAuthUrl.searchParams.set('state', csrf)
         console.log(config.githubAuthUrl.href)
