@@ -34,4 +34,10 @@ export const TabHeaderList = styled.ul`
   &::-webkit-scrollbar {
     display: none;
   }
+  @media only screen and (any-pointer: coarse) and (max-width: 767px) {
+    & {
+      height: 54px;
+      min-height: 54px;
+    }
+  }
 `

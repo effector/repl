@@ -147,7 +147,7 @@ body {
     width: 100vw;
     overflow-x: hidden;
     scroll-snap-type: mandatory;
-    grid-template-rows: 36px minmax(0, 1fr) minmax(
+    grid-template-rows: 54px minmax(0, 1fr) minmax(
         var(--console-min-height),
         var(--console-height)
       );

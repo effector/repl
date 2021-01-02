@@ -13,7 +13,7 @@ import {selectVersion} from './editor'
 import {LoadingIcon} from './components/Icons/LoadingIcon'
 
 export const toggleMenu = createEvent<any>()
-const isMenuOpen = createStore(true).on(toggleMenu, open => !open)
+const isMenuOpen = createStore(false).on(toggleMenu, open => !open)
 
 const PrettifyButton = styled.button`
   --color-main: #e95801;
