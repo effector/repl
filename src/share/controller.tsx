@@ -17,11 +17,10 @@ import {setCurrentShareId} from './index'
 
 export const pressCtrlS = createEvent()
 
-forward({
-  from: guard(pressCtrlS, {
-    filter: shareCode.pending.map(pending => !pending),
-  }),
-  to: shareCode,
+guard({
+  source: pressCtrlS,
+  filter: shareCode.pending.map(pending => !pending),
+  target: shareCode
 })
 
 document.addEventListener(
