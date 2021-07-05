@@ -135,20 +135,6 @@ const fetchForest = createEffect({
     return createRealm(text, `forest.cjs.js`, {effector})
   },
 })
-const fetchEffectorFork = createEffect({
-  async handler(effector) {
-    const url =
-      'https://effector--canary.s3-eu-west-1.amazonaws.com/effector/fork.js'
-    const sourceMap = `${url}.map`
-    const req = await fetch(url)
-    let text = await req.text()
-    text = text.replace(
-      /\/\/\# sourceMappingURL\=.*$/m,
-      `//${tag}MappingURL=${sourceMap}`,
-    )
-    return createRealm(text, `fork.js`, {effector})
-  },
-})
 
 const fetchEffectorReactSSR = createEffect({
   async handler(effector) {
@@ -183,7 +169,6 @@ fetchBabelPlugin.fail.watch(() => selectVersion('master'))
 
 const api = {
   effector: fetchEffector,
-  'effector/fork': fetchEffectorFork,
   '@effector/babel-plugin': fetchBabelPlugin,
   forest: fetchForest,
 }
@@ -212,20 +197,17 @@ export async function evaluator(code: string) {
   ])
   const effectorReact = await fetchEffectorReact(effector)
   let forest
-  let effectorFork
   let effectorReactSSR
   let patronum
   if (version.getState() === 'master') {
     const additionalLibs = await Promise.all([
       fetchForest(effector),
-      fetchEffectorFork(effector),
       fetchEffectorReactSSR(effector),
       fetchPatronum(effector),
     ])
     forest = additionalLibs[0]
-    effectorFork = additionalLibs[1]
-    effectorReactSSR = additionalLibs[2]
-    patronum = additionalLibs[3]
+    effectorReactSSR = additionalLibs[1]
+    patronum = additionalLibs[2]
   }
   const env = prepareRuntime(effector, effectorReact, version.getState())
   return exec({
@@ -233,18 +215,18 @@ export async function evaluator(code: string) {
     realmGlobal: getIframe().contentWindow,
     globalBlocks: [
       env, {
-        dom: forest, forest, effectorFork, effectorReactSSR, patronum,
+        dom: forest, forest, effectorFork: effector, effectorReactSSR, patronum,
         CodeMirror, cm: codeMirror,
         babel,
         generateBabelConfig: (plugins = []) => {
           const config = generateBabelConfig({types: null, filename: 'file'})
           config.plugins = [
-            "transform-strict-mode", 
-            "syntax-bigint", 
-            "proposal-numeric-separator", 
-            "proposal-nullish-coalescing-operator", 
-            "proposal-optional-chaining", 
-            "effector/babel-plugin-react", 
+            "transform-strict-mode",
+            "syntax-bigint",
+            "proposal-numeric-separator",
+            "proposal-nullish-coalescing-operator",
+            "proposal-optional-chaining",
+            "effector/babel-plugin-react",
             "@effector/repl-remove-imports",
             [availablePlugins['proposal-class-properties'], {loose: true}],
             [availablePlugins['effector/babel-plugin'], {addLoc: true}],
