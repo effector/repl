@@ -319,6 +319,7 @@ const removeImportsPlugin = babel => ({
         case 'effector/fork':
           replaceModuleImports('effectorFork', path, babel)
           break
+        case 'effector-react/scope':
         case 'effector-react/ssr':
           replaceModuleImports('effectorReactSSR', path, babel)
           break
