@@ -139,7 +139,7 @@ const fetchForest = createEffect({
 const fetchEffectorReactSSR = createEffect({
   async handler(effector) {
     const url =
-      'https://effector--canary.s3-eu-west-1.amazonaws.com/effector-react/ssr.js'
+      'https://effector--canary.s3-eu-west-1.amazonaws.com/effector-react/scope.js'
     const sourceMap = `${url}.map`
     const req = await fetch(url)
     let text = await req.text()
@@ -147,7 +147,7 @@ const fetchEffectorReactSSR = createEffect({
       /\/\/\# sourceMappingURL\=.*$/m,
       `//${tag}MappingURL=${sourceMap}`,
     )
-    return createRealm(text, `ssr.js`, {effector})
+    return createRealm(text, `scope.js`, {effector})
   },
 })
 
