@@ -1,34 +1,33 @@
-import React from 'react'
 import CodeMirror from 'codemirror'
-import debounce from 'lodash.debounce'
-import {attach, forward, createEffect} from 'effector'
-import {createGate, useGate} from 'effector-react'
-
-import './mode/jsx'
-
-import 'codemirror/addon/lint/lint.css'
-import 'codemirror/addon/lint/lint'
 import 'codemirror/addon/comment/comment'
-import 'codemirror/addon/wrap/hardwrap'
-import 'codemirror/addon/fold/foldgutter'
 import 'codemirror/addon/fold/brace-fold'
 import 'codemirror/addon/fold/comment-fold'
-import 'codemirror/keymap/sublime'
+import 'codemirror/addon/fold/foldgutter'
 import 'codemirror/addon/fold/foldgutter.css'
+import 'codemirror/addon/lint/lint'
+import 'codemirror/addon/lint/lint.css'
+import 'codemirror/addon/wrap/hardwrap'
+import 'codemirror/keymap/sublime'
+import {attach, forward, createEffect} from 'effector'
+import {createGate, useGate} from 'effector-react'
+import debounce from 'lodash.debounce'
+import React from 'react'
 
-import {mode, sourceCode} from './state'
 import {codeMarkLine, codeSetCursor, codeCursorActivity, changeSources} from '.'
+
 import {codeMirrorConfig} from './codeMirrorConfig'
+import './mode/jsx'
+import {$mode, $sourceCode} from './state'
 
 export let codeMirror: CodeMirror.EditorFromTextArea
 
 const CodeMirrorGate = createGate<{}>()
 
-mode.updates.watch(mode => {
+$mode.updates.watch(mode => {
   codeMirror.setOption('mode', mode)
 })
 
-sourceCode.updates.watch(code => {
+$sourceCode.updates.watch(code => {
   if (codeMirror.getValue() !== code) {
     codeMirror.setValue(code)
   }
@@ -90,7 +89,7 @@ const setupCodeMirrorFx = createEffect(
 forward({
   from: CodeMirrorGate.open,
   to: attach({
-    source: {code: sourceCode, mode},
+    source: {code: $sourceCode, mode: $mode},
     effect: setupCodeMirrorFx,
   }),
 })

@@ -1,11 +1,30 @@
 import {sample, forward, guard} from 'effector'
 
-import {sourceCode} from '../editor/state'
+import {
+  clickPrettify,
+  prettierFx,
+  enableAutoScroll,
+  disableAutoScroll,
+  debugSidsToggleChange,
+  reactSSRToggleChange,
+  factoriesChange,
+  importNameChange,
+  addNamesToggleChange,
+} from '.'
 
-import {clickPrettify, prettierFx, enableAutoScroll, disableAutoScroll} from '.'
-import {domain, $typechecker, $autoScrollLog} from './state'
+import {$sourceCode} from '../editor/state'
+import {
+  localStorageSync,
+  $typechecker,
+  $autoScrollLog,
+  $debugSids,
+  $reactSsr,
+  $factories,
+  $importName,
+  $addNames,
+} from './state'
 
-domain.onCreateStore(store => {
+localStorageSync.onCreateStore(store => {
   const snapshot = localStorage.getItem(store.compositeName.fullName)
   if (snapshot != null) {
     const data = JSON.parse(snapshot)
@@ -31,20 +50,25 @@ prettierFx.use(async ({code, parser}) => {
   return result.code
 })
 
-sample({
+guard({
+  clock: clickPrettify,
+  filter: prettierFx.pending.map(pending => !pending),
   source: {
-    code: sourceCode,
+    code: $sourceCode,
     parser: $typechecker.map(parser => parser ?? 'babel'),
   },
-  clock: guard(clickPrettify, {
-    filter: prettierFx.pending.map(pending => !pending),
-  }),
   target: prettierFx,
 })
 
 forward({
   from: prettierFx.doneData,
-  to: sourceCode,
+  to: $sourceCode,
 })
 
 $autoScrollLog.on(enableAutoScroll, _ => true).on(disableAutoScroll, _ => false)
+
+$addNames.on(addNamesToggleChange, addNames => !addNames)
+$debugSids.on(debugSidsToggleChange, debug => !debug)
+$reactSsr.on(reactSSRToggleChange, reactSsr => !reactSsr)
+$factories.on(factoriesChange, (_, factories) => factories)
+$importName.on(importNameChange, (_, event) => event.currentTarget.value.trim())

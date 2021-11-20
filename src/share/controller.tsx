@@ -1,4 +1,3 @@
-import React from 'react'
 import {
   createStore,
   createEvent,
@@ -10,9 +9,11 @@ import {
   Store,
   Event,
 } from 'effector'
-import {sourceCode} from '../editor/state'
-import {shareCode} from '../graphql'
+import React from 'react'
+
 import {isShareAPISupported} from '../device'
+import {$sourceCode} from '../editor/state'
+import {shareCode} from '../graphql'
 import {setCurrentShareId} from './index'
 
 export const pressCtrlS = createEvent()
@@ -20,7 +21,7 @@ export const pressCtrlS = createEvent()
 guard({
   source: pressCtrlS,
   filter: shareCode.pending.map(pending => !pending),
-  target: shareCode
+  target: shareCode,
 })
 
 document.addEventListener(

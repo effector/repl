@@ -1,22 +1,23 @@
-import React from 'react'
-import * as pathLibrary from 'path'
-import {combine, createEffect} from 'effector'
-import {prepareRuntime} from './prepareRuntime'
-import {selectVersion} from '../editor'
-import {version, sourceCode, compiledCode} from '../editor/state'
-import {$typechecker} from '../settings/state'
-// TODO: remove exact dependency on feature, use requirements in the future
-import {consoleMap} from '~/features/logs'
-import {realmStatusApi, realmListener, realmRemoveListener} from '../realm'
-import {exec} from './runtime'
-import {getStackFrames} from './stackframe/getStackFrames'
-import PluginEffectorReact from 'effector/babel-plugin-react'
-import PluginBigInt from '@babel/plugin-syntax-bigint'
-import * as babel from '@babel/core'
 import CodeMirror from 'codemirror'
-import {generateBabelConfig} from './runtime'
+import {combine, createEffect, sample} from 'effector'
+import PluginEffectorReact from 'effector/babel-plugin-react'
+import * as pathLibrary from 'path'
+import React from 'react'
+
+import * as babel from '@babel/core'
+import PluginBigInt from '@babel/plugin-syntax-bigint'
 import {availablePlugins} from '@babel/standalone'
-import {codeMirror} from '~/editor/view'
+
+import {selectVersion} from '../editor'
+import {$compiledCode, $sourceCode, $version} from '../editor/state'
+import {codeMirror} from '../editor/view'
+// TODO: remove exact dependency on feature, use requirements in the future
+import {consoleMap} from '../features/logs'
+import {realmListener, realmRemoveListener, realmStatusApi} from '../realm'
+import {$babelPluginSettings, $typechecker} from '../settings/state'
+import {prepareRuntime} from './prepareRuntime'
+import {BabelPlugin, exec, generateBabelConfig} from './runtime'
+import {getStackFrames} from './stackframe/getStackFrames'
 
 const tag = `# source`
 const filename = combine($typechecker, (typechecker): string => {
@@ -75,7 +76,7 @@ const fetchEffector = createEffect('fetch effector', {
   },
 })
 
-fetchEffector.fail.watch(() => selectVersion('master'))
+sample({clock: fetchEffector.fail, fn: () => 'master', target: selectVersion})
 
 const fetchBabelPlugin = createEffect<string, {[key: string]: any}, any>({
   async handler(ver) {
@@ -181,7 +182,7 @@ function cacher(v, cache, fetcher) {
   return req
 }
 
-export const versionLoader = version.map(v => {
+export const versionLoader = $version.map(v => {
   const data = {}
   for (const key in cache) {
     data[key] = cacher(v, cache[key], api[key])
@@ -192,14 +193,15 @@ export const versionLoader = version.map(v => {
 export async function evaluator(code: string) {
   realmStatusApi.init()
   const [babelPlugin, effector] = await Promise.all([
-    cache['@effector/babel-plugin'].get(version.getState()),
-    cache.effector.get(version.getState()),
+    cache['@effector/babel-plugin'].get($version.getState()),
+    cache.effector.get($version.getState()),
   ])
+  const babelPluginOptions = $babelPluginSettings.getState()
   const effectorReact = await fetchEffectorReact(effector)
   let forest
   let effectorReactSSR
   let patronum
-  if (version.getState() === 'master') {
+  if ($version.getState() === 'master') {
     const additionalLibs = await Promise.all([
       fetchForest(effector),
       fetchEffectorReactSSR(effector),
@@ -209,30 +211,42 @@ export async function evaluator(code: string) {
     effectorReactSSR = additionalLibs[1]
     patronum = additionalLibs[2]
   }
-  const env = prepareRuntime(effector, effectorReact, version.getState())
+  const env = prepareRuntime(effector, effectorReact, $version.getState())
   return exec({
     code,
     realmGlobal: getIframe().contentWindow,
     globalBlocks: [
-      env, {
-        dom: forest, forest, effectorFork: effector, effectorReactSSR, patronum,
-        CodeMirror, cm: codeMirror,
+      env,
+      {
+        dom: forest,
+        forest,
+        effectorFork: effector,
+        effectorReactSSR,
+        patronum,
+        CodeMirror,
+        cm: codeMirror,
         babel,
         generateBabelConfig: (plugins = []) => {
-          const config = generateBabelConfig({types: null, filename: 'file'})
+          const config = generateBabelConfig({
+            types: null,
+            filename: 'file',
+            babelPluginOptions,
+          })
           config.plugins = [
-            "transform-strict-mode",
-            "syntax-bigint",
-            "proposal-numeric-separator",
-            "proposal-nullish-coalescing-operator",
-            "proposal-optional-chaining",
-            "effector/babel-plugin-react",
-            "@effector/repl-remove-imports",
+            'transform-strict-mode',
+            'syntax-bigint',
+            'proposal-numeric-separator',
+            'proposal-nullish-coalescing-operator',
+            'proposal-optional-chaining',
+            'effector/babel-plugin-react',
+            '@effector/repl-remove-imports',
             [availablePlugins['proposal-class-properties'], {loose: true}],
             [availablePlugins['effector/babel-plugin'], {addLoc: true}],
             availablePlugins['syntax-jsx'],
-            ...plugins
-          ].map((plugin) => typeof plugin === 'string' ? availablePlugins[plugin] : plugin)
+            ...plugins,
+          ].map(plugin =>
+            typeof plugin === 'string' ? availablePlugins[plugin] : plugin,
+          ) as BabelPlugin[]
           config.presets = []
           return config
         },
@@ -247,6 +261,7 @@ export async function evaluator(code: string) {
       'syntax-bigint': PluginBigInt,
       '@effector/repl-remove-imports': removeImportsPlugin,
     },
+    babelPluginOptions,
     onCompileError(error) {
       realmStatusApi.fail()
       console.error('Babel ERR', error)
@@ -254,7 +269,7 @@ export async function evaluator(code: string) {
     },
     onRuntimeError,
     onCompileComplete(compiled, config) {
-      compiledCode.setState(compiled)
+      ;($compiledCode as any).setState(compiled)
     },
     onRuntimeComplete() {
       realmStatusApi.done()
@@ -268,8 +283,9 @@ const onRuntimeError = async error => {
   const stackFrames = await getStackFrames(error)
   throw {type: 'runtime-error', original: error, stackFrames}
 }
+
 function replaceModuleImports(globalVarName, path, {types: t}) {
-  const values = []
+  const values: any[] = []
   for (const specifier of path.node.specifiers) {
     switch (specifier.type) {
       case 'ImportSpecifier':
@@ -308,6 +324,7 @@ function replaceModuleImports(globalVarName, path, {types: t}) {
     ]),
   )
 }
+
 const removeImportsPlugin = babel => ({
   visitor: {
     ImportDeclaration(path) {
@@ -350,40 +367,46 @@ let iframe: HTMLIFrameElement | null = null
 
 function getIframe(): HTMLIFrameElement {
   if (iframe === null) {
-    iframe = document.getElementById('dom') || document.createElement('iframe')
+    iframe =
+      (document.getElementById('dom') as HTMLIFrameElement) ||
+      (document.createElement('iframe') as HTMLIFrameElement)
     const wrapListenerMethods = target => {
       if (!target) return
       if (!target.addEventListener.__original__) {
         const originalMethod = target.addEventListener.bind(target)
+
         function addEventListener(type, fn, options) {
           originalMethod(type, fn, options)
           realmListener({type, target, fn, options})
         }
+
         addEventListener.__original__ = originalMethod
         target.addEventListener = addEventListener
       }
       if (!target.removeEventListener.__original__) {
         const originalMethod = target.removeEventListener.bind(target)
+
         function removeEventListener(type, fn, options) {
           originalMethod(type, fn, options)
           realmRemoveListener({type, target, fn, options})
         }
+
         removeEventListener.__original__ = originalMethod
         target.removeEventListener = removeEventListener
       }
     }
     const generateFrame = () => {
       if (iframe === null) return
-      if (iframe.contentDocument.body === null) return
+      if (iframe.contentDocument!.body === null) return
       resetHead(iframe.contentDocument)
-      iframe.contentDocument.body.innerHTML =
+      iframe.contentDocument!.body.innerHTML =
         '<div class="spectrum spectrum--lightest spectrum--medium" id="root"></div>'
       //wrapListenerMethods(iframe.contentDocument)
       //wrapListenerMethods(iframe.contentWindow)
       //wrapListenerMethods(iframe.contentDocument.body)
       //wrapListenerMethods(iframe.contentDocument.documentElement)
     }
-    sourceCode.watch(generateFrame)
+    $sourceCode.watch(generateFrame)
     selectVersion.watch(generateFrame)
   }
 

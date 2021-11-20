@@ -1,7 +1,7 @@
-import {StackFrame} from './stack-frame'
-import {getSourceMap} from './getSourceMap'
+import {$compiledCode} from '../../editor/state'
 import {getLinesAround} from './getLinesAround'
-import {compiledCode} from '../../editor/state'
+import {getSourceMap} from './getSourceMap'
+import {StackFrame} from './stack-frame'
 
 /**
  * Enhances a set of <code>StackFrame</code>s with their original positions and code (when available).
@@ -32,7 +32,7 @@ export async function map(
           : fileName
       const fileSource =
         fetchUrl === 'repl.js'
-          ? compiledCode.getState()
+          ? $compiledCode.getState()
           : await fetch(fetchUrl).then(r => r.text())
       const map = await getSourceMap(fileName, fileSource)
       cache[fileName] = {fileSource, map}

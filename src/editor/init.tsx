@@ -1,23 +1,25 @@
 import {forward, sample} from 'effector'
+import {debounce} from 'patronum/debounce'
 
-import {changeSources, evalEffect, selectVersion} from '.'
-import {sourceCode, codeError, version} from './state'
-import {retrieveCode, retrieveVersion} from './retrieve'
-import {compress} from './compression'
+import {changeSources, evalFx, selectVersion} from '.'
+
 import {evaluator, versionLoader} from '../evaluator'
-import {$typechecker} from '../settings/state'
+import {$babelPluginSettings, $typechecker} from '../settings/state'
+import {compress} from './compression'
+import {retrieveCode, retrieveVersion} from './retrieve'
+import {$sourceCode, $codeError, $version} from './state'
 
-evalEffect.use(evaluator)
+evalFx.use(evaluator)
 
-version.on(selectVersion, (_, p) => p)
+$version.on(selectVersion, (_, p) => p)
 
-codeError
-  .on(evalEffect.done, () => ({
+$codeError
+  .on(evalFx.done, () => ({
     isError: false,
     error: null,
     stackFrames: [],
   }))
-  .on(evalEffect.fail, (_, e) => {
+  .on(evalFx.fail, (_, e) => {
     if ('stack' in e.error) {
       return {
         isError: true,
@@ -60,15 +62,20 @@ changeSources.watch(codeRaw => {
 
 forward({
   from: changeSources,
-  to: sourceCode,
+  to: $sourceCode,
+})
+
+const debouncedPluginSettings = debounce({
+  source: $babelPluginSettings,
+  timeout: 400,
 })
 
 sample({
-  source: sourceCode,
-  clock: [sourceCode, versionLoader, $typechecker],
-  target: evalEffect,
+  source: $sourceCode,
+  clock: [$sourceCode, versionLoader, $typechecker, debouncedPluginSettings],
+  target: evalFx,
 })
 
-evalEffect(sourceCode.getState())
+evalFx($sourceCode.getState())
 changeSources(retrieveCode())
 selectVersion(retrieveVersion())

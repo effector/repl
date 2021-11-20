@@ -1,9 +1,9 @@
-import React from 'react'
-import {styled} from 'linaria/react'
 import {useStore} from 'effector-react'
+import {styled} from 'linaria/react'
+import React from 'react'
 
+import {$codeError} from '../../editor/state'
 import {StackFrame} from './stack-frame'
-import {codeError} from '../../editor/state'
 
 const Link = styled.div`
   font-size: 0.9em;
@@ -87,7 +87,7 @@ export function StackFrameView({frame}: {frame: StackFrame}) {
 }
 
 export function Errors() {
-  const {isError, error, stackFrames} = useStore(codeError)
+  const {isError, error, stackFrames} = useStore($codeError)
   if (isError) {
     if (!error) {
       return (

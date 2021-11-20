@@ -8,6 +8,14 @@ function writeStuckFlag(stuck: boolean) {
   } catch (err) {}
 }
 
+export interface BabelPluginOptions {
+  addNames?: boolean
+  debugSids?: boolean
+  factories?: string[]
+  importName?: string
+  reactSsr?: boolean
+}
+
 export async function exec({
   realmGlobal,
   code,
@@ -15,6 +23,7 @@ export async function exec({
   types = 'typescript',
   filename = 'repl',
   pluginRegistry = {},
+  babelPluginOptions = {},
   compile = true,
   onCompileError,
   onRuntimeError,
@@ -27,6 +36,7 @@ export async function exec({
   types?: 'flow' | 'typescript'
   filename?: string
   pluginRegistry?: {[name: string]: any}
+  babelPluginOptions?: BabelPluginOptions
   compile?: boolean
   onCompileError?: (error: any) => any
   onRuntimeError?: (error: any) => any
@@ -41,7 +51,11 @@ export async function exec({
       delete availablePlugins[key]
       registerPlugin(key, pluginRegistry[key])
     }
-    const babelOptions = generateBabelConfig({types, filename})
+    const babelOptions = generateBabelConfig({
+      types,
+      filename,
+      babelPluginOptions,
+    })
     try {
       compiled = transformCode(code, babelOptions)
       if (onCompileComplete) await onCompileComplete(compiled, babelOptions)
@@ -81,8 +95,16 @@ main()
   return wrappedCode
 }
 
-export function generateBabelConfig({types, filename}) {
-  const presets: BabelPlugin[] = ['react']
+export function generateBabelConfig({
+  types,
+  filename,
+  babelPluginOptions,
+}: {
+  types: 'typescript' | 'flow' | null
+  filename: string
+  babelPluginOptions: BabelPluginOptions
+}) {
+  const presets: BabelPlugin[] = ['react'] // TODO: add 'patronum/babel-preset'
   const plugins: BabelPlugin[] = [
     'transform-strict-mode',
     'syntax-bigint',
@@ -90,11 +112,11 @@ export function generateBabelConfig({types, filename}) {
     'proposal-nullish-coalescing-operator',
     'proposal-optional-chaining',
     ['proposal-class-properties', {loose: true}],
-    'effector/babel-plugin-react',
     [
       'effector/babel-plugin',
       {
         addLoc: true,
+        ...babelPluginOptions,
       },
     ],
     '@effector/repl-remove-imports',
@@ -107,7 +129,6 @@ export function generateBabelConfig({types, filename}) {
       presets.push(['flow', {all: true}])
       break
     case 'typescript':
-    case 'ts':
       presets.push([
         'typescript',
         {

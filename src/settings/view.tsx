@@ -2,11 +2,26 @@ import {useList, useStore, useStoreMap} from 'effector-react'
 import {styled} from 'linaria/react'
 import React from 'react'
 
-import {clickPrettify, prettierFx} from '.'
+import {
+  addNamesToggleChange,
+  clickPrettify,
+  debugSidsToggleChange,
+  factoriesChange,
+  importNameChange,
+  prettierFx,
+  reactSSRToggleChange,
+} from '.'
 
 import {LoadingIcon} from '../components/Icons/LoadingIcon'
 import {selectVersion} from '../editor'
-import {packageVersions, version} from '../editor/state'
+import {$packageVersions, $version} from '../editor/state'
+import {
+  $addNames,
+  $debugSids,
+  $factories,
+  $importName,
+  $reactSsr,
+} from '../settings/state'
 
 export const PrettifyButton = () => {
   const {disabled, pending} = useStoreMap({
@@ -45,14 +60,75 @@ export const Settings = () => (
       <Label>
         <div className="versions">
           <select
-            value={useStore(version)}
+            value={useStore($version)}
             onChange={e => selectVersion(e.currentTarget.value)}>
-            {useList(packageVersions, item => (
+            {useList($packageVersions, item => (
               <option value={item}>{item}</option>
             ))}
           </select>
         </div>
         Effector version
+      </Label>
+    </Section>
+    <Section>
+      <Label>
+        <div>
+          <input
+            type="checkbox"
+            checked={useStore($debugSids) ?? false}
+            onChange={debugSidsToggleChange}
+          />
+        </div>
+        Debug SIDs
+      </Label>
+      <Label>
+        <div>
+          <input
+            type="checkbox"
+            checked={useStore($reactSsr) ?? false}
+            onChange={reactSSRToggleChange}
+          />
+        </div>
+        React SSR
+      </Label>
+      <Label>
+        <div>
+          <input
+            type="checkbox"
+            checked={useStore($addNames) ?? false}
+            onChange={addNamesToggleChange}
+          />
+        </div>
+        Add names
+      </Label>
+      <Label>
+        <div>
+          <input
+            type="text"
+            value={useStore($importName) ?? ''}
+            onChange={importNameChange}
+          />
+        </div>
+        Import name
+      </Label>
+      <Label>
+        <div>
+          <input
+            type="text"
+            value={useStore($factories).join(', ')}
+            onChange={e =>
+              factoriesChange(
+                e.currentTarget.value
+                  .split(',')
+                  .map(e => e.trim())
+                  .filter(Boolean),
+              )
+            }
+          />
+        </div>
+        <div>
+          Factories <span>ex.:(first, second)</span>
+        </div>
       </Label>
     </Section>
   </SettingsGroup>
@@ -81,6 +157,10 @@ const Label = styled.label`
   border-bottom: 1px solid #ddd;
   font-weight: bold;
   cursor: pointer;
+
+  & span {
+    font-weight: normal;
+  }
 `
 
 export const Section = styled.section`

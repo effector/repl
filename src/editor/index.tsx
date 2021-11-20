@@ -1,6 +1,6 @@
 import {createEvent, createEffect, Event, Effect} from 'effector'
 
-export const evalEffect: Effect<string, any, any> = createEffect()
+export const evalFx: Effect<string, any, any> = createEffect()
 
 export const changeSources: Event<string> = createEvent()
 

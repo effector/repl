@@ -1,16 +1,15 @@
-import React from 'react'
-import {styled} from 'linaria/react'
 import {createStore, createEvent} from 'effector'
 import {useStore, useList} from 'effector-react'
+import {styled} from 'linaria/react'
+import React from 'react'
 
-import {config} from './github/config'
-import {$csrf, $githubToken, $githubUser} from './github/state'
-import {logout} from './github/index'
-
-import {clickPrettify, prettierFx} from './settings'
-import {packageVersions, version} from './editor/state'
-import {selectVersion} from './editor'
 import {LoadingIcon} from './components/Icons/LoadingIcon'
+import {selectVersion} from './editor'
+import {$packageVersions, $version} from './editor/state'
+import {config} from './github/config'
+import {logout} from './github/index'
+import {$csrf, $githubToken, $githubUser} from './github/state'
+import {clickPrettify, prettierFx} from './settings'
 
 export const toggleMenu = createEvent<any>()
 const isMenuOpen = createStore(false).on(toggleMenu, open => !open)
@@ -261,8 +260,8 @@ export const MenuContent = () => {
   const token = useStore($githubToken)
   const isPrettifyPending = useStore(prettierFx.pending)
   const isOpen = useStore(isMenuOpen)
-  const usedVersion = useStore(version)
-  const versionList = useList(packageVersions, item => (
+  const usedVersion = useStore($version)
+  const versionList = useList($packageVersions, item => (
     <option value={item}>{item}</option>
   ))
   if (!isOpen) return null

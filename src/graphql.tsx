@@ -1,10 +1,11 @@
 import {attach, createEffect} from 'effector'
 import md5 from 'js-md5'
-import {$githubUser} from './github/state'
-import {$shareDescription} from './share/state'
-import {addShare} from './share'
-import {sourceCode} from './editor/state'
+
+import {$sourceCode} from './editor/state'
 import {auth} from './github/init'
+import {$githubUser} from './github/state'
+import {addShare} from './share'
+import {$shareDescription} from './share/state'
 
 const ENDPOINT = {
   DIST: 'y6776i4nfja2lnx3gbkbmlgr3i',
@@ -64,7 +65,7 @@ export const shareCode = attach({
   source: {
     user: $githubUser,
     description: $shareDescription,
-    sourceCode,
+    sourceCode: $sourceCode,
   },
   mapParams: (params, {user, description, sourceCode}) => ({
     author: user ? user.databaseId : null,
