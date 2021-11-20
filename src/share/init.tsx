@@ -1,3 +1,9 @@
+import {combine, forward, sample, split} from 'effector'
+import md5 from 'js-md5'
+
+import {$githubUser} from '~/github/state'
+import {getShareListByAuthorFx, shareCodeFx} from '~/graphql'
+
 import {
   addShare,
   onKeyDown,
@@ -6,7 +12,7 @@ import {
   setCurrentShareId,
   setFilterMode,
 } from './index'
-import md5 from 'js-md5'
+import {SharedItem} from './index.h'
 import {
   $currentShareId,
   $filterMode,
@@ -14,10 +20,6 @@ import {
   $shareDescription,
   $shareList,
 } from './state'
-import {combine, forward, sample, split} from 'effector'
-import {getShareListByAuthor, shareCode} from '~/graphql'
-import {$githubUser} from '~/github/state'
-import {SharedItem} from './index.h'
 
 $currentShareId.on(setCurrentShareId, (_, id) => id)
 
@@ -28,12 +30,12 @@ export const keyDown = split(onKeyDown, {
 
 forward({
   from: keyDown.Enter,
-  to: shareCode,
+  to: shareCodeFx,
 })
 
 $shareDescription.on(onTextChange, (_, value) => value).reset(keyDown.Escape)
 
-$shareList.on(getShareListByAuthor.done, (state, {params, result}) => {
+$shareList.on(getShareListByAuthorFx.done, (state, {params, result}) => {
   return {
     ...state,
     [params.author]: result.pages
@@ -131,7 +133,7 @@ export const $sortedShareList = combine(
 
 $githubUser.watch(({databaseId}) => {
   if (databaseId) {
-    getShareListByAuthor({author: databaseId})
+    getShareListByAuthorFx({author: databaseId})
   }
 })
 

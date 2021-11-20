@@ -1,11 +1,19 @@
-import React from 'react'
-import {styled} from 'linaria/react'
 import {useStore} from 'effector-react'
+import {styled} from 'linaria/react'
+import React from 'react'
 
-import {getShareListByAuthor, shareCode} from '../graphql'
-import {sharing} from './controller'
-import {Section} from '../settings/view'
+import {theme} from '~/features/logs/lib/console/theme'
+import {getUserInfo} from '~/github/init'
+import {$debouncedInput} from '~/share/debounceInput'
+
+import {IconButton} from '../components/IconButton'
+import {CopyIcon} from '../components/Icons/CopyIcon'
+import {LoadingIcon} from '../components/Icons/LoadingIcon'
+import {ShareIcon} from '../components/Icons/ShareIcon'
 import {isShareAPISupported} from '../device'
+import {getShareListByAuthorFx, shareCodeFx} from '../graphql'
+import {Section} from '../settings/view'
+import {sharing} from './controller'
 import {
   handleInput,
   handleKeyDown,
@@ -14,20 +22,13 @@ import {
   setCurrentShareId,
   setFilterMode,
 } from './index'
-import {$currentShareId, $filterMode, $shareDescription} from './state'
-import {CopyIcon} from '../components/Icons/CopyIcon'
-import {ShareIcon} from '../components/Icons/ShareIcon'
-import {LoadingIcon} from '../components/Icons/LoadingIcon'
 import {$sortedShareList} from './init'
-import {IconButton} from '../components/IconButton'
-import {theme} from '~/features/logs/lib/console/theme'
-import {getUserInfo} from '~/github/init'
-import {$debouncedInput} from '~/share/debounceInput'
+import {$currentShareId, $filterMode, $shareDescription} from './state'
 
 const Save = ({disabled}: {disabled: boolean}) => {
-  const pending = useStore(shareCode.pending)
+  const pending = useStore(shareCodeFx.pending)
   return (
-    <ShareButton onClick={shareCode} disabled={disabled || pending}>
+    <ShareButton onClick={shareCodeFx} disabled={disabled || pending}>
       {pending && <LoadingIcon style={{marginRight: 10}} />}
       Save app
     </ShareButton>
@@ -233,7 +234,7 @@ const timeStringFormatter = new Intl.DateTimeFormat(['en-US'], {
 const ShareList = ({filterMode, description}) => {
   let sortedShareList = useStore($sortedShareList)
   const currentShareId = useStore($currentShareId)
-  const loading = useStore(getShareListByAuthor.pending)
+  const loading = useStore(getShareListByAuthorFx.pending)
   const signing = useStore(getUserInfo.pending)
   const isEmpty = sortedShareList.length === 0
 
@@ -353,7 +354,7 @@ const ValidatedInput = styled.input`
 
 export const Share = () => {
   const shareDescription = useStore($shareDescription)
-  const saving = useStore(shareCode.pending)
+  const saving = useStore(shareCodeFx.pending)
   const filterMode = useStore($filterMode)
   const descRef = React.useRef<HTMLInputElement>(null)
   const debouncedInput = useStore($debouncedInput)

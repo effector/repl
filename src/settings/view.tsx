@@ -142,6 +142,7 @@ const SettingsGroup = styled.div`
   border-bottom: 1px solid #ddd;
   grid-column: 3 / span 1;
   grid-row: 2 / span 1;
+  overflow-x: auto;
 
   @media (max-width: 699px) {
     grid-column: 1 / span 1;

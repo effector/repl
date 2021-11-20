@@ -1,8 +1,9 @@
 import {attach, createEffect} from 'effector'
 import md5 from 'js-md5'
 
-import {$sourceCode} from './editor/state'
-import {auth} from './github/init'
+import {$babelPluginSettings} from '~/settings/state'
+
+import {$sourceCode, $version} from './editor/state'
 import {$githubUser} from './github/state'
 import {addShare} from './share'
 import {$shareDescription} from './share/state'
@@ -33,13 +34,24 @@ const request = data => {
     })
 }
 
-export const shareCode = attach({
-  effect: createEffect('share code', {
-    async handler({author, description, code}) {
-      description = description || undefined
-      author = author || undefined
-      const {createCodePage} = await request({
-        query: `
+export const shareCodeFx = attach({
+  source: {
+    user: $githubUser,
+    description: $shareDescription,
+    code: $sourceCode,
+    effectorVersion: $version,
+    babelPluginOptions: $babelPluginSettings,
+  },
+  async effect({
+    user,
+    description = undefined,
+    code,
+    effectorVersion,
+    babelPluginOptions,
+  }) {
+    const author = user ? user.databaseId : undefined
+    const {createCodePage} = await request({
+      query: `
         mutation ReplMutation($codePage: CodePageInput!) {
           createCodePage(codePage: $codePage) {
             slug
@@ -50,31 +62,26 @@ export const shareCode = attach({
           }
         }
       `,
-        variables: {
-          codePage: {author, description, code},
+      variables: {
+        codePage: {
+          author,
+          description,
+          code,
+          effectorVersion,
+          babelPluginOptions,
         },
-        operationName: 'ReplMutation',
-      })
-      addShare({
-        ...createCodePage,
-        md5: md5(createCodePage.code),
-      })
-      return createCodePage
-    },
-  }),
-  source: {
-    user: $githubUser,
-    description: $shareDescription,
-    sourceCode: $sourceCode,
+      },
+      operationName: 'ReplMutation',
+    })
+    addShare({
+      ...createCodePage,
+      md5: md5(createCodePage.code),
+    })
+    return createCodePage
   },
-  mapParams: (params, {user, description, sourceCode}) => ({
-    author: user ? user.databaseId : null,
-    description,
-    code: sourceCode,
-  }),
 })
 
-export const getShareListByAuthor = attach({
+export const getShareListByAuthorFx = attach({
   effect: createEffect('get share list', {
     async handler({author}: {author: number | null}) {
       if (!author) throw new Error('author required')
