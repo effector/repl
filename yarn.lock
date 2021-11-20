@@ -2329,15 +2329,15 @@ ee-first@1.1.1:
   resolved "https://registry.yarnpkg.com/ee-first/-/ee-first-1.1.1.tgz#590c61156b0ae2f4f0255732a158b266bc56b21d"
   integrity sha1-WQxhFWsK4vTwJVcyoViyZrxWsh0=
 
-effector-react@^21.2.1:
-  version "21.2.1"
-  resolved "https://registry.yarnpkg.com/effector-react/-/effector-react-21.2.1.tgz#b6d1c8a5c61ffee841b41f4b697ec069094798c8"
-  integrity sha512-NvQBKnA6VQ14aZcHjag5muqvqnfr4H8g3Ry8/nuiEWqR/c9LkKK9mUoU1lyQU7m/eKlvuXSqeDQ1I4iBsobMqA==
+effector-react@^22.0.4:
+  version "22.0.4"
+  resolved "https://registry.yarnpkg.com/effector-react/-/effector-react-22.0.4.tgz#4dcefdbf1167a0ad9a23fbabeec03a66a0f746de"
+  integrity sha512-4bWdcUXZlET5uKF/+9HNeB+s7tAPrD6V7RWbTJXeDCVSwF6gXgDQMjmla7DtHsbpZxB6hSsH98JfqFq7yXbXdw==
 
-effector@^21.7.5:
-  version "21.7.5"
-  resolved "https://registry.yarnpkg.com/effector/-/effector-21.7.5.tgz#6a8ed81c57e17cc8373ce29645e2715f9693aebd"
-  integrity sha512-sWB9xPJxfTHsPOzjxUIa2rJQ1T33Ya4X2N8RSqm+XMewEt5YmPpo2w82yZF27JxBl0qAQBg1ZI3Tz7u5fE+cwA==
+effector@^22.1.2:
+  version "22.1.2"
+  resolved "https://registry.yarnpkg.com/effector/-/effector-22.1.2.tgz#5edf2aea4d6b5ae932a2a9c75312804c50e3fe55"
+  integrity sha512-myJlmwZbaoNV5YYaRmM4QhAQeUqpbnmmUXZkACzuhV/2z49qCByC4DT62hghHpGz6Knr/sbB4sAAZ8VJCUYy2g==
 
 electron-to-chromium@^1.3.621:
   version "1.3.629"
@@ -2689,10 +2689,10 @@ foreach@^2.0.5:
   resolved "https://registry.yarnpkg.com/foreach/-/foreach-2.0.5.tgz#0bee005018aeb260d0a3af3ae658dd0136ec1b99"
   integrity sha1-C+4AUBiusmDQo6865ljdATbsG5k=
 
-forest@^0.19.6:
-  version "0.19.6"
-  resolved "https://registry.yarnpkg.com/forest/-/forest-0.19.6.tgz#dcae2f4c96f21229a1243732af952eeadc15f868"
-  integrity sha512-pMj2Murs7JfSLGfjtcpBF++XVdL044weGttKEF39lNP0TIs1/S1yFCla5RWY9GfepVeK1FDQ87ORYBTX3/wd0w==
+forest@^0.20.2:
+  version "0.20.2"
+  resolved "https://registry.yarnpkg.com/forest/-/forest-0.20.2.tgz#e6d6bece7f465740018fc78d42abac14f662abd2"
+  integrity sha512-Gpcxg0zmO+kUDxJ0Y/dTCEwC5RUJ6VsJAB4Yov9kjQUlEoBNRLHMyqmN3C+w6WOy4XBjXX3TZDMNIE44Nn7FfA==
 
 forever-agent@~0.6.1:
   version "0.6.1"

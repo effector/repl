@@ -47,34 +47,39 @@ intervals
   .on(realmClearInterval, (state, removed) =>
     state.filter(id => id !== removed),
   )
-  .on(changeSources, state => {
-    for (const id of state) {
-      global.clearInterval(id)
-    }
+  .on([changeSources, selectVersion], state => {
+
     return []
   })
-  .on(selectVersion, state => {
-    for (const id of state) {
-      global.clearInterval(id)
-    }
-    return []
-  })
+
+intervals.watch(changeSources, (state) => {
+  for (const id of state) {
+    global.clearInterval(id)
+  }
+})
+intervals.watch(selectVersion, (state) => {
+  for (const id of state) {
+    global.clearInterval(id)
+  }
+})
 
 timeouts
   .on(realmTimeout, (state, id) => [...state, id])
   .on(realmClearTimeout, (state, removed) => state.filter(id => id !== removed))
-  .on(changeSources, state => {
-    for (const id of state) {
-      global.clearTimeout(id)
-    }
+  .on([changeSources, selectVersion], state => {
     return []
   })
-  .on(selectVersion, state => {
-    for (const id of state) {
-      global.clearTimeout(id)
-    }
-    return []
-  })
+
+timeouts.watch(changeSources, (state) => {
+  for (const id of state) {
+    global.clearTimeout(id)
+  }
+})
+timeouts.watch(selectVersion, (state) => {
+  for (const id of state) {
+    global.clearTimeout(id)
+  }
+})
 
 stats
   .on(realmEvent, ({event, ...rest}, e) => {

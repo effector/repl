@@ -1,25 +1,27 @@
 import {createStore, Event, Store, Effect, Domain} from 'effector'
 import {StoreView} from 'effector-react'
 
-export const intervals: Store<number[]> = createStore([])
-export const timeouts: Store<number[]> = createStore([])
+export const intervals = createStore<number[]>([])
+export const timeouts = createStore<number[]>([])
 
-export const listeners: Store<
-  Array<{
-    type: string
-    target: any
-    fn: Function
-    options?: any
-  }>
-> = createStore([])
+export interface Listener {
+  type: string
+  target: any
+  fn: Function
+  options?: any
+}
 
-export const stats: Store<{
+export const listeners = createStore<Listener[]>([])
+
+export interface Stats {
   event: Event<any>[]
   store: Store<any>[]
   effect: Effect<any, any, any>[]
   domain: Domain[]
   component: StoreView<any, any>[]
-}> = createStore({
+}
+
+export const stats = createStore<Stats>({
   event: [],
   store: [],
   effect: [],
