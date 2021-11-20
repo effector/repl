@@ -1,8 +1,8 @@
 import {createStore, Event, Store, Effect, Domain} from 'effector'
 import {StoreView} from 'effector-react'
 
-export const intervals = createStore<number[]>([])
-export const timeouts = createStore<number[]>([])
+export const $intervals = createStore<number[]>([])
+export const $timeouts = createStore<number[]>([])
 
 export interface Listener {
   type: string
@@ -11,7 +11,7 @@ export interface Listener {
   options?: any
 }
 
-export const listeners = createStore<Listener[]>([])
+export const $listeners = createStore<Listener[]>([])
 
 export interface Stats {
   event: Event<any>[]
@@ -21,7 +21,7 @@ export interface Stats {
   component: StoreView<any, any>[]
 }
 
-export const stats = createStore<Stats>({
+export const $stats = createStore<Stats>({
   event: [],
   store: [],
   effect: [],

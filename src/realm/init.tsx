@@ -18,9 +18,9 @@ import {
   realmRemoveListener,
 } from '.'
 
-import {intervals, timeouts, listeners, stats} from './state'
+import {$intervals, $timeouts, $listeners, $stats} from './state'
 
-listeners
+$listeners
   .on(realmListener, (list, record) => [...list, record])
   .on(realmRemoveListener, (list, {type, target, fn}) =>
     list.filter(record => {
@@ -42,7 +42,7 @@ listeners
     return []
   })
 
-intervals
+$intervals
   .on(realmInterval, (state, id) => [...state, id])
   .on(realmClearInterval, (state, removed) =>
     state.filter(id => id !== removed),
@@ -52,36 +52,36 @@ intervals
     return []
   })
 
-intervals.watch(changeSources, (state) => {
+$intervals.watch(changeSources, (state) => {
   for (const id of state) {
     global.clearInterval(id)
   }
 })
-intervals.watch(selectVersion, (state) => {
+$intervals.watch(selectVersion, (state) => {
   for (const id of state) {
     global.clearInterval(id)
   }
 })
 
-timeouts
+$timeouts
   .on(realmTimeout, (state, id) => [...state, id])
   .on(realmClearTimeout, (state, removed) => state.filter(id => id !== removed))
   .on([changeSources, selectVersion], state => {
     return []
   })
 
-timeouts.watch(changeSources, (state) => {
+$timeouts.watch(changeSources, (state) => {
   for (const id of state) {
     global.clearTimeout(id)
   }
 })
-timeouts.watch(selectVersion, (state) => {
+$timeouts.watch(selectVersion, (state) => {
   for (const id of state) {
     global.clearTimeout(id)
   }
 })
 
-stats
+$stats
   .on(realmEvent, ({event, ...rest}, e) => {
     if (event.includes(e)) return
     return {
@@ -191,17 +191,17 @@ realmDomain.watch(domain => {
     if (getDomainName(event) !== domain.compositeName) return
     realmEvent(event)
   })
-  domain.onCreateEffect(event => {
+  domain.onCreateEffect(fx => {
     //TODO: wrong behaviour?
-    if (getDomainName(event) !== domain.compositeName) return
-    realmEffect(event)
+    if (getDomainName(fx) !== domain.compositeName) return
+    realmEffect(fx)
   })
-  domain.onCreateStore(event => {
+  domain.onCreateStore(store => {
     //TODO: wrong behaviour?
-    if (getDomainName(event) !== domain.compositeName) return
-    realmStore(event)
+    if (getDomainName(store) !== domain.compositeName) return
+    realmStore(store)
   })
-  domain.onCreateDomain(event => realmDomain(event))
+  domain.onCreateDomain(domain => realmDomain(domain))
 })
 function getDomainName(event) {
   if (event.parent) return event.parent.compositeName

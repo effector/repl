@@ -3,7 +3,7 @@ import {styled} from 'linaria/react'
 import {useStore} from 'effector-react'
 
 import {codeSetCursor} from '../editor'
-import {stats} from '../realm/state'
+import {$stats} from '../realm/state'
 
 const OutlineWrapper = styled.div`
   grid-column: 1 / span 1;
@@ -69,7 +69,7 @@ const OutlineSection = ({list, title}) => {
 }
 
 export function Outline() {
-  const {component, domain, event, effect, store} = useStore(stats)
+  const {component, domain, event, effect, store} = useStore($stats)
   const isEmpty =
     event.length === 0 &&
     effect.length === 0 &&
