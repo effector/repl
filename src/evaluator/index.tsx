@@ -4,7 +4,7 @@ import {combine, createEffect} from 'effector'
 import {prepareRuntime} from './prepareRuntime'
 import {selectVersion} from '../editor'
 import {version, sourceCode, compiledCode} from '../editor/state'
-import {typechecker} from '../settings/state'
+import {$typechecker} from '../settings/state'
 // TODO: remove exact dependency on feature, use requirements in the future
 import {consoleMap} from '~/features/logs'
 import {realmStatusApi, realmListener, realmRemoveListener} from '../realm'
@@ -19,7 +19,7 @@ import {availablePlugins} from '@babel/standalone'
 import {codeMirror} from '~/editor/view'
 
 const tag = `# source`
-const filename = combine(typechecker, (typechecker): string => {
+const filename = combine($typechecker, (typechecker): string => {
   if (typechecker === 'typescript') return 'repl.ts'
   return 'repl.js'
 })
@@ -240,7 +240,7 @@ export async function evaluator(code: string) {
       },
     ],
     filename: filename.getState(),
-    types: typechecker.getState() || 'typescript',
+    types: $typechecker.getState() || 'typescript',
     pluginRegistry: {
       'effector/babel-plugin': babelPlugin,
       'effector/babel-plugin-react': PluginEffectorReact,

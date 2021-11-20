@@ -11,7 +11,7 @@ import {
   $logs as logs,
   LogsPanel as LogsView,
 } from '~/features/logs'
-import {autoScrollLog} from '../settings/state'
+import {$autoScrollLog} from '../settings/state'
 import {IconButton} from './IconButton'
 import {DesktopScreens, SmallScreens} from '../tabs/view'
 import {Outline} from './Outline'
@@ -36,7 +36,7 @@ const Tab = styled.li`
 `
 
 const ToolbarView = createComponent(
-  {logs, tab, autoScrollLog, $mainTab},
+  {logs, tab, autoScrollLog: $autoScrollLog, $mainTab},
   ({}, {$mainTab, logs, tab, autoScrollLog}) => (
     <TabHeaderList justify="space-between" style={{border: 'none'}}>
       <div style={{display: 'flex'}}>

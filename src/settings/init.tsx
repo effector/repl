@@ -2,8 +2,8 @@ import {sample, forward, guard} from 'effector'
 
 import {sourceCode} from '../editor/state'
 
-import {clickPrettify, prettier, enableAutoScroll, disableAutoScroll} from '.'
-import {domain, typechecker, autoScrollLog} from './state'
+import {clickPrettify, prettierFx, enableAutoScroll, disableAutoScroll} from '.'
+import {domain, $typechecker, $autoScrollLog} from './state'
 
 domain.onCreateStore(store => {
   const snapshot = localStorage.getItem(store.compositeName.fullName)
@@ -18,7 +18,7 @@ domain.onCreateStore(store => {
   return store
 })
 
-prettier.use(async ({code, parser}) => {
+prettierFx.use(async ({code, parser}) => {
   const req = await fetch('https://codebox.now.sh/prettier', {
     method: 'POST',
     body: JSON.stringify({code, config: {parser}}),
@@ -34,17 +34,17 @@ prettier.use(async ({code, parser}) => {
 sample({
   source: {
     code: sourceCode,
-    parser: typechecker.map(parser => parser ?? 'babel'),
+    parser: $typechecker.map(parser => parser ?? 'babel'),
   },
   clock: guard(clickPrettify, {
-    filter: prettier.pending.map(pending => !pending),
+    filter: prettierFx.pending.map(pending => !pending),
   }),
-  target: prettier,
+  target: prettierFx,
 })
 
 forward({
-  from: prettier.doneData,
+  from: prettierFx.doneData,
   to: sourceCode,
 })
 
-autoScrollLog.on(enableAutoScroll, _ => true).on(disableAutoScroll, _ => false)
+$autoScrollLog.on(enableAutoScroll, _ => true).on(disableAutoScroll, _ => false)

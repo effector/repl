@@ -5,7 +5,7 @@ import {sourceCode, codeError, version} from './state'
 import {retrieveCode, retrieveVersion} from './retrieve'
 import {compress} from './compression'
 import {evaluator, versionLoader} from '../evaluator'
-import {typechecker} from '../settings/state'
+import {$typechecker} from '../settings/state'
 
 evalEffect.use(evaluator)
 
@@ -65,7 +65,7 @@ forward({
 
 sample({
   source: sourceCode,
-  clock: [sourceCode, versionLoader, typechecker],
+  clock: [sourceCode, versionLoader, $typechecker],
   target: evalEffect,
 })
 

@@ -1,13 +1,9 @@
-import {createDomain, combine, Store, createStore} from 'effector'
+import {createDomain, createStore, Store} from 'effector'
 
 export const domain = createDomain('settings')
 
-export const tsToggle = domain.store<boolean>(false)
-export const typechecker: Store<'typescript' | null> = combine(
-  tsToggle,
-  tsEnabled => {
-    if (tsEnabled) return 'typescript'
-    return null
-  },
+export const $tsToggle = domain.createStore<boolean>(false)
+export const $typechecker: Store<'typescript' | null> = $tsToggle.map(
+  tsEnabled => tsEnabled ? 'typescript' : null,
 )
-export const autoScrollLog = createStore<boolean>(true)
+export const $autoScrollLog = createStore<boolean>(true)

@@ -1,14 +1,16 @@
-import React from 'react'
-import {useStore, useStoreMap, useList} from 'effector-react'
+import {useList, useStore, useStoreMap} from 'effector-react'
 import {styled} from 'linaria/react'
-import {clickPrettify, prettier} from '.'
+import React from 'react'
+
+import {clickPrettify, prettierFx} from '.'
+
+import {LoadingIcon} from '../components/Icons/LoadingIcon'
 import {selectVersion} from '../editor'
 import {packageVersions, version} from '../editor/state'
-import {LoadingIcon} from '../components/Icons/LoadingIcon'
 
 export const PrettifyButton = () => {
   const {disabled, pending} = useStoreMap({
-    store: prettier.pending,
+    store: prettierFx.pending,
     keys: [],
     fn: pending => ({
       disabled: pending,

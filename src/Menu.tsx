@@ -7,7 +7,7 @@ import {config} from './github/config'
 import {$csrf, $githubToken, $githubUser} from './github/state'
 import {logout} from './github/index'
 
-import {clickPrettify, prettier} from './settings'
+import {clickPrettify, prettierFx} from './settings'
 import {packageVersions, version} from './editor/state'
 import {selectVersion} from './editor'
 import {LoadingIcon} from './components/Icons/LoadingIcon'
@@ -259,7 +259,7 @@ const GitHubCatIcon = () => (
 
 export const MenuContent = () => {
   const token = useStore($githubToken)
-  const isPrettifyPending = useStore(prettier.pending)
+  const isPrettifyPending = useStore(prettierFx.pending)
   const isOpen = useStore(isMenuOpen)
   const usedVersion = useStore(version)
   const versionList = useList(packageVersions, item => (

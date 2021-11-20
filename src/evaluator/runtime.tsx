@@ -1,5 +1,4 @@
-import {transform, registerPlugin, availablePlugins} from '@babel/standalone'
-import { BabelFileResult } from '@babel/core'
+import {availablePlugins, registerPlugin, transform} from '@babel/standalone'
 
 export type BabelPlugin = string | [string, any]
 
@@ -67,8 +66,11 @@ export async function exec({
 function transformCode(code: string, babelOptions): string {
   const detail = transform(code, babelOptions)
   const compiled = detail.code
-  window.addons ||= {}
-  window.addons.transformation = detail
+  if (!window['addons']) {
+    window['addons'] = {}
+  }
+  // window['addons'] ||= {}
+  window['addons'].transformation = detail
   window.dispatchEvent(new CustomEvent('@babel/transform', {detail}))
   const wrappedCode = `async function main() {
 ${compiled}

@@ -6,7 +6,7 @@ import './github/init'
 import './share/init'
 import './editor/init'
 
-import {autoScrollLog} from './settings/state'
+import {$autoScrollLog} from './settings/state'
 import {changeSources, selectVersion} from './editor'
 import {realmStatus} from './realm'
 
@@ -16,7 +16,7 @@ import {
   autoScrollEnableClicked,
 } from '~/features/logs'
 
-forward({from: autoScrollLog, to: logs.autoScrollLogChanged})
+forward({from: $autoScrollLog, to: logs.autoScrollLogChanged})
 forward({from: changeSources, to: logs.sourcesChanged})
 forward({from: selectVersion, to: logs.versionChanged})
 forward({
@@ -24,6 +24,6 @@ forward({
   to: logs.realmActiveChanged,
 })
 
-autoScrollLog
+$autoScrollLog
   .on(autoScrollEnableClicked, () => true)
   .on(autoScrollDisableClicked, () => false)
