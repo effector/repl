@@ -4415,10 +4415,10 @@ path-parse@^1.0.6:
   resolved "https://registry.yarnpkg.com/path-parse/-/path-parse-1.0.6.tgz#d62dbb5679405d72c4737ec58600e9ddcf06d24c"
   integrity sha512-GSmOT2EbHrINBf9SR7CDELwlJ8AENk3Qn7OikK4nFYAu3Ote2+JYNVvkpAEQm3/TLNEJFD/xZJjzyxg3KBWOzw==
 
-patronum@^1.6.0-next.0:
-  version "1.6.0-next.0"
-  resolved "https://registry.yarnpkg.com/patronum/-/patronum-1.6.0-next.0.tgz#3e0b87997483f785a94e3657ca238e471ea09f08"
-  integrity sha512-bDixff9qEyyXSb8VwHP1GxiEZp9TemP4sYxijXE1uydxBLkSzL68puxUUofBL/VjLb/9GIShhrx/V9IQXbOqIQ==
+patronum@^1.1.0:
+  version "1.1.0"
+  resolved "https://registry.yarnpkg.com/patronum/-/patronum-1.1.0.tgz#6c56f334bfff46042a597cf68deb1540e8134949"
+  integrity sha512-YSbGQUbLxTO8m4FeXEwg/Xq0h3ka9S3+WvTANHGlNqo+2gPpglex32xh2dzC7ZP0likG/gHQNEOZokNV1nS7HA==
 
 pbkdf2@^3.0.3:
   version "3.1.1"

@@ -1,5 +1,4 @@
 import {forward, sample} from 'effector'
-import {debounce} from 'patronum/debounce'
 
 import {changeSources, evalFx, selectVersion} from '.'
 
@@ -7,7 +6,7 @@ import {evaluator, versionLoader} from '../evaluator'
 import {$babelPluginSettings, $typechecker} from '../settings/state'
 import {compress} from './compression'
 import {retrieveCode, retrieveVersion} from './retrieve'
-import {$sourceCode, $codeError, $version} from './state'
+import {$codeError, $sourceCode, $version} from './state'
 
 evalFx.use(evaluator)
 
@@ -65,14 +64,11 @@ forward({
   to: $sourceCode,
 })
 
-const debouncedPluginSettings = debounce({
-  source: $babelPluginSettings,
-  timeout: 400,
-})
+// TODO: use patronum/debounce requires to fix error with ? operator
 
 sample({
   source: $sourceCode,
-  clock: [$sourceCode, versionLoader, $typechecker, debouncedPluginSettings],
+  clock: [$sourceCode, versionLoader, $typechecker, $babelPluginSettings],
   target: evalFx,
 })
 
