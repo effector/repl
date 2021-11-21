@@ -13,15 +13,15 @@ import React from 'react'
 
 import {isShareAPISupported} from '../device'
 import {$sourceCode} from '../editor/state'
-import {shareCode} from '../graphql'
+import {shareCodeFx} from '../graphql'
 import {setCurrentShareId} from './index'
 
 export const pressCtrlS = createEvent()
 
 guard({
   source: pressCtrlS,
-  filter: shareCode.pending.map(pending => !pending),
-  target: shareCode,
+  filter: shareCodeFx.pending.map(pending => !pending),
+  target: shareCodeFx,
 })
 
 document.addEventListener(
@@ -35,7 +35,7 @@ document.addEventListener(
   false,
 )
 
-shareCode.done.watch(({result: {slug}}) => {
+shareCodeFx.done.watch(({result: {slug}}) => {
   // if (/https\:\/\/(share\.)?effector\.dev/.test(location.origin)) {
   history.pushState({slug}, slug, `${location.origin}/${slug}`)
   setCurrentShareId(slug)
@@ -43,14 +43,14 @@ shareCode.done.watch(({result: {slug}}) => {
 })
 
 const slug = createStore('').on(
-  shareCode.done,
+  shareCodeFx.done,
   (state, {result}) => result.slug,
 )
 export const sharedUrl: Store<string> = createStore('').on(
   slug,
   (state, slug) => `${location.origin}/${slug}`,
 )
-shareCode.fail.watch(e => console.log('fail', e))
+shareCodeFx.fail.watch(e => console.log('fail', e))
 
 export const canShare: Store<boolean> = slug.map(url => url !== '')
 
