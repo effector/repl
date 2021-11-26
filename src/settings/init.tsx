@@ -1,27 +1,28 @@
-import {sample, forward, guard} from 'effector'
+import {forward, guard} from 'effector'
 
 import {
+  addNamesToggleChange,
   clickPrettify,
-  prettierFx,
-  enableAutoScroll,
-  disableAutoScroll,
   debugSidsToggleChange,
-  reactSSRToggleChange,
+  disableAutoScroll,
+  enableAutoScroll,
   factoriesChange,
   importNameChange,
-  addNamesToggleChange,
+  prettierFx,
+  reactSSRToggleChange,
+  setSettings,
 } from '.'
 
 import {$sourceCode} from '../editor/state'
 import {
-  localStorageSync,
-  $typechecker,
+  $addNames,
   $autoScrollLog,
   $debugSids,
-  $reactSsr,
   $factories,
   $importName,
-  $addNames,
+  $reactSsr,
+  $typechecker,
+  localStorageSync,
 } from './state'
 
 localStorageSync.onCreateStore(store => {
@@ -67,8 +68,18 @@ forward({
 
 $autoScrollLog.on(enableAutoScroll, _ => true).on(disableAutoScroll, _ => false)
 
-$addNames.on(addNamesToggleChange, addNames => !addNames)
-$debugSids.on(debugSidsToggleChange, debug => !debug)
-$reactSsr.on(reactSSRToggleChange, reactSsr => !reactSsr)
-$factories.on(factoriesChange, (_, factories) => factories)
-$importName.on(importNameChange, (_, event) => event.currentTarget.value.trim())
+$addNames
+  .on(addNamesToggleChange, addNames => !addNames)
+  .on(setSettings, (_, {addNames}) => addNames)
+$debugSids
+  .on(debugSidsToggleChange, debug => !debug)
+  .on(setSettings, (_, {debugSids}) => debugSids)
+$reactSsr
+  .on(reactSSRToggleChange, reactSsr => !reactSsr)
+  .on(setSettings, (_, {reactSsr}) => reactSsr)
+$factories
+  .on(factoriesChange, (_, factories) => factories)
+  .on(setSettings, (_, {factories}) => factories)
+$importName
+  .on(importNameChange, (_, event) => event.currentTarget.value.trim())
+  .on(setSettings, (_, {importName}) => importName)

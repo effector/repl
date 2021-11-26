@@ -1,15 +1,17 @@
-import defaultSourceCode from './defaultSourceCode'
-import defaultVersions from '../versions.json'
-import {decompress, compress} from './compression'
-import {changeSources} from './index'
+import {BabelPluginOptions} from '../evaluator/runtime'
+import {setSettings} from '../settings'
 import {setCurrentShareId} from '../share'
+import defaultVersions from '../versions.json'
+import {compress, decompress} from './compression'
+import defaultSourceCode from './defaultSourceCode'
+import {changeSources, selectVersion} from './index'
 
 function getLocation<T>(defaults: T, fn: (loc: Location) => T): T {
   if (typeof location !== 'undefined') return fn(location)
   return defaults
 }
 
-export function retrieveCode(): string {
+export function retrieveCode(): string | null {
   const isStuck = readStuckFlag()
   const pathname = getLocation('', loc => loc.pathname)
   const origin = getLocation('', loc => loc.origin)
@@ -29,8 +31,12 @@ export function retrieveCode(): string {
         code: string
         description: string
         tags: string[]
+        babelPluginOptions: BabelPluginOptions
+        effectorVersion: string
       } = (window as any).__code__
       slug && setCurrentShareId(slug)
+      selectVersion(preloaded.effectorVersion)
+      setSettings(preloaded.babelPluginOptions)
       return preloaded.code
     }
   } else if (!isAuthRedirectedUrl) {
@@ -58,15 +64,20 @@ export function retrieveCode(): string {
     return decompress(code)!
   }
   if (typeof localStorage !== 'undefined') {
-    const sessionExists = Object.keys(sessionStorage || {}).includes('code-compressed')
-    const storageCode = (sessionExists ? sessionStorage : localStorage).getItem('code-compressed')
+    const sessionExists = Object.keys(sessionStorage || {}).includes(
+      'code-compressed',
+    )
+    const storageCode = (sessionExists ? sessionStorage : localStorage).getItem(
+      'code-compressed',
+    )
     if (storageCode != null) {
       const decompressed = decompress(storageCode)!
       if (isStuck) {
         const withThrow = `throw Error('this code leads to infinite loop')\n${decompressed}`
         const compressedWithThrow = compress(withThrow)
         localStorage.setItem('code-compressed', compressedWithThrow)
-        sessionStorage && sessionStorage.setItem('code-compressed', compressedWithThrow)
+        sessionStorage &&
+          sessionStorage.setItem('code-compressed', compressedWithThrow)
         return withThrow
       }
       return decompressed
