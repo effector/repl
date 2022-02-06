@@ -391,9 +391,32 @@ export const ObjectValue = ({object}: {object: any}) => {
 
       return <span>{object.constructor.name}</span>
     case 'function':
+      const isClass = object.toString().startsWith('class')
+      if (isClass) {
+        return (
+          <span>
+            <span className={styles.objectValueFunctionKeyword}>
+              class&nbsp;
+            </span>
+            {object.name}
+            {}
+          </span>
+        )
+      }
+
+      const isAsync = object.constructor.name.includes('Async')
+      const isGenerator = object.constructor.name.includes('Generator')
       return (
         <span>
+          {isAsync ? (
+            <span className={styles.objectValueFunctionKeyword}>
+              async&nbsp;
+            </span>
+          ) : null}
           <span className={styles.objectValueFunctionKeyword}>function</span>
+          {isGenerator ? (
+            <span className={styles.objectValueFunctionKeyword}>*</span>
+          ) : null}
           <span className={styles.objectValueFunctionName}>
             &nbsp;{object.name}()
           </span>
