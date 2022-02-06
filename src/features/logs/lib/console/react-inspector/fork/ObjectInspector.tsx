@@ -211,6 +211,12 @@ export const ObjectPreview = ({
         ]
       </ObjectPreviewElement>
     )
+  } else if (inheritsOneOf(object, [ArrayBuffer])) {
+    return (
+      <ObjectPreviewElement>
+        {object.constructor.name}[{object.byteLength}]
+      </ObjectPreviewElement>
+    )
   } else {
     const propertyNodes = [] as JSX.Element[]
     if (inheritsOf(object, Set)) {
@@ -297,6 +303,10 @@ function inheritsOf(source: any, target: any): boolean {
   return source instanceof target || source.constructor.name === target.name
 }
 
+function inheritsOneOf(source: any, targets: any[]): boolean {
+  return targets.some(item => inheritsOf(source, item))
+}
+
 /**
  * A view for object property names.
  *
@@ -327,6 +337,8 @@ export const ObjectValue = ({object}: {object: any}) => {
   switch (typeof object) {
     case 'number':
       return <span className={styles.objectValueNumber}>{String(object)}</span>
+    case 'bigint':
+      return <span className={styles.objectValueNumber}>{String(object)}n</span>
     case 'string':
       return <span className={styles.objectValueString}>"{object}"</span>
     case 'boolean':
@@ -371,6 +383,10 @@ export const ObjectValue = ({object}: {object: any}) => {
       }
       if (inheritsOf(object, Set)) {
         return <span>{`Set[${object.size}]`}</span>
+      }
+
+      if (inheritsOf(object, ArrayBuffer)) {
+        return <span>{`${object.constructor.name}[${object.byteLength}]`}</span>
       }
 
       return <span>{object.constructor.name}</span>
