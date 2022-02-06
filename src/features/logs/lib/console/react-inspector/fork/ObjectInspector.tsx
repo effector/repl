@@ -1,5 +1,6 @@
-import React from 'react'
 import {styled} from 'linaria/react'
+import React from 'react'
+
 import {styleSet} from '../styles'
 import {TreeView} from './TreeView'
 
@@ -146,6 +147,14 @@ function intersperse(arr: any[], sep: string) {
   return arr.slice(1).reduce((xs, x) => xs.concat([sep, x]), [arr[0]])
 }
 
+function printDate(date) {
+  let string = date.toString()
+  if ('toLocaleString' in date) {
+    string = date.toLocaleString()
+  }
+  return string
+}
+
 /**
  * A preview of the object
  */
@@ -158,12 +167,25 @@ export const ObjectPreview = ({
 }) => {
   const object = data
 
-  if (
-    typeof object !== 'object' ||
-    object === null ||
-    object instanceof Date ||
-    object instanceof RegExp
-  ) {
+  if (inheritsOf(object, Date)) {
+    return (
+      <span>
+        <ObjectName name="Date" />
+        &nbsp;{printDate(object)}
+      </span>
+    )
+  }
+
+  if (inheritsOf(object, RegExp)) {
+    return (
+      <span>
+        <ObjectName name="RegExp" />
+        &nbsp;{object.toString()}
+      </span>
+    )
+  }
+
+  if (typeof object !== 'object' || object === null) {
     return <ObjectValue object={object} />
   }
 
@@ -191,6 +213,30 @@ export const ObjectPreview = ({
     )
   } else {
     const propertyNodes = [] as JSX.Element[]
+    if (inheritsOf(object, Set)) {
+      if (object.size > 0) {
+        for (let [key, item] of object.entries()) {
+          propertyNodes.push(
+            <span key={key}>
+              <ObjectValue object={item} />
+            </span>,
+          )
+        }
+      }
+    }
+    if (inheritsOf(object, Map)) {
+      if (object.size > 0) {
+        for (let [key, item] of object.entries()) {
+          propertyNodes.push(
+            <span key={key}>
+              <ObjectName name={key} />
+              &nbsp;={'>'}&nbsp;
+              <ObjectValue object={item} />
+            </span>,
+          )
+        }
+      }
+    }
     for (let propertyName in object) {
       const propertyValue = object[propertyName]
       if (Object.prototype.hasOwnProperty.call(object, propertyName)) {
@@ -246,6 +292,11 @@ export const ObjectLabel = ({
   )
 }
 
+function inheritsOf(source: any, target: any): boolean {
+  // We need to check instance name because while using different realms instances is different
+  return source instanceof target || source.constructor.name === target.name
+}
+
 /**
  * A view for object property names.
  *
@@ -286,25 +337,40 @@ export const ObjectValue = ({object}: {object: any}) => {
       if (object === null) {
         return <span className={styles.objectValueNull}>null</span>
       }
-      if (object instanceof Date) {
-        return <span>{object.toString()}</span>
-      }
-      if (object instanceof RegExp) {
+      if (inheritsOf(object, Date)) {
         return (
-          <span className={styles.objectValueRegExp}>{object.toString()}</span>
+          <span>
+            <ObjectName name="Date" />
+            &nbsp;{printDate(object)}
+          </span>
+        )
+      }
+      if (inheritsOf(object, RegExp)) {
+        return (
+          <span className={styles.objectValueRegExp}>
+            <ObjectName name="RegExp" />
+            &nbsp;{object.toString()}
+          </span>
         )
       }
       if (Array.isArray(object)) {
         return <span>{`Array[${object.length}]`}</span>
       }
-      if (!object.constructor) {
-        return <span>Object</span>
+      if (!object.constructor || inheritsOf(object, Object)) {
+        return <span>{`Object {${Object.keys(object).length}}`}</span>
       }
       if (
         typeof object.constructor.isBuffer === 'function' &&
         object.constructor.isBuffer(object)
       ) {
         return <span>{`Buffer[${object.length}]`}</span>
+      }
+
+      if (inheritsOf(object, Map)) {
+        return <span>{`Map[${object.size}]`}</span>
+      }
+      if (inheritsOf(object, Set)) {
+        return <span>{`Set[${object.size}]`}</span>
       }
 
       return <span>{object.constructor.name}</span>
@@ -322,6 +388,6 @@ export const ObjectValue = ({object}: {object: any}) => {
         <span className={styles.objectValueSymbol}>{object.toString()}</span>
       )
     default:
-      return <span />
+      return <span>{typeof object}</span>
   }
 }
