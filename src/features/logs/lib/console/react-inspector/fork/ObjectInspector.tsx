@@ -300,7 +300,7 @@ export const ObjectLabel = ({
 
 function inheritsOf(source: any, target: any): boolean {
   // We need to check instance name because while using different realms instances is different
-  return source instanceof target || source.constructor.name === target.name
+  return source instanceof target || source?.constructor?.name === target.name
 }
 
 function inheritsOneOf(source: any, targets: any[]): boolean {
