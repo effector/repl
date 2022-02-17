@@ -154,7 +154,7 @@ const fetchEffectorReactSSR = createEffect({
 
 const fetchPatronum = createEffect({
   async handler(effector) {
-    const url = 'https://unpkg.com/patronum/patronum.cjs.js'
+    const url = 'https://unpkg.com/patronum/patronum.cjs'
     const sourceMap = `${url}.map`
     const req = await fetch(url)
     let text = await req.text()
