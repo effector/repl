@@ -289,7 +289,7 @@ const ShareList = ({filterMode, description}) => {
             <ShareRow>
               <ShareDescription>
                 {typeof share.description === 'undefined' ||
-                share.description === null
+                share.description === null || share.description === ''
                   ? `<${share.slug}>`
                   : share.description}
               </ShareDescription>
