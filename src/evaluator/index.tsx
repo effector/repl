@@ -103,14 +103,15 @@ const fetchBabelPlugin = createEffect<string, {[key: string]: any}, any>({
   },
 })
 
+const shimName = 'use-sync-external-store/shim'
+const withSelectorName = 'use-sync-external-store/shim/with-selector'
+
 const fetchEffectorReact = createEffect<any, {[key: string]: any}, any>({
   async handler(effector) {
     const effectorReactUrl =
       'https://effector--canary.s3-eu-west-1.amazonaws.com/effector-react/effector-react.cjs.js'
     const shimUrl = 'https://unpkg.com/use-sync-external-store/cjs/use-sync-external-store-shim.production.min.js'
     const withSelectorUrl = 'https://unpkg.com/use-sync-external-store/cjs/use-sync-external-store-shim/with-selector.production.min.js'
-    const shimName = 'use-sync-external-store/shim'
-    const withSelectorName = 'use-sync-external-store/shim/with-selector'
     const shim = await getLibraryCode(shimName, shimUrl)
     const withSelector = await getLibraryCode(withSelectorName, withSelectorUrl, {[shimName]: shim})
     const effectorReact = await getLibraryCode(`effector-react.cjs.js`, effectorReactUrl, {
