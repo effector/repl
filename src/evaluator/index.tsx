@@ -20,6 +20,16 @@ import {BabelPlugin, exec, generateBabelConfig} from './runtime'
 import {getStackFrames} from './stackframe/getStackFrames'
 
 const tag = `# source`
+
+async function getLibraryCode(filename: string, url: string, additionalLibs = {}) {
+  const req = await fetch(url)
+  let text = await req.text()
+  text.replace(
+    /\/\/\# sourceMappingURL\=.*$/m,
+    `//${tag}MappingURL=${url}.map`,
+  )
+  return createRealm(text, filename, additionalLibs)
+}
 const filename = combine($typechecker, (typechecker): string => {
   if (typechecker === 'typescript') return 'repl.ts'
   return 'repl.js'
@@ -65,14 +75,7 @@ const fetchEffector = createEffect('fetch effector', {
       ver === 'master'
         ? 'https://effector--canary.s3-eu-west-1.amazonaws.com/effector/effector.cjs.js'
         : `https://unpkg.com/effector@${ver}/effector.cjs.js`
-    const sourceMap = `${url}.map`
-    const req = await fetch(url)
-    let text = await req.text()
-    text = text.replace(
-      /\/\/\# sourceMappingURL\=.*$/m,
-      `//${tag}MappingURL=${sourceMap}`,
-    )
-    return createRealm(text, `effector.${ver}.js`)
+    return getLibraryCode(`effector.${ver}.js`, url)
   },
 })
 
@@ -96,29 +99,26 @@ const fetchBabelPlugin = createEffect<string, {[key: string]: any}, any>({
         url = `https://unpkg.com/effector@${ver}/babel-plugin.js`
       }
     }
-    const sourceMap = `${url}.map`
-    const req = await fetch(url)
-    let text = await req.text()
-    text = text.replace(
-      /\/\/\# sourceMappingURL\=.*$/m,
-      `//${tag}MappingURL=${sourceMap}`,
-    )
-    return createRealm(text, `effector-babel-plugin.${ver}.js`)
+    return getLibraryCode(`effector-babel-plugin.${ver}.js`, url)
   },
 })
 
 const fetchEffectorReact = createEffect<any, {[key: string]: any}, any>({
   async handler(effector) {
-    const url =
+    const effectorReactUrl =
       'https://effector--canary.s3-eu-west-1.amazonaws.com/effector-react/effector-react.cjs.js'
-    const sourceMap = `${url}.map`
-    const req = await fetch(url)
-    let text = await req.text()
-    text = text.replace(
-      /\/\/\# sourceMappingURL\=.*$/m,
-      `//${tag}MappingURL=${sourceMap}`,
-    )
-    return createRealm(text, `effector-react.cjs.js`, {effector})
+    const shimUrl = 'https://unpkg.com/use-sync-external-store/cjs/use-sync-external-store-shim.production.min.js'
+    const withSelectorUrl = 'https://unpkg.com/use-sync-external-store/cjs/use-sync-external-store-shim/with-selector.production.min.js'
+    const shimName = 'use-sync-external-store/shim'
+    const withSelectorName = 'use-sync-external-store/shim/with-selector'
+    const shim = await getLibraryCode(shimName, shimUrl)
+    const withSelector = await getLibraryCode(withSelectorName, withSelectorUrl, {[shimName]: shim})
+    const effectorReact = await getLibraryCode(`effector-react.cjs.js`, effectorReactUrl, {
+      effector,
+      [shimName]: shim,
+      [withSelectorName]: withSelector,
+    })
+    return {effectorReact, shim, withSelector}
   },
 })
 
@@ -126,43 +126,22 @@ const fetchForest = createEffect({
   async handler(effector) {
     const url =
       'https://effector--canary.s3-eu-west-1.amazonaws.com/forest/forest.cjs.js'
-    const sourceMap = `${url}.map`
-    const req = await fetch(url)
-    let text = await req.text()
-    text = text.replace(
-      /\/\/\# sourceMappingURL\=.*$/m,
-      `//${tag}MappingURL=${sourceMap}`,
-    )
-    return createRealm(text, `forest.cjs.js`, {effector})
+    return getLibraryCode(`forest.cjs.js`, url, {effector})
   },
 })
 
 const fetchEffectorReactSSR = createEffect({
-  async handler(effector) {
+  async handler(deps) {
     const url =
       'https://effector--canary.s3-eu-west-1.amazonaws.com/effector-react/scope.js'
-    const sourceMap = `${url}.map`
-    const req = await fetch(url)
-    let text = await req.text()
-    text = text.replace(
-      /\/\/\# sourceMappingURL\=.*$/m,
-      `//${tag}MappingURL=${sourceMap}`,
-    )
-    return createRealm(text, `scope.js`, {effector})
+    return getLibraryCode(`scope.js`, url, deps)
   },
 })
 
 const fetchPatronum = createEffect({
   async handler(effector) {
     const url = 'https://unpkg.com/patronum/patronum.cjs'
-    const sourceMap = `${url}.map`
-    const req = await fetch(url)
-    let text = await req.text()
-    text = text.replace(
-      /\/\/\# sourceMappingURL\=.*$/m,
-      `//${tag}MappingURL=${sourceMap}`,
-    )
-    return createRealm(text, `patronum.js`, {effector})
+    return getLibraryCode(`patronum.js`, url, {effector})
   },
 })
 
@@ -197,14 +176,18 @@ export async function evaluator(code: string) {
     cache.effector.get($version.getState()),
   ])
   const babelPluginOptions = $babelPluginSettings.getState()
-  const effectorReact = await fetchEffectorReact(effector)
+  const {effectorReact, shim, withSelector} = await fetchEffectorReact(effector)
   let forest
   let effectorReactSSR
   let patronum
   if ($version.getState() === 'master') {
     const additionalLibs = await Promise.all([
       fetchForest(effector),
-      fetchEffectorReactSSR(effector),
+      fetchEffectorReactSSR({
+        effector,
+        [shimName]: shim,
+        [withSelectorName]: withSelector,
+      }),
       fetchPatronum(effector),
     ])
     forest = additionalLibs[0]
