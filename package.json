@@ -1,7 +1,7 @@
 {
   "scripts": {
     "start": "npx parcel src/index.html --no-cache",
-    "build": "npx babel -o node_modules/babel-plugin-jsx-dom-expressions/index.js node_modules/babel-plugin-jsx-dom-expressions/index.js && npx parcel build -d dist --no-autoinstall --public-url /try src/index.html",
+    "build": "npx babel --config-file ./.babelrc -o node_modules/babel-plugin-jsx-dom-expressions/index.js node_modules/babel-plugin-jsx-dom-expressions/index.js && npx parcel build -d dist --no-autoinstall --public-url /try src/index.html",
     "now-build": "node src/loadVersions.js && yarn build"
   },
   "resolutions": {
