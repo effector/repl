@@ -79,6 +79,7 @@ export async function exec({
       throw error
     }
   }
+  writeStuckFlag(true)
   try {
     const result = await realmGlobal.eval(compiled)
     if (onRuntimeComplete) await onRuntimeComplete()
