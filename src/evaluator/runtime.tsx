@@ -1,4 +1,10 @@
-import {availablePlugins, registerPlugin, transform} from '@babel/standalone'
+import {
+  availablePlugins,
+  availablePresets,
+  registerPlugin,
+  registerPreset,
+  transform,
+} from '@babel/standalone'
 
 export type BabelPlugin = string | [string, any]
 
@@ -21,8 +27,10 @@ export async function exec({
   code,
   globalBlocks = [],
   types = 'typescript',
+  preset = 'react',
   filename = 'repl',
   pluginRegistry = {},
+  presetRegistry = {},
   babelPluginOptions = {},
   compile = true,
   onCompileError,
@@ -34,8 +42,10 @@ export async function exec({
   code: string
   globalBlocks?: Object[]
   types?: 'flow' | 'typescript'
+  preset?: string
   filename?: string
   pluginRegistry?: {[name: string]: any}
+  presetRegistry?: {[name: string]: any}
   babelPluginOptions?: BabelPluginOptions
   compile?: boolean
   onCompileError?: (error: any) => any
@@ -51,10 +61,15 @@ export async function exec({
       delete availablePlugins[key]
       registerPlugin(key, pluginRegistry[key])
     }
+    for (const key in presetRegistry) {
+      delete availablePresets[key]
+      registerPreset(key, presetRegistry[key])
+    }
     const babelOptions = generateBabelConfig({
       types,
       filename,
       babelPluginOptions,
+      preset,
     })
     try {
       compiled = transformCode(code, babelOptions)
@@ -64,7 +79,6 @@ export async function exec({
       throw error
     }
   }
-  writeStuckFlag(true)
   try {
     const result = await realmGlobal.eval(compiled)
     if (onRuntimeComplete) await onRuntimeComplete()
@@ -99,12 +113,14 @@ export function generateBabelConfig({
   types,
   filename,
   babelPluginOptions,
+  preset = 'react',
 }: {
   types: 'typescript' | 'flow' | null
   filename: string
   babelPluginOptions: BabelPluginOptions
+  preset?: string
 }) {
-  const presets: BabelPlugin[] = ['react'] // TODO: add 'patronum/babel-preset'
+  const presets: BabelPlugin[] = preset === 'react' ? ['react'] : ['solid'] // TODO: add 'patronum/babel-preset'
   const plugins: BabelPlugin[] = [
     'transform-strict-mode',
     'syntax-bigint',

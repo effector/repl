@@ -1,6 +1,5 @@
 import {is} from 'effector'
 
-import {changeSources, selectVersion} from '../editor'
 import {
   realmClearNode,
   realmInvoke,
@@ -18,6 +17,7 @@ import {
   realmRemoveListener,
 } from '.'
 
+import {changeSources, selectVersion, selectViewLib} from '../editor'
 import {$intervals, $timeouts, $listeners, $stats} from './state'
 
 $listeners
@@ -41,23 +41,33 @@ $listeners
     }
     return []
   })
+  .on(selectViewLib, listeners => {
+    for (const {type, target, fn, options} of listeners) {
+      target.removeEventListener.__original__(type, fn, options)
+    }
+    return []
+  })
 
 $intervals
   .on(realmInterval, (state, id) => [...state, id])
   .on(realmClearInterval, (state, removed) =>
     state.filter(id => id !== removed),
   )
-  .on([changeSources, selectVersion], state => {
-
+  .on([changeSources, selectVersion, selectViewLib], state => {
     return []
   })
 
-$intervals.watch(changeSources, (state) => {
+$intervals.watch(changeSources, state => {
   for (const id of state) {
     global.clearInterval(id)
   }
 })
-$intervals.watch(selectVersion, (state) => {
+$intervals.watch(selectVersion, state => {
+  for (const id of state) {
+    global.clearInterval(id)
+  }
+})
+$intervals.watch(selectViewLib, state => {
   for (const id of state) {
     global.clearInterval(id)
   }
@@ -66,16 +76,21 @@ $intervals.watch(selectVersion, (state) => {
 $timeouts
   .on(realmTimeout, (state, id) => [...state, id])
   .on(realmClearTimeout, (state, removed) => state.filter(id => id !== removed))
-  .on([changeSources, selectVersion], state => {
+  .on([changeSources, selectVersion, selectViewLib], state => {
     return []
   })
 
-$timeouts.watch(changeSources, (state) => {
+$timeouts.watch(changeSources, state => {
   for (const id of state) {
     global.clearTimeout(id)
   }
 })
-$timeouts.watch(selectVersion, (state) => {
+$timeouts.watch(selectVersion, state => {
+  for (const id of state) {
+    global.clearTimeout(id)
+  }
+})
+$timeouts.watch(selectViewLib, state => {
   for (const id of state) {
     global.clearTimeout(id)
   }
@@ -150,6 +165,7 @@ $stats
   })
   .reset(changeSources)
   .reset(selectVersion)
+  .reset(selectViewLib)
 
 realmInvoke.watch(({method, params, instance}) => {
   if (method === 'restore') {
