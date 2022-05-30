@@ -4,14 +4,14 @@ import {setCurrentShareId} from '../share'
 import defaultVersions from '../versions.json'
 import {compress, decompress} from './compression'
 import defaultSourceCode from './defaultSourceCode'
-import {changeSources, selectVersion} from './index'
+import {changeSources, selectVersion, selectViewLib} from './index'
 
 function getLocation<T>(defaults: T, fn: (loc: Location) => T): T {
   if (typeof location !== 'undefined') return fn(location)
   return defaults
 }
 
-export function retrieveCode(): string | null {
+export function  retrieveCode(): string | null {
   const isStuck = readStuckFlag()
   const pathname = getLocation('', loc => loc.pathname)
   const origin = getLocation('', loc => loc.origin)
@@ -33,9 +33,11 @@ export function retrieveCode(): string | null {
         tags: string[]
         babelPluginOptions: BabelPluginOptions
         effectorVersion: string
+        viewLibrary: string
       } = (window as any).__code__
       slug && setCurrentShareId(slug)
       selectVersion(preloaded.effectorVersion)
+      selectViewLib(preloaded.viewLibrary)
       setSettings(preloaded.babelPluginOptions)
       return preloaded.code
     }

@@ -1,7 +1,7 @@
 import {attach, createEffect} from 'effector'
 import md5 from 'js-md5'
 
-import {$babelPluginSettings} from '~/settings/state'
+import {$babelPluginSettings, $viewLib} from '~/settings/state'
 
 import {$sourceCode, $version} from './editor/state'
 import {$githubUser} from './github/state'
@@ -40,6 +40,7 @@ export const shareCodeFx = attach({
     description: $shareDescription,
     code: $sourceCode,
     effectorVersion: $version,
+    viewLibrary: $viewLib,
     babelPluginOptions: $babelPluginSettings,
   },
   async effect({
@@ -47,6 +48,7 @@ export const shareCodeFx = attach({
     description = undefined,
     code,
     effectorVersion,
+    viewLibrary,
     babelPluginOptions,
   }) {
     const author = user ? user.databaseId : undefined
@@ -68,6 +70,7 @@ export const shareCodeFx = attach({
           description,
           code,
           effectorVersion,
+          viewLibrary,
           babelPluginOptions,
         },
       },
