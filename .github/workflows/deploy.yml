@@ -29,7 +29,7 @@ jobs:
         run: node src/loadVersions.js
 
       - name: Build app
-        run: npx parcel build -d dist --no-autoinstall --public-url 'https://editor-prod.effector.dev' src/index.html
+        run: npx babel --config-file ./.babelrc -o node_modules/babel-plugin-jsx-dom-expressions/index.js node_modules/babel-plugin-jsx-dom-expressions/index.js && npx parcel build -d dist --no-autoinstall --public-url 'https://editor-prod.effector.dev' src/index.html
 
       - name: Configure AWS Credentials
         uses: aws-actions/configure-aws-credentials@v1
