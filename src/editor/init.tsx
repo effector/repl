@@ -1,9 +1,9 @@
 import {forward, sample} from 'effector'
 
-import {changeSources, evalFx, selectVersion} from '.'
+import {changeSources, evalFx, selectVersion, selectViewLib} from '.'
 
 import {evaluator, versionLoader} from '../evaluator'
-import {$babelPluginSettings, $typechecker} from '../settings/state'
+import {$babelPluginSettings, $typechecker, $viewLib} from '../settings/state'
 import {compress} from './compression'
 import {retrieveCode, retrieveVersion} from './retrieve'
 import {$codeError, $sourceCode, $version} from './state'
@@ -11,6 +11,7 @@ import {$codeError, $sourceCode, $version} from './state'
 evalFx.use(evaluator)
 
 $version.on(selectVersion, (_, p) => p)
+$viewLib.on(selectViewLib, (_, p) => p)
 
 $codeError
   .on(evalFx.done, () => ({
@@ -68,7 +69,13 @@ forward({
 
 sample({
   source: $sourceCode,
-  clock: [$sourceCode, versionLoader, $typechecker, $babelPluginSettings],
+  clock: [
+    $sourceCode,
+    versionLoader,
+    $viewLib,
+    $typechecker,
+    $babelPluginSettings,
+  ],
   target: evalFx,
 })
 

@@ -13,6 +13,7 @@ export const $debugSids = localStorageSync.createStore<boolean | null>(null)
 export const $factories = localStorageSync.createStore<string[]>([])
 export const $importName = localStorageSync.createStore<string | null>(null)
 export const $reactSsr = localStorageSync.createStore<boolean | null>(null)
+export const $viewLib = localStorageSync.createStore<string>('react')
 
 export const $babelPluginSettings = combine(
   {

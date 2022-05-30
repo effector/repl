@@ -13,14 +13,15 @@ import {
 } from '.'
 
 import {LoadingIcon} from '../components/Icons/LoadingIcon'
-import {selectVersion} from '../editor'
-import {$packageVersions, $version} from '../editor/state'
+import {selectVersion, selectViewLib} from '../editor'
+import {$packageVersions, $version, $viewLibraries} from '../editor/state'
 import {
   $addNames,
   $debugSids,
   $factories,
   $importName,
   $reactSsr,
+  $viewLib,
 } from '../settings/state'
 
 export const PrettifyButton = () => {
@@ -47,7 +48,8 @@ export const PrettifyButton = () => {
         alignItems: 'center',
         fontSize: 14,
         justifyContent: 'center',
-      }}>
+      }}
+    >
       {pending && <LoadingIcon style={{marginRight: 10}} />}
       Prettify
     </Button>
@@ -61,13 +63,29 @@ export const Settings = () => (
         <div className="versions">
           <select
             value={useStore($version)}
-            onChange={e => selectVersion(e.currentTarget.value)}>
+            onChange={e => selectVersion(e.currentTarget.value)}
+          >
             {useList($packageVersions, item => (
               <option value={item}>{item}</option>
             ))}
           </select>
         </div>
         Effector version
+      </Label>
+    </Section>
+    <Section>
+      <Label>
+        <div>
+          <select
+            value={useStore($viewLib)}
+            onChange={e => selectViewLib(e.currentTarget.value)}
+          >
+            {useList($viewLibraries, item => (
+              <option value={item}>{item}</option>
+            ))}
+          </select>
+        </div>
+        View library
       </Label>
     </Section>
     <Section>

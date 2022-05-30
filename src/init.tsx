@@ -7,7 +7,7 @@ import './share/init'
 import './editor/init'
 
 import {$autoScrollLog} from './settings/state'
-import {changeSources, selectVersion} from './editor'
+import {changeSources, selectVersion, selectViewLib} from './editor'
 import {realmStatus} from './realm'
 
 import {
@@ -19,6 +19,7 @@ import {
 forward({from: $autoScrollLog, to: logs.autoScrollLogChanged})
 forward({from: changeSources, to: logs.sourcesChanged})
 forward({from: selectVersion, to: logs.versionChanged})
+forward({from: selectViewLib, to: logs.viewLibraryChanged})
 forward({
   from: realmStatus.map(status => status.active),
   to: logs.realmActiveChanged,

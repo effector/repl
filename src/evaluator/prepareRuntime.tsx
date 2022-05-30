@@ -1,8 +1,3 @@
-import * as Effector from 'effector'
-import * as EffectorReact from 'effector-react'
-import React from 'react'
-import * as ReactDOM from 'react-dom'
-
 // TODO: remove exact dependency on feature, use requirements in the future
 import {consoleMap} from '~/features/logs'
 
@@ -14,7 +9,7 @@ import {
   realmClearTimeout,
 } from '../realm'
 
-export function prepareRuntime(effector, effectorReact, version: string) {
+export function prepareRuntime(effector, initViewLib, version: string) {
   const api = {}
   apiMap(api, {
     createEvent: effector.createEvent,
@@ -33,14 +28,11 @@ export function prepareRuntime(effector, effectorReact, version: string) {
     clearNode: effector.clearNode,
     _withFactory: effector.withFactory, // TODO: fix babel plugin
   })
-  apiMap(api, {
-    createComponent: effectorReact.createComponent,
-  })
+  const {lib, env} = initViewLib(apiMap, api)
   assignLibrary(api, effector)
-  assignLibrary(api, effectorReact)
+  assignLibrary(api, lib)
   return {
-    React,
-    ReactDOM,
+    ...env,
     console: consoleMap(),
     setInterval,
     setTimeout,
