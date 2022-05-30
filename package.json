@@ -1,7 +1,7 @@
 {
   "scripts": {
     "start": "npx parcel src/index.html --no-cache",
-    "build": "npx parcel build -d dist --no-autoinstall --public-url /try src/index.html",
+    "build": "npx babel -o node_modules/babel-plugin-jsx-dom-expressions/index.js node_modules/babel-plugin-jsx-dom-expressions/index.js && npx parcel build -d dist --no-autoinstall --public-url /try src/index.html",
     "now-build": "node src/loadVersions.js && yarn build"
   },
   "resolutions": {
@@ -9,6 +9,7 @@
   },
   "devDependencies": {
     "@babel/core": "^7.12.10",
+    "@babel/cli": "^7.17.10",
     "@babel/plugin-proposal-class-properties": "^7.12.1",
     "@babel/plugin-proposal-export-namespace-from": "^7.12.1",
     "@babel/plugin-proposal-nullish-coalescing-operator": "^7.12.1",
@@ -29,7 +30,7 @@
     "@types/node": "^14.14.14",
     "@types/react": "^17.0.0",
     "babel-preset-solid": "^1.4.2",
-    "parcel-bundler": "^1.12.4",
+    "parcel-bundler": "^1.12.5",
     "parcel-plugin-linaria": "file:./forks/parcel-plugin-linaria",
     "prettier": "^2.4.1",
     "typescript": "^4.1.3"
