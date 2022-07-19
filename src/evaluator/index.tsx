@@ -49,6 +49,7 @@ async function createRealm(sourceCode: string, filename, additionalLibs = {}) {
         return pathLibrary
       case 'react':
         return React
+      
     }
     if (path in additionalLibs) return additionalLibs[path]
     console.warn('require: ', path)
@@ -106,8 +107,8 @@ const fetchBabelPlugin = createEffect<string, {[key: string]: any}, any>({
   },
 })
 
-const shimName = 'use-sync-external-store/shim'
-const withSelectorName = 'use-sync-external-store/shim/with-selector'
+const shimName = 'use-sync-external-store/shim/index.js'
+const withSelectorName = 'use-sync-external-store/shim/with-selector.js'
 
 const fetchEffectorSolid = createEffect<any, {[key: string]: any}, any>({
   async handler(effector) {
