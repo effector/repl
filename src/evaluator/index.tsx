@@ -49,7 +49,6 @@ async function createRealm(sourceCode: string, filename, additionalLibs = {}) {
         return pathLibrary
       case 'react':
         return React
-      
     }
     if (path in additionalLibs) return additionalLibs[path]
     console.warn('require: ', path)
@@ -107,8 +106,19 @@ const fetchBabelPlugin = createEffect<string, {[key: string]: any}, any>({
   },
 })
 
-const shimName = 'use-sync-external-store/shim/index.js'
-const withSelectorName = 'use-sync-external-store/shim/with-selector.js'
+function getShimDefinition(shim: any) {
+  const result = {}
+  result['use-sync-external-store/shim/index.js'] = shim
+  result['use-sync-external-store/shim'] = shim
+  return result
+}
+
+function getShiSelectorDefinition(shimSelector: any) {
+  const result = {}
+  result['use-sync-external-store/shim/with-selector.js'] = shimSelector
+  result['use-sync-external-store/shim/with-selector'] = shimSelector
+  return result
+}
 
 const fetchEffectorSolid = createEffect<any, {[key: string]: any}, any>({
   async handler(effector) {
@@ -148,19 +158,21 @@ const fetchEffectorReact = createEffect<any, {[key: string]: any}, any>({
       'https://unpkg.com/use-sync-external-store/cjs/use-sync-external-store-shim.production.min.js'
     const withSelectorUrl =
       'https://unpkg.com/use-sync-external-store/cjs/use-sync-external-store-shim/with-selector.production.min.js'
+    const shimName = 'use-sync-external-store/shim/index.js'
+    const shimSelectorName = 'use-sync-external-store/shim/with-selector.js'
     const shim = await getLibraryCode(shimName, shimUrl)
     const withSelector = await getLibraryCode(
-      withSelectorName,
+      shimSelectorName,
       withSelectorUrl,
-      {[shimName]: shim},
+      getShimDefinition(shim),
     )
     const effectorReact = await getLibraryCode(
       `effector-react.cjs.js`,
       effectorReactUrl,
       {
         effector,
-        [shimName]: shim,
-        [withSelectorName]: withSelector,
+        ...getShimDefinition(shim),
+        ...getShiSelectorDefinition(withSelector),
       },
     )
     return {effectorReact, shim, withSelector}
@@ -239,15 +251,17 @@ export async function evaluator(code: string) {
   if ($version.getState() === 'master') {
     const additionalLibs = await Promise.all([
       fetchForest(effector),
-      $viewLib.getState() === 'react' ? fetchEffectorReactSSR({
-        effector,
-        [shimName]: shim,
-        [withSelectorName]: withSelector,
-      }) : fetchEffectorSolidSSR({
-        effector,
-        'solid-js': solidJs,
-        'solid-js/web': solidJsWeb
-      }),
+      $viewLib.getState() === 'react'
+        ? fetchEffectorReactSSR({
+            effector,
+            ...getShimDefinition(shim),
+            ...getShiSelectorDefinition(withSelector),
+          })
+        : fetchEffectorSolidSSR({
+            effector,
+            'solid-js': solidJs,
+            'solid-js/web': solidJsWeb,
+          }),
       fetchPatronum(effector),
     ])
     forest = additionalLibs[0]
