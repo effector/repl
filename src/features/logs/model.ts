@@ -1,7 +1,7 @@
 import {createStore, createEvent, restore} from 'effector'
 
-import {Method} from './types'
 import * as requirements from './requirements'
+import {Method} from './types'
 
 interface Log {
   id: number
@@ -47,7 +47,19 @@ export function consoleMap(): Console {
   const console = {} as Console
 
   for (const method in global.console) {
-    console[method] = logger.bind(method)
+    const logFn = logger.bind(method)
+    console[method] =
+      method === 'warn'
+        ? (...args) => {
+            const [message] = args
+            if (
+              typeof message === 'string' &&
+              message.includes('multiple instances of Solid')
+            )
+              return
+            logFn(...args)
+          }
+        : logFn
   }
   console.assert = (condition, ...args) => {
     if (!condition) {
