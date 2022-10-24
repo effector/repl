@@ -309,6 +309,7 @@ export async function evaluator(code: string) {
       env,
       {
         dom: forest,
+        useSyncExternalStoreLib: {shim, withSelector},
         forest,
         effectorFork: effector,
         effectorBindingSSR,
