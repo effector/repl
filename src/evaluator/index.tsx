@@ -106,6 +106,17 @@ const fetchBabelPlugin = createEffect<string, {[key: string]: any}, any>({
   },
 })
 
+const fetchEffectorInspect = createEffect(
+  async ({effector, ver}: {effector: any; ver: string}) => {
+    const url =
+      ver === 'master'
+        ? 'https://effector--canary.s3-eu-west-1.amazonaws.com/effector/inspect.js'
+        : `https://unpkg.com/effector@${ver}/inspect.js`
+
+    return getLibraryCode(`effector.${ver}.js`, url, {effector})
+  },
+)
+
 function getShimDefinition(shim: any) {
   const result = {}
   result['use-sync-external-store/shim/index.js'] = shim
@@ -240,6 +251,10 @@ export async function evaluator(code: string) {
     cache['@effector/babel-plugin'].get($version.getState()),
     cache.effector.get($version.getState()),
   ])
+  const effectorInspect = await fetchEffectorInspect({
+    effector,
+    ver: $version.getState(),
+  })
   const babelPluginOptions = $babelPluginSettings.getState()
   const {effectorReact, shim, withSelector} = await fetchEffectorReact(effector)
   const {effectorSolid, solidJs, solidJsWeb} = await fetchEffectorSolid(
@@ -312,6 +327,7 @@ export async function evaluator(code: string) {
         useSyncExternalStoreLib: {shim, withSelector},
         forest,
         effectorFork: effector,
+        effectorInspect,
         effectorBindingSSR,
         patronum,
         CodeMirror,
@@ -431,6 +447,9 @@ const removeImportsPlugin = babel => ({
           break
         case 'effector/fork':
           replaceModuleImports('effectorFork', path, babel)
+          break
+        case 'effector/inspect':
+          replaceModuleImports('effectorInspect', path, babel)
           break
         case 'effector-react/scope':
         case 'effector-react/ssr':
