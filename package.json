@@ -1,7 +1,7 @@
 {
   "scripts": {
     "start": "parcel src/index.html --no-cache",
-    "build": "babel --config-file ./.babelrc -o node_modules/babel-plugin-jsx-dom-expressions/index.js node_modules/babel-plugin-jsx-dom-expressions/index.js && parcel build -d dist --no-autoinstall --public-url 'https://share.effector.dev' src/index.html",
+    "build": "parcel build -d dist --no-autoinstall --public-url 'https://share.effector.dev' src/index.html",
     "versions": "node src/loadVersions.js"
   },
   "resolutions": {
