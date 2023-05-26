@@ -1,7 +1,7 @@
 import React from 'react'
 import ReactDOM from 'react-dom'
 import {useStore} from 'effector-react'
-import {styled} from 'linaria/react'
+import styled from '@emotion/styled'
 
 import {config} from './config'
 import {$csrf, $githubToken, $githubUser} from './state'

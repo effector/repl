@@ -1,5 +1,5 @@
 import React from 'react'
-import {styled} from 'linaria/react'
+import styled from '@emotion/styled'
 import {useStore} from 'effector-react'
 
 import {codeSetCursor} from '../editor'

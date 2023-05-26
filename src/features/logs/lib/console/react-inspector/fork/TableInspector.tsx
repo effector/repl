@@ -5,7 +5,7 @@
  */
 
 import React from 'react'
-import {styled} from 'linaria/react'
+import styled from '@emotion/styled'
 
 import {ObjectValue} from './ObjectInspector'
 import {styleSet} from '../styles'

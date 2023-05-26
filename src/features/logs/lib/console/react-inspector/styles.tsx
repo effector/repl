@@ -1,5 +1,5 @@
 import React from 'react'
-import {css} from 'linaria'
+import {css} from '@emotion/css'
 import {theme} from '../theme'
 
 const {styles} = theme

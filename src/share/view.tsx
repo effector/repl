@@ -1,10 +1,10 @@
 import {useStore} from 'effector-react'
-import {styled} from 'linaria/react'
+import styled from '@emotion/styled'
 import React from 'react'
 
-import {theme} from '~/features/logs/lib/console/theme'
-import {getUserInfo} from '~/github/init'
-import {$debouncedInput} from '~/share/debounceInput'
+import {theme} from '../features/logs/lib/console/theme'
+import {getUserInfo} from '../github/init'
+import {$debouncedInput} from './debounceInput'
 
 import {IconButton} from '../components/IconButton'
 import {CopyIcon} from '../components/Icons/CopyIcon'
@@ -289,7 +289,8 @@ const ShareList = ({filterMode, description}) => {
             <ShareRow>
               <ShareDescription>
                 {typeof share.description === 'undefined' ||
-                share.description === null || share.description === ''
+                share.description === null ||
+                share.description === ''
                   ? `<${share.slug}>`
                   : share.description}
               </ShareDescription>

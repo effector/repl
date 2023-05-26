@@ -1,16 +1,16 @@
 import React from 'react'
-import {styled} from 'linaria/react'
+import styled from '@emotion/styled'
 import {createComponent, useStore} from 'effector-react'
 import {createApi, createStore} from 'effector'
 import {TabHeaderList} from '../tabs/styled'
 import Sizer from './Sizer'
-import {theme} from '~/features/logs/lib/console/theme'
+import {theme} from '../features/logs/lib/console/theme'
 // TODO: remove exact dependency on feature, use requirements in the future
 import {
   logsClear as clearConsole,
   $logs as logs,
   LogsPanel as LogsView,
-} from '~/features/logs'
+} from '../features/logs'
 import {$autoScrollLog} from '../settings/state'
 import {IconButton} from './IconButton'
 import {DesktopScreens, SmallScreens} from '../tabs/view'

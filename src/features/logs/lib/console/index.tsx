@@ -5,7 +5,7 @@ import {ConsoleMessage} from './Message'
 import {Props} from './index.h'
 import {autoScrollDisableClicked, autoScrollEnableClicked} from '../../model'
 
-export {Styles} from './index.h'
+export {type Styles} from './index.h'
 
 const AUTO_SCROLL_MARGIN = 10
 

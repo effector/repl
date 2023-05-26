@@ -1,4 +1,4 @@
-import {styled} from 'linaria/react'
+import styled from '@emotion/styled'
 
 export const IconButton = styled.button`
   display: inline-block;

@@ -1,8 +1,8 @@
 import {combine, forward, sample, split} from 'effector'
 import md5 from 'js-md5'
 
-import {$githubUser} from '~/github/state'
-import {getShareListByAuthorFx, shareCodeFx} from '~/graphql'
+import {$githubUser} from '../github/state'
+import {getShareListByAuthorFx, shareCodeFx} from '../graphql'
 
 import {
   addShare,

@@ -13,7 +13,6 @@
     "moduleResolution": "node",
     "noEmit": true,
     "noImplicitAny": false,
-    "paths": {"~/*": ["./src/*"]},
     "resolveJsonModule": true,
     "skipLibCheck": true,
     "strictNullChecks": true,

@@ -1,4 +1,4 @@
-import {styled} from 'linaria/react'
+import styled from '@emotion/styled'
 
 export const TabHeader = styled.li`
   flex: 1 1 100%;

@@ -1,6 +1,6 @@
 import {createApi} from 'effector'
-import {createMediaMatcher} from '~/lib/media-query'
-import {createLocalStore} from '~/lib/local-store'
+import {createMediaMatcher} from '../lib/media-query'
+import {createLocalStore} from '../lib/local-store'
 
 export type Tab =
   | 'dom'

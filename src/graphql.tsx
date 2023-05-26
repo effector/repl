@@ -1,7 +1,7 @@
 import {attach, createEffect} from 'effector'
 import md5 from 'js-md5'
 
-import {$babelPluginSettings, $viewLib} from '~/settings/state'
+import {$babelPluginSettings, $viewLib} from './settings/state'
 
 import {$sourceCode, $version} from './editor/state'
 import {$githubUser} from './github/state'

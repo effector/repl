@@ -1,6 +1,6 @@
 import {createStore, createEvent} from 'effector'
 import {useStore, useList} from 'effector-react'
-import {styled} from 'linaria/react'
+import styled from '@emotion/styled'
 import React from 'react'
 
 import {LoadingIcon} from './components/Icons/LoadingIcon'
@@ -310,9 +310,7 @@ export const MenuContent = () => {
         </MenuRow>
         <Divider />
         <MenuRow data-menu-bottom-link>
-          <a
-            href="https://effector.dev/docs/api/effector"
-            target="_self">
+          <a href="https://effector.dev/docs/api/effector" target="_self">
             API
           </a>
         </MenuRow>

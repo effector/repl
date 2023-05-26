@@ -1,4 +1,4 @@
-import {createLocalStore} from '~/lib/local-store'
+import {createLocalStore} from '../lib/local-store'
 
 export type TGitHubUserInfo = {
   databaseId: number | null

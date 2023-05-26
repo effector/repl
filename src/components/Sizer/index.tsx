@@ -1,5 +1,5 @@
 import React, {useEffect, useRef} from 'react'
-import {styled} from 'linaria/react'
+import styled from '@emotion/styled'
 import debounce from 'lodash.debounce'
 
 const setBorder = dir => props =>

@@ -1,5 +1,5 @@
 // TODO: remove exact dependency on feature, use requirements in the future
-import {consoleMap} from '~/features/logs'
+import {consoleMap} from '../features/logs'
 
 import {
   realmInvoke,

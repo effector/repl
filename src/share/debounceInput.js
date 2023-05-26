@@ -1,7 +1,7 @@
 import {debounce} from 'patronum/debounce'
 import {restore, createEvent, forward} from 'effector'
-import {onTextChange} from '~/share/index'
-import {keyDown} from '~/share/init'
+import {onTextChange} from '../share/index'
+import {keyDown} from './init'
 
 export const setInput = debounce({source: onTextChange, timeout: 350})
 export const resetInput = createEvent()

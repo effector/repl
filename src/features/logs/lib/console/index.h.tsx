@@ -1,4 +1,4 @@
-import {Methods} from './methods'
+import {type Methods} from './methods'
 
 export type Message = {
   method: Methods

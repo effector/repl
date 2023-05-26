@@ -4,7 +4,7 @@ import {tab as _tab, tabApi} from './domain'
 import {PrettifyButton, Settings} from '../settings/view'
 import {Share} from '../share/view'
 import {TabHeader, TabHeaderList} from './styled'
-import {createMediaQuery, createMediaMatcher} from '~/lib/media-query'
+import {createMediaQuery, createMediaMatcher} from '../lib/media-query'
 import {toggleMenu} from '../Menu'
 
 export const SmallScreens = createMediaQuery('(max-width: 699px)')

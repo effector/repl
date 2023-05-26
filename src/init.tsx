@@ -14,7 +14,7 @@ import {
   requirements as logs,
   autoScrollDisableClicked,
   autoScrollEnableClicked,
-} from '~/features/logs'
+} from './features/logs'
 
 forward({from: $autoScrollLog, to: logs.autoScrollLogChanged})
 forward({from: changeSources, to: logs.sourcesChanged})

@@ -1,5 +1,5 @@
 import {createStore} from 'effector'
-import {createLocalStore} from '~/lib/local-store'
+import {createLocalStore} from '../lib/local-store'
 import {SharedItem} from './index.h'
 
 const shareListBackup = localStorage.getItem('share-list-backup')

@@ -1,5 +1,5 @@
 import {useList, useStore, useStoreMap} from 'effector-react'
-import {styled} from 'linaria/react'
+import styled from '@emotion/styled'
 import React from 'react'
 
 import {
@@ -48,8 +48,7 @@ export const PrettifyButton = () => {
         alignItems: 'center',
         fontSize: 14,
         justifyContent: 'center',
-      }}
-    >
+      }}>
       {pending && <LoadingIcon style={{marginRight: 10}} />}
       Prettify
     </Button>
@@ -63,8 +62,7 @@ export const Settings = () => (
         <div className="versions">
           <select
             value={useStore($version)}
-            onChange={e => selectVersion(e.currentTarget.value)}
-          >
+            onChange={e => selectVersion(e.currentTarget.value)}>
             {useList($packageVersions, item => (
               <option value={item}>{item}</option>
             ))}
@@ -78,8 +76,7 @@ export const Settings = () => (
         <div>
           <select
             value={useStore($viewLib)}
-            onChange={e => selectViewLib(e.currentTarget.value)}
-          >
+            onChange={e => selectViewLib(e.currentTarget.value)}>
             {useList($viewLibraries, item => (
               <option value={item}>{item}</option>
             ))}
