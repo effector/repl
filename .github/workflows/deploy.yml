@@ -9,27 +9,28 @@ on:
 
 jobs:
   build:
-    runs-on: ubuntu-latest
+    runs-on: ubuntu-22.04
     steps:
-      - uses: actions/checkout@v2
-      - uses: actions/setup-node@v1
-        with:
-          node-version: 16
+      - name: Checkout
+        uses: actions/checkout@v3
 
-      - uses: actions/cache@v2
+      - name: Setup pnpm
+        uses: pnpm/action-setup@v2
+
+      - name: Setup Node.JS
+        uses: actions/setup-node@v3
         with:
-          path: '**/node_modules'
-          key: modules-${{ hashFiles('**/yarn.lock') }}
+          node-version: 18.x
+          cache: 'pnpm'
 
       - name: Install deps
-        if: steps.yarn-cache.outputs.cache-hit != 'true'
-        run: yarn install --frozen-lockfile
+        run: pnpm install
 
       - name: Generate versions
-        run: node src/loadVersions.js
+        run: pnpm versions
 
       - name: Build app
-        run: npx babel --config-file ./.babelrc -o node_modules/babel-plugin-jsx-dom-expressions/index.js node_modules/babel-plugin-jsx-dom-expressions/index.js && npx parcel build -d dist --no-autoinstall --public-url 'https://editor-prod.effector.dev' src/index.html
+        run: pnpm build
 
       - name: Configure AWS Credentials
         uses: aws-actions/configure-aws-credentials@v1

@@ -1,8 +1,8 @@
 {
   "scripts": {
-    "start": "npx parcel src/index.html --no-cache",
-    "build": "npx babel --config-file ./.babelrc -o node_modules/babel-plugin-jsx-dom-expressions/index.js node_modules/babel-plugin-jsx-dom-expressions/index.js && npx parcel build -d dist --no-autoinstall --public-url /try src/index.html",
-    "now-build": "node src/loadVersions.js && yarn build"
+    "start": "parcel src/index.html --no-cache",
+    "build": "babel --config-file ./.babelrc -o node_modules/babel-plugin-jsx-dom-expressions/index.js node_modules/babel-plugin-jsx-dom-expressions/index.js && parcel build -d dist --no-autoinstall --public-url 'https://share.effector.dev' src/index.html",
+    "versions": "node src/loadVersions.js"
   },
   "resolutions": {
     "node-forge": "0.10.0"
@@ -51,7 +51,9 @@
     "patronum": "^1.9.0",
     "prop-types": "^15.8.1",
     "react": "^18.2.0",
-    "react-dom": "^18.2.0"
+    "react-dom": "^18.2.0",
+    "scheduler": "^0.23.0",
+    "source-map": "^0.7.4"
   },
   "browserslist": [
     "last 2 Chrome versions",
@@ -59,7 +61,8 @@
     "last 2 Safari versions"
   ],
   "engines": {
-    "node": ">=10.x"
+    "node": ">=18.x"
   },
+  "packageManager": "pnpm@8.5.1",
   "license": "MIT"
 }
