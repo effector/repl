@@ -11,7 +11,7 @@ import {$shareDescription} from './share/state'
 const ENDPOINT = {
   DIST: 'y6776i4nfja2lnx3gbkbmlgr3i',
   REGION: 'us-east-1',
-  PUBLIC_API_KEY: 'da2-srl2uzygsnhpdd2bban5gscnza',
+  PUBLIC_API_KEY: 'da2-5pphlux5pnhf5klzdxuaugszf4',
 }
 
 const request = data => {
