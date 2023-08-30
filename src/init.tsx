@@ -11,18 +11,18 @@ import {changeSources, selectVersion, selectViewLib} from './editor'
 import {realmStatus} from './realm'
 
 import {
-  requirements as logs,
+  requirements,
   autoScrollDisableClicked,
   autoScrollEnableClicked,
 } from '~/features/logs'
 
-forward({from: $autoScrollLog, to: logs.autoScrollLogChanged})
-forward({from: changeSources, to: logs.sourcesChanged})
-forward({from: selectVersion, to: logs.versionChanged})
-forward({from: selectViewLib, to: logs.viewLibraryChanged})
+forward({from: $autoScrollLog, to: requirements.autoScrollLogChanged})
+forward({from: changeSources, to: requirements.sourcesChanged})
+forward({from: selectVersion, to: requirements.versionChanged})
+forward({from: selectViewLib, to: requirements.viewLibraryChanged})
 forward({
   from: realmStatus.map(status => status.active),
-  to: logs.realmActiveChanged,
+  to: requirements.realmActiveChanged,
 })
 
 $autoScrollLog

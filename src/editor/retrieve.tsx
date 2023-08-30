@@ -11,7 +11,7 @@ function getLocation<T>(defaults: T, fn: (loc: Location) => T): T {
   return defaults
 }
 
-export function  retrieveCode(): string | null {
+export function retrieveCode(): string | null {
   const isStuck = readStuckFlag()
   const pathname = getLocation('', loc => loc.pathname)
   const origin = getLocation('', loc => loc.origin)
@@ -48,7 +48,11 @@ export function  retrieveCode(): string | null {
           try {
             const {status, data} = await res.json()
             if (status === 200) {
-              const {code} = JSON.parse(decompress(data)!)
+              const {code, effectorVersion, viewLibrary, babelPluginOptions} =
+                JSON.parse(decompress(data)!)
+              selectVersion(effectorVersion)
+              selectViewLib(viewLibrary)
+              setSettings(babelPluginOptions)
               return changeSources(code)
             }
           } catch (e) {
