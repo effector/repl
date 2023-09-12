@@ -1,6 +1,6 @@
-import React from 'react'
-import {styled} from 'linaria/react'
 import {useStore} from 'effector-react'
+import {styled} from 'linaria/react'
+import React from 'react'
 
 import {codeSetCursor} from '../editor'
 import {$stats} from '../realm/state'
@@ -45,7 +45,7 @@ const OutlineSection = ({list, title}) => {
       <Header>{title}</Header>
       <Section>
         <ol>
-          {list.map((item, i) => {
+          {list.filter(Boolean).map((item, i) => {
             const loc = item?.defaultConfig?.loc
             const name =
               item?.compositeName?.fullName ||
