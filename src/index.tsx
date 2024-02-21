@@ -24,4 +24,5 @@ root.addEventListener(
   },
   false,
 )
+
 ReactDOM.render(<App />, root)
