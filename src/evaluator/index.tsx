@@ -266,7 +266,15 @@ export async function evaluator(code: string) {
   if ($version.getState() === 'master') {
     const additionalLibs = await Promise.all([
       fetchForest(effector),
-      $viewLib.getState() === 'react'
+      fetchPatronum(effector),
+    ])
+    forest = additionalLibs[0]
+    patronum = additionalLibs[1]
+  } else {
+    const isVersionWithScopeModule =
+      parseInt($version.getState().slice(0, 2)) <= 22
+    if (isVersionWithScopeModule) {
+      effectorBindingSSR = await ($viewLib.getState() === 'react'
         ? fetchEffectorReactSSR({
             effector,
             ...getShimDefinition(shim),
@@ -276,12 +284,8 @@ export async function evaluator(code: string) {
             effector,
             'solid-js': solidJs,
             'solid-js/web': solidJsWeb,
-          }),
-      fetchPatronum(effector),
-    ])
-    forest = additionalLibs[0]
-    effectorBindingSSR = additionalLibs[1]
-    patronum = additionalLibs[2]
+          }))
+    }
   }
   function initViewLib(apiMap, api) {
     let env
