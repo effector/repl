@@ -166,9 +166,9 @@ const fetchEffectorReact = createEffect<any, {[key: string]: any}, any>({
     const effectorReactUrl =
       'https://effector--canary.s3-eu-west-1.amazonaws.com/effector-react/effector-react.cjs.js'
     const shimUrl =
-      'https://unpkg.com/use-sync-external-store/cjs/use-sync-external-store-shim.production.min.js'
+      'https://unpkg.com/use-sync-external-store@1.2.0/cjs/use-sync-external-store-shim.production.min.js'
     const withSelectorUrl =
-      'https://unpkg.com/use-sync-external-store/cjs/use-sync-external-store-shim/with-selector.production.min.js'
+      'https://unpkg.com/use-sync-external-store@1.2.0/cjs/use-sync-external-store-shim/with-selector.production.min.js'
     const shimName = 'use-sync-external-store/shim/index.js'
     const shimSelectorName = 'use-sync-external-store/shim/with-selector.js'
     const shim = await getLibraryCode(shimName, shimUrl)
