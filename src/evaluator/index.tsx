@@ -72,42 +72,40 @@ const cache = {
   '@effector/babel-plugin': new Map(),
 }
 
-const fetchEffector = createEffect('fetch effector', {
-  async handler(ver: string) {
-    const url =
-      ver === 'master'
-        ? 'https://effector--canary.s3-eu-west-1.amazonaws.com/effector/effector.cjs.js'
-        : `https://unpkg.com/effector@${ver}/effector.cjs.js`
-    return getLibraryCode(`effector.${ver}.js`, url)
-  },
+const fetchEffectorFx = createEffect((ver: string) => {
+  const url =
+    ver === 'master'
+      ? 'https://effector--canary.s3-eu-west-1.amazonaws.com/effector/effector.cjs.js'
+      : `https://unpkg.com/effector@${ver}/effector.cjs.js`
+  return getLibraryCode(`effector.${ver}.js`, url)
 })
 
-sample({clock: fetchEffector.fail, fn: () => 'master', target: selectVersion})
+sample({clock: fetchEffectorFx.fail, fn: () => 'master', target: selectVersion})
 
-const fetchBabelPlugin = createEffect<string, {[key: string]: any}, any>({
-  async handler(ver) {
-    let url: string
-    if (ver === 'master') {
-      url =
-        'https://effector--canary.s3-eu-west-1.amazonaws.com/effector/babel-plugin.js'
+const fetchBabelPluginFx = createEffect((ver: string) => {
+  let url: string
+  if (ver === 'master') {
+    url =
+      'https://effector--canary.s3-eu-west-1.amazonaws.com/effector/babel-plugin.js'
+  } else {
+    let [major, minor = '', patch = ''] = ver.split('.')
+    patch = patch.split('-')[0]
+    if (
+      major === '0' &&
+      (parseInt(minor) < 18 || (minor === '18' && parseInt(patch) < 7))
+    ) {
+      url = `https://unpkg.com/@effector/babel-plugin@latest/index.js`
     } else {
-      let [major, minor = '', patch = ''] = ver.split('.')
-      patch = patch.split('-')[0]
-      if (
-        major === '0' &&
-        (parseInt(minor) < 18 || (minor === '18' && parseInt(patch) < 7))
-      ) {
-        url = `https://unpkg.com/@effector/babel-plugin@latest/index.js`
-      } else {
-        url = `https://unpkg.com/effector@${ver}/babel-plugin.js`
-      }
+      url = `https://unpkg.com/effector@${ver}/babel-plugin.js`
     }
-    return getLibraryCode(`effector-babel-plugin.${ver}.js`, url)
-  },
+  }
+  return getLibraryCode(`effector-babel-plugin.${ver}.js`, url) as {
+    [key: string]: any
+  }
 })
 
-const fetchEffectorInspect = createEffect(
-  async ({effector, ver}: {effector: any; ver: string}) => {
+const fetchEffectorInspectFx = createEffect(
+  ({effector, ver}: {effector: any; ver: string}) => {
     const url =
       ver === 'master'
         ? 'https://effector--canary.s3-eu-west-1.amazonaws.com/effector/inspect.js'
@@ -131,102 +129,90 @@ function getShiSelectorDefinition(shimSelector: any) {
   return result
 }
 
-const fetchEffectorSolid = createEffect<any, {[key: string]: any}, any>({
-  async handler(effector) {
-    const effectorSolidUrl =
-      'https://effector--canary.s3-eu-west-1.amazonaws.com/effector-solid/effector-solid.cjs.js'
-    const solidJsUrl = 'https://unpkg.com/solid-js/dist/dev.cjs'
-    const solidJsWebUrl = 'https://unpkg.com/solid-js/web/dist/dev.cjs'
+const fetchEffectorSolidFx = createEffect(async effector => {
+  const effectorSolidUrl =
+    'https://effector--canary.s3-eu-west-1.amazonaws.com/effector-solid/effector-solid.cjs.js'
+  const solidJsUrl = 'https://unpkg.com/solid-js/dist/dev.cjs'
+  const solidJsWebUrl = 'https://unpkg.com/solid-js/web/dist/dev.cjs'
 
-    const solidJs = await getLibraryCode('solid-js', solidJsUrl)
-    const solidJsWeb = await getLibraryCode('solid-js/web', solidJsWebUrl, {
+  const solidJs = await getLibraryCode('solid-js', solidJsUrl)
+  const solidJsWeb = await getLibraryCode('solid-js/web', solidJsWebUrl, {
+    'solid-js': solidJs,
+  })
+
+  const effectorSolid = await getLibraryCode(
+    `effector-solid.cjs.js`,
+    effectorSolidUrl,
+    {
+      effector,
       'solid-js': solidJs,
-    })
+      'solid-js/web': solidJsWeb,
+    },
+  )
 
-    const effectorSolid = await getLibraryCode(
-      `effector-solid.cjs.js`,
-      effectorSolidUrl,
-      {
-        effector,
-        'solid-js': solidJs,
-        'solid-js/web': solidJsWeb,
-      },
-    )
-
-    return {
-      effectorSolid,
-      solidJs,
-      solidJsWeb,
-    }
-  },
+  return {
+    effectorSolid,
+    solidJs,
+    solidJsWeb,
+  }
 })
 
-const fetchEffectorReact = createEffect<any, {[key: string]: any}, any>({
-  async handler(effector) {
-    const effectorReactUrl =
-      'https://effector--canary.s3-eu-west-1.amazonaws.com/effector-react/effector-react.cjs.js'
-    const shimUrl =
-      'https://unpkg.com/use-sync-external-store@1.2.0/cjs/use-sync-external-store-shim.production.min.js'
-    const withSelectorUrl =
-      'https://unpkg.com/use-sync-external-store@1.2.0/cjs/use-sync-external-store-shim/with-selector.production.min.js'
-    const shimName = 'use-sync-external-store/shim/index.js'
-    const shimSelectorName = 'use-sync-external-store/shim/with-selector.js'
-    const shim = await getLibraryCode(shimName, shimUrl)
-    const withSelector = await getLibraryCode(
-      shimSelectorName,
-      withSelectorUrl,
-      getShimDefinition(shim),
-    )
-    const effectorReact = await getLibraryCode(
-      `effector-react.cjs.js`,
-      effectorReactUrl,
-      {
-        effector,
-        ...getShimDefinition(shim),
-        ...getShiSelectorDefinition(withSelector),
-      },
-    )
-    return {effectorReact, shim, withSelector}
-  },
+const fetchEffectorReactFx = createEffect(async effector => {
+  const effectorReactUrl =
+    'https://effector--canary.s3-eu-west-1.amazonaws.com/effector-react/effector-react.cjs.js'
+  const shimUrl =
+    'https://unpkg.com/use-sync-external-store@1.2.0/cjs/use-sync-external-store-shim.production.min.js'
+  const withSelectorUrl =
+    'https://unpkg.com/use-sync-external-store@1.2.0/cjs/use-sync-external-store-shim/with-selector.production.min.js'
+  const shimName = 'use-sync-external-store/shim/index.js'
+  const shimSelectorName = 'use-sync-external-store/shim/with-selector.js'
+  const shim = await getLibraryCode(shimName, shimUrl)
+  const withSelector = await getLibraryCode(
+    shimSelectorName,
+    withSelectorUrl,
+    getShimDefinition(shim),
+  )
+  const effectorReact = await getLibraryCode(
+    `effector-react.cjs.js`,
+    effectorReactUrl,
+    {
+      effector,
+      ...getShimDefinition(shim),
+      ...getShiSelectorDefinition(withSelector),
+    },
+  )
+  return {effectorReact, shim, withSelector}
 })
 
-const fetchForest = createEffect({
-  async handler(effector) {
-    const url =
-      'https://effector--canary.s3-eu-west-1.amazonaws.com/forest/forest.cjs.js'
-    return getLibraryCode(`forest.cjs.js`, url, {effector})
-  },
+const fetchForestFx = createEffect(effector => {
+  const url =
+    'https://effector--canary.s3-eu-west-1.amazonaws.com/forest/forest.cjs.js'
+  return getLibraryCode(`forest.cjs.js`, url, {effector})
 })
 
-const fetchEffectorReactSSR = createEffect({
-  async handler(deps) {
-    const url =
-      'https://effector--canary.s3-eu-west-1.amazonaws.com/effector-react/scope.js'
-    return getLibraryCode(`scope.js`, url, deps)
-  },
+const fetchEffectorReactSSRFx = createEffect(deps => {
+  const url =
+    'https://effector--canary.s3-eu-west-1.amazonaws.com/effector-react/scope.js'
+  return getLibraryCode(`scope.js`, url, deps)
 })
 
-const fetchEffectorSolidSSR = createEffect({
-  async handler(deps) {
-    const url =
-      'https://effector--canary.s3-eu-west-1.amazonaws.com/effector-solid/scope.js'
-    return getLibraryCode(`scope.js`, url, deps)
-  },
+const fetchEffectorSolidSSRFx = createEffect(deps => {
+  const url =
+    'https://effector--canary.s3-eu-west-1.amazonaws.com/effector-solid/scope.js'
+  return getLibraryCode(`scope.js`, url, deps)
 })
 
-const fetchPatronum = createEffect({
-  async handler(effector) {
-    const url = 'https://unpkg.com/patronum/patronum.cjs'
-    return getLibraryCode(`patronum.js`, url, {effector})
-  },
+const fetchPatronumFx = createEffect(effector => {
+  const url = 'https://unpkg.com/patronum/patronum.cjs'
+  return getLibraryCode(`patronum.js`, url, {effector})
 })
 
-fetchBabelPlugin.fail.watch(() => selectVersion('master'))
+fetchBabelPluginFx.fail.watch(() => selectVersion('master'))
 
 const api = {
-  effector: fetchEffector,
-  '@effector/babel-plugin': fetchBabelPlugin,
-  forest: fetchForest,
+  effector: fetchEffectorFx,
+  '@effector/babel-plugin': fetchBabelPluginFx,
+  forest: fetchForestFx,
 }
 
 function cacher(v, cache, fetcher) {
@@ -247,51 +233,52 @@ export const versionLoader = $version.map(v => {
 
 export async function evaluator(code: string) {
   realmStatusApi.init()
-  const [babelPlugin, effector] = await Promise.all([
-    cache['@effector/babel-plugin'].get($version.getState()),
-    cache.effector.get($version.getState()),
-  ])
-  const effectorInspect = await fetchEffectorInspect({
-    effector,
-    ver: $version.getState(),
-  })
+  const version = $version.getState()
+  const viewLib = $viewLib.getState()
   const babelPluginOptions = $babelPluginSettings.getState()
-  const {effectorReact, shim, withSelector} = await fetchEffectorReact(effector)
-  const {effectorSolid, solidJs, solidJsWeb} = await fetchEffectorSolid(
-    effector,
-  )
-  let forest
+  const isMaster = version === 'master'
+  /** could be used in pair with `isMaster === false` check */
+  const versionNumber = parseInt(version.slice(0, 2))
+  const isVersionWithInspect = isMaster || versionNumber >= 22
+  const isVersionWithScopeModule = !isMaster && versionNumber <= 22
+  const [babelPlugin, effector] = await Promise.all([
+    cache['@effector/babel-plugin'].get(version),
+    cache.effector.get(version),
+  ])
+  const [
+    effectorInspect,
+    {effectorReact, shim, withSelector},
+    {effectorSolid, solidJs, solidJsWeb},
+    forest,
+    patronum,
+  ] = await Promise.all([
+    isVersionWithInspect
+      ? fetchEffectorInspectFx({effector, ver: version})
+      : {},
+    viewLib === 'react' ? fetchEffectorReactFx(effector) : ({} as any),
+    viewLib === 'solid' ? fetchEffectorSolidFx(effector) : ({} as any),
+    isMaster ? fetchForestFx(effector) : {},
+    isMaster ? fetchPatronumFx(effector) : {},
+  ])
   let effectorBindingSSR
-  let patronum
-  if ($version.getState() === 'master') {
-    const additionalLibs = await Promise.all([
-      fetchForest(effector),
-      fetchPatronum(effector),
-    ])
-    forest = additionalLibs[0]
-    patronum = additionalLibs[1]
-  } else {
-    const isVersionWithScopeModule =
-      parseInt($version.getState().slice(0, 2)) <= 22
-    if (isVersionWithScopeModule) {
-      effectorBindingSSR = await ($viewLib.getState() === 'react'
-        ? fetchEffectorReactSSR({
-            effector,
-            ...getShimDefinition(shim),
-            ...getShiSelectorDefinition(withSelector),
-          })
-        : fetchEffectorSolidSSR({
-            effector,
-            'solid-js': solidJs,
-            'solid-js/web': solidJsWeb,
-          }))
-    }
+  if (isVersionWithScopeModule) {
+    effectorBindingSSR = await (viewLib === 'react'
+      ? fetchEffectorReactSSRFx({
+          effector,
+          ...getShimDefinition(shim),
+          ...getShiSelectorDefinition(withSelector),
+        })
+      : fetchEffectorSolidSSRFx({
+          effector,
+          'solid-js': solidJs,
+          'solid-js/web': solidJsWeb,
+        }))
   }
   function initViewLib(apiMap, api) {
     let env
     let lib
 
-    switch ($viewLib.getState()) {
+    switch (viewLib) {
       case 'react':
         env = {
           React,
@@ -320,7 +307,7 @@ export async function evaluator(code: string) {
       env,
     }
   }
-  const env = prepareRuntime(effector, initViewLib, $version.getState())
+  const env = prepareRuntime(effector, initViewLib, version)
   return exec({
     code,
     realmGlobal: getIframe().contentWindow,
@@ -342,7 +329,7 @@ export async function evaluator(code: string) {
             types: null,
             filename: 'file',
             babelPluginOptions,
-            preset: $viewLib.getState(),
+            preset: viewLib,
           })
           config.plugins = [
             'transform-strict-mode',
@@ -367,7 +354,7 @@ export async function evaluator(code: string) {
     ],
     filename: filename.getState(),
     types: $typechecker.getState() || 'typescript',
-    preset: $viewLib.getState() || 'react',
+    preset: viewLib || 'react',
     pluginRegistry: {
       'effector/babel-plugin': babelPlugin,
       'effector/babel-plugin-react': PluginEffectorReact,
