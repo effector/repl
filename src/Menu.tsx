@@ -303,7 +303,7 @@ export const MenuContent = () => {
         <Divider />
         <MenuRow data-menu-bottom-link>
           <a
-            href="https://effector.dev/docs/introduction/installation"
+            href="https://effector.dev/en/introduction/get-started/"
             target="_self">
             Docs
           </a>
