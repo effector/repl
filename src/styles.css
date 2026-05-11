@@ -275,6 +275,13 @@ body {
   line-height: 1.6;
 }
 
+.CodeMirror-scroll,
+.errors,
+.editor.results {
+  -webkit-overflow-scrolling: touch;
+  overscroll-behavior: contain;
+}
+
 .page-body {
   padding: var(--gutter) 0;
   height: 100%;

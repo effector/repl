@@ -85,6 +85,7 @@ const MenuBlock = styled.section`
   position: fixed;
   top: 0;
   left: 0;
+  -webkit-overflow-scrolling: touch;
   overscroll-behavior: contain;
   background: #fff;
   overflow-x: hidden;
