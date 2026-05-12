@@ -17,6 +17,8 @@ const {styles} = theme
  */
 export const Root = styled.div`
   overflow-y: auto;
+  -webkit-overflow-scrolling: touch;
+  overscroll-behavior: contain;
   word-break: break-word;
 `
 

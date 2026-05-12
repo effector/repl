@@ -151,6 +151,8 @@ const ShareListSection = styled(Section)`
   margin: 0;
   padding: 0;
   overflow-y: auto;
+  -webkit-overflow-scrolling: touch;
+  overscroll-behavior: contain;
   border-top: none;
   border-bottom: none;
   height: calc(100% - 42px);
